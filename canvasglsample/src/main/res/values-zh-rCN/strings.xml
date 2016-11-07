@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="permission_tips">需要权限，否则崩溃╮(╯▽╰)╭</string>
+    <string name="first_image">选照片一</string>
+    <string name="second_image">选照片二</string>
+</resources>
