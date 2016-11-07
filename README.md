@@ -1,4 +1,4 @@
-# GPUImage for Android
+# OpenGL canvas
 
 Idea from: 
 * Codes of Android source code under package com.android.gallery3d.glrenderer
@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.ChillingVan:CanvasGL:1.0.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.0.1'
 }
 ```
 
