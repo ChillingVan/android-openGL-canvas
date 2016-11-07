@@ -1049,7 +1049,7 @@ public class GLThread extends Thread {
             if (renderer == null) {
                 throw new NullPointerException("renderer has not been set");
             }
-            if (surface == null) {
+            if (surface == null && eglWindowSurfaceFactory == null) {
                 throw new NullPointerException("surface has not been set");
             }
             if (configChooser == null) {

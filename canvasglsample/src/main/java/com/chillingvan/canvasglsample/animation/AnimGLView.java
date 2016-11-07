@@ -22,7 +22,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
-import com.chillingvan.canvasgl.glview.GLContinuouslyView;
+import com.chillingvan.canvasgl.glview.GLContinuousView;
 import com.chillingvan.canvasglsample.animation.bubble.Bubble;
 import com.chillingvan.canvasglsample.animation.bubble.MovableObj;
 import com.chillingvan.canvasglsample.animation.bubble.Wall;
@@ -34,7 +34,7 @@ import java.util.List;
  * Created by Chilling on 2016/10/24.
  */
 
-public class AnimGLView extends GLContinuouslyView {
+public class AnimGLView extends GLContinuousView {
     public static final int INTERNVAL_TIME_MS = 16;
     private List<Bubble> bubbles = new ArrayList<>();
     private Wall wallTop = new Wall.WallY(0);

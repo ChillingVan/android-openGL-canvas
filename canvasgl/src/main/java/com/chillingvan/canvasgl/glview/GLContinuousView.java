@@ -28,12 +28,12 @@ import com.chillingvan.canvasgl.ICanvasGL;
  * Created by Chilling on 2016/10/24.
  */
 
-public abstract class GLContinuouslyView extends GLView {
-    public GLContinuouslyView(Context context) {
+public abstract class GLContinuousView extends GLView {
+    public GLContinuousView(Context context) {
         super(context);
     }
 
-    public GLContinuouslyView(Context context, AttributeSet attrs) {
+    public GLContinuousView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

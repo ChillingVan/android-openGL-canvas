@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest package="com.chillingvan.canvasglsample"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -47,13 +45,21 @@
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>
-        <activity android:name=".textureView.TextureCameraActivity"
-                  android:label="TextureCamera"
-            >
-
-
+        <activity
+            android:name=".textureView.TextureCameraActivity"
+            android:label="TextureCamera">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".offscreen.OffScreenActivity"
+                  android:label="OffScreenActivity"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>

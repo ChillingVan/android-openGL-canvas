@@ -27,13 +27,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.0.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.0'
 }
 ```
 
 ### Sample Code
 
-Custom your view.
+* Custom your view.
 ```java
 public class MyGLView extends GLView {
 
@@ -56,10 +56,10 @@ public class MyGLView extends GLView {
 
 ![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example.png)
 
-The Usage of GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView is similar.
+* The Usage of GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView is similar.
 
 
-Using canvas to draw
+* Using canvas to draw
 ```java
         canvas.drawBitmap(textBitmap, left, top);
         
@@ -82,14 +82,17 @@ Using canvas to draw
 ![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example.png)
 
 
-And can be used with camera, just run the camera sample code on a real device(not in emulator) to see what will happen.
+* And can be used with camera, just run the camera sample code on a real device(not in emulator) to see what will happen.
 
 ![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example.jpg)
 
 
+* If you do not want to use GLView, you can use OffScreenCanvas to draw things and fetch it by getDrawingBitmap.
+
 ## Notice
 * The onGLDraw method in GLView runs in its own thread but not the main thread. 
 * I haven't implemented all the filters in GPUImage. I will add more later. If you need, you can take my code as example to implement your filter. It is simple.
+* Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
 
 ## License
     Copyright 2012 CyberAgent, Inc.

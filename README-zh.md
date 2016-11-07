@@ -25,13 +25,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.0.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.0'
 }
 ```
 
 ### 样例代码 
 
-自定义一个View.
+* 自定义一个View.
 ```java
 public class MyGLView extends GLView {
 
@@ -54,10 +54,10 @@ public class MyGLView extends GLView {
 
 ![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example.png)
 
-其中, GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView 用法相似.
+* 其中, GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView 用法相似.
 
 
-使用CanvasGL实现绘制
+* 使用CanvasGL实现绘制
 ```java
         canvas.drawBitmap(textBitmap, left, top);
         
@@ -80,10 +80,10 @@ public class MyGLView extends GLView {
 ![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example.png)
 
 
-可以与Camera结合，注意运行样例代码的时候尽量使用真机而不是模拟器。
+* 可以与Camera结合，注意运行样例代码的时候尽量使用真机而不是模拟器。
 ![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example.jpg)
 
-
+* 如果不想使用View，可以使用 OffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
 
 ## 注意事项
 * 每一个View的onGLDraw都运行在自己的线程而非主线程。
