@@ -89,6 +89,8 @@ public class MyGLView extends GLView {
 
 * If you do not want to use GLView, you can use OffScreenCanvas to draw things and fetch it by getDrawingBitmap.
 
+See the wiki page for more use case.[here](https://github.com/ChillingVan/android-openGL-canvas/wiki)
+
 ## Notice
 * The onGLDraw method in GLView runs in its own thread but not the main thread. 
 * I haven't implemented all the filters in GPUImage. I will add more later. If you need, you can take my code as example to implement your filter. It is simple.

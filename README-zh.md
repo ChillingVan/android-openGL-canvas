@@ -85,6 +85,9 @@ public class MyGLView extends GLView {
 
 * 如果不想使用View，可以使用 OffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
 
+
+[更多用例请查看wiki](https://github.com/ChillingVan/android-openGL-canvas/wiki)
+
 ## 注意事项
 * 每一个View的onGLDraw都运行在自己的线程而非主线程。
 * 目前的Filter没有GPUImage里那么多，后续会陆续增加，如果有需要，参照我的代码自己实现即可，难度不高。
