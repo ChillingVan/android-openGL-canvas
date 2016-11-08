@@ -95,7 +95,7 @@ public class MyGLView extends GLView {
 * Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
 
 ## License
-    Copyright 2012 CyberAgent, Inc.
+    Copyright 2016 ChillingVan.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

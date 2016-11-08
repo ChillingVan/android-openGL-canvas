@@ -90,7 +90,7 @@ public class MyGLView extends GLView {
 * 目前的Filter没有GPUImage里那么多，后续会陆续增加，如果有需要，参照我的代码自己实现即可，难度不高。
 
 ## License
-    Copyright 2012 CyberAgent, Inc.
+    Copyright 2016 ChillingVan.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
