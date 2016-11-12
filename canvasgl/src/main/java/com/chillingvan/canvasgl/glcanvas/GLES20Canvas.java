@@ -28,6 +28,8 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import com.chillingvan.canvasgl.Loggers;
+import com.chillingvan.canvasgl.shapeFilter.BasicDrawShapeFilter;
+import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 
@@ -70,8 +72,8 @@ public class GLES20Canvas implements GLCanvas {
     };
 
     private static final float[] BOUNDS_COORDINATES = {
-        0, 0, 0, 1,
-        1, 1, 0, 1,
+            0, 0, 0, 1,
+            1, 1, 0, 1,
     };
 
     public static final String POSITION_ATTRIBUTE = "aPosition";
@@ -81,21 +83,6 @@ public class GLES20Canvas implements GLCanvas {
     public static final String TEXTURE_SAMPLER_UNIFORM = "uTextureSampler";
     public static final String ALPHA_UNIFORM = "uAlpha";
     public static final String TEXTURE_COORD_ATTRIBUTE = "aTextureCoordinate";
-
-    public static final String DRAW_VERTEX_SHADER = ""
-            + "uniform mat4 " + MATRIX_UNIFORM + ";\n"
-            + "attribute vec2 " + POSITION_ATTRIBUTE + ";\n"
-            + "void main() {\n"
-            + "  vec4 pos = vec4(" + POSITION_ATTRIBUTE + ", 0.0, 1.0);\n"
-            + "  gl_Position = " + MATRIX_UNIFORM + " * pos;\n"
-            + "}\n";
-
-    public static final String DRAW_FRAGMENT_SHADER = ""
-            + "precision mediump float;\n"
-            + "uniform vec4 " + COLOR_UNIFORM + ";\n"
-            + "void main() {\n"
-            + "  gl_FragColor = " + COLOR_UNIFORM + ";\n"
-            + "}\n";
 
     public static final String MESH_VERTEX_SHADER = ""
             + "uniform mat4 " + MATRIX_UNIFORM + ";\n"
@@ -111,6 +98,7 @@ public class GLES20Canvas implements GLCanvas {
     private static final int INITIAL_RESTORE_STATE_SIZE = 8;
     private static final int MATRIX_SIZE = 16;
 
+    private Map<DrawShapeFilter, Integer> mDrawShapeFilterMapProgramId = new HashMap<>();
     private Map<TextureFilter, Integer> mTextureFilterMapProgramId = new HashMap<>();
     private Map<TextureFilter, Integer> mOESTextureFilterMapProgramId = new HashMap<>();
 
@@ -156,7 +144,13 @@ public class GLES20Canvas implements GLCanvas {
 
     // Handle indices -- mesh
     private static final int INDEX_TEXTURE_COORD = 2;
+
+
     private TextureFilter mTextureFilter;
+    private DrawShapeFilter mDrawShapeFilter;
+
+    private OnPreDrawTextureListener onPreDrawTextureListener;
+    private OnPreDrawShapeListener onPreDrawShapeListener;
 
     private abstract static class ShaderParameter {
         public int handle;
@@ -256,10 +250,9 @@ public class GLES20Canvas implements GLCanvas {
         mBoxCoordinates = uploadBuffer(boxBuffer);
 
 
-        setupDrawProgram(loadShader(GLES20.GL_VERTEX_SHADER, DRAW_VERTEX_SHADER), loadShader(GLES20.GL_FRAGMENT_SHADER, DRAW_FRAGMENT_SHADER));
+        mDrawProgram = assembleProgram(loadShader(GLES20.GL_VERTEX_SHADER, BasicDrawShapeFilter.DRAW_VERTEX_SHADER), loadShader(GLES20.GL_FRAGMENT_SHADER, BasicDrawShapeFilter.DRAW_FRAGMENT_SHADER), mDrawParameters, mTempIntArray);
 
         int textureFragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, BasicTextureFilter.TEXTURE_FRAGMENT_SHADER);
-
         int meshVertexShader = loadShader(GLES20.GL_VERTEX_SHADER, MESH_VERTEX_SHADER);
         setupMeshProgram(meshVertexShader, textureFragmentShader);
 
@@ -267,12 +260,8 @@ public class GLES20Canvas implements GLCanvas {
         checkError();
     }
 
-    private void setupDrawProgram(int drawVertexShader, int drawFragmentShader) {
-        mDrawProgram = assembleProgram(drawVertexShader, drawFragmentShader, mDrawParameters);
-    }
-
     private void setupMeshProgram(int meshVertexShader, int textureFragmentShader) {
-        mMeshProgram = assembleProgram(meshVertexShader, textureFragmentShader, mMeshParameters);
+        mMeshProgram = assembleProgram(meshVertexShader, textureFragmentShader, mMeshParameters, mTempIntArray);
     }
 
     private static FloatBuffer createBuffer(float[] values) {
@@ -285,7 +274,7 @@ public class GLES20Canvas implements GLCanvas {
     }
 
 
-    private int assembleProgram(int vertexShader, int fragmentShader, ShaderParameter[] params) {
+    private static int assembleProgram(int vertexShader, int fragmentShader, ShaderParameter[] params, int[] linkStatus) {
         int program = GLES20.glCreateProgram();
         checkError();
         if (program == 0) {
@@ -297,9 +286,8 @@ public class GLES20Canvas implements GLCanvas {
         checkError();
         GLES20.glLinkProgram(program);
         checkError();
-        int[] mLinkStatus = mTempIntArray;
-        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, mLinkStatus, 0);
-        if (mLinkStatus[0] != GLES20.GL_TRUE) {
+        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linkStatus, 0);
+        if (linkStatus[0] != GLES20.GL_TRUE) {
             Log.e(TAG, "Could not link program: ");
             Log.e(TAG, GLES20.glGetProgramInfoLog(program));
             GLES20.glDeleteProgram(program);
@@ -385,7 +373,7 @@ public class GLES20Canvas implements GLCanvas {
     @Override
     public void setMatrix(float[] mt) {
         int index = mCurrentMatrixIndex;
-        for (int i = 0; i < mt.length-4; i++) {
+        for (int i = 0; i < mt.length - 4; i++) {
             mMatrices[index + i] = mt[i];
         }
         mMatrices[index + 12] += mt[12];
@@ -477,26 +465,37 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     @Override
-    public void drawLine(float x1, float y1, float x2, float y2, GLPaint paint) {
+    public void drawCircle(float x, float y, float radius, GLPaint paint, DrawShapeFilter drawShapeFilter) {
+        setupDrawShapeFilter(drawShapeFilter);
+        draw(GLES20.GL_TRIANGLE_STRIP, OFFSET_FILL_RECT, COUNT_FILL_VERTEX, x, y, 2*radius, 2*radius, paint.getColor(), 0f);
+    }
+
+    @Override
+    public void drawLine(float x1, float y1, float x2, float y2, GLPaint paint, DrawShapeFilter drawShapeFilter) {
+        setupDrawShapeFilter(drawShapeFilter);
         draw(GLES20.GL_LINE_STRIP, OFFSET_DRAW_LINE, COUNT_LINE_VERTEX, x1, y1, x2 - x1, y2 - y1,
                 paint);
         mCountDrawLine++;
     }
 
     @Override
-    public void drawRect(float x, float y, float width, float height, GLPaint paint) {
+    public void drawRect(float x, float y, float width, float height, GLPaint paint, DrawShapeFilter drawShapeFilter) {
+        setupDrawShapeFilter(drawShapeFilter);
         draw(GLES20.GL_LINE_LOOP, OFFSET_DRAW_RECT, COUNT_RECT_VERTEX, x, y, width, height, paint);
         mCountDrawLine++;
     }
 
     private void draw(int type, int offset, int count, float x, float y, float width, float height,
-            GLPaint paint) {
+                      GLPaint paint) {
         draw(type, offset, count, x, y, width, height, paint.getColor(), paint.getLineWidth());
     }
 
     private void draw(int type, int offset, int count, float x, float y, float width, float height,
-            int color, float lineWidth) {
+                      int color, float lineWidth) {
         prepareDraw(offset, color, lineWidth);
+        if (onPreDrawShapeListener != null) {
+            onPreDrawShapeListener.onPreDraw(mDrawProgram, mDrawShapeFilter);
+        }
         draw(mDrawParameters, type, count, x, y, width, height);
     }
 
@@ -553,7 +552,7 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     private void draw(ShaderParameter[] params, int type, int count, float x, float y, float width,
-            float height) {
+                      float height) {
         setMatrix(params, x, y, width, height);
         int positionHandle = params[INDEX_POSITION].handle;
         GLES20.glEnableVertexAttribArray(positionHandle);
@@ -574,7 +573,8 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     @Override
-    public void fillRect(float x, float y, float width, float height, int color) {
+    public void fillRect(float x, float y, float width, float height, int color, DrawShapeFilter drawShapeFilter) {
+        setupDrawShapeFilter(drawShapeFilter);
         draw(GLES20.GL_TRIANGLE_STRIP, OFFSET_FILL_RECT, COUNT_FILL_VERTEX, x, y, width, height,
                 color, 0f);
         mCountFillRect++;
@@ -585,7 +585,7 @@ public class GLES20Canvas implements GLCanvas {
         if (width <= 0 || height <= 0) {
             return;
         }
-        setTextureFilter(texture.getTarget(), textureFilter);
+        setupTextureFilter(texture.getTarget(), textureFilter);
         TextureMatrixTransformer.copyTextureCoordinates(texture, mTempSourceRect);
         mTempTargetRect.set(x, y, x + width, y + height);
         TextureMatrixTransformer.convertCoordinate(mTempSourceRect, texture);
@@ -598,7 +598,7 @@ public class GLES20Canvas implements GLCanvas {
         if (target.width() <= 0 || target.height() <= 0) {
             return;
         }
-        setTextureFilter(texture.getTarget(), textureFilter);
+        setupTextureFilter(texture.getTarget(), textureFilter);
         mTempSourceRect.set(source);
         mTempTargetRect.set(target);
 
@@ -613,7 +613,7 @@ public class GLES20Canvas implements GLCanvas {
         if (w <= 0 || h <= 0) {
             return;
         }
-        setTextureFilter(texture.getTarget(), textureFilter);
+        setupTextureFilter(texture.getTarget(), textureFilter);
         mTempTargetRect.set(x, y, x + w, y + h);
         drawTextureRect(texture, textureTransform, mTempTargetRect);
     }
@@ -639,8 +639,8 @@ public class GLES20Canvas implements GLCanvas {
         setPosition(params, OFFSET_FILL_RECT);
         printMatrix("texture matrix", textureMatrix, 0);
         GLES20.glUniformMatrix4fv(params[INDEX_TEXTURE_MATRIX].handle, 1, false, textureMatrix, 0);
-        if (onPreDrawListener != null) {
-            onPreDrawListener.onPreDraw(texture.getTarget() == GLES20.GL_TEXTURE_2D ? mTextureProgram : mOesTextureProgram, texture, mTextureFilter);
+        if (onPreDrawTextureListener != null) {
+            onPreDrawTextureListener.onPreDraw(texture.getTarget() == GLES20.GL_TEXTURE_2D ? mTextureProgram : mOesTextureProgram, texture, mTextureFilter);
         }
         checkError();
         if (texture.isFlippedVertically()) {
@@ -729,14 +729,14 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     @Override
-    public void drawMixed(BasicTexture texture, int toColor, float ratio, int x, int y, int w, int h) {
+    public void drawMixed(BasicTexture texture, int toColor, float ratio, int x, int y, int w, int h, DrawShapeFilter drawShapeFilter) {
         TextureMatrixTransformer.copyTextureCoordinates(texture, mTempSourceRect);
         mTempTargetRect.set(x, y, x + w, y + h);
-        drawMixed(texture, toColor, ratio, mTempSourceRect, mTempTargetRect);
+        drawMixed(texture, toColor, ratio, mTempSourceRect, mTempTargetRect, drawShapeFilter);
     }
 
     @Override
-    public void drawMixed(BasicTexture texture, int toColor, float ratio, RectF source, RectF target) {
+    public void drawMixed(BasicTexture texture, int toColor, float ratio, RectF source, RectF target, DrawShapeFilter drawShapeFilter) {
         if (target.width() <= 0 || target.height() <= 0) {
             return;
         }
@@ -751,7 +751,7 @@ public class GLES20Canvas implements GLCanvas {
 
         float colorAlpha = cappedRatio * currentAlpha;
         setAlpha(colorAlpha);
-        fillRect(target.left, target.top, target.width(), target.height(), toColor);
+        fillRect(target.left, target.top, target.width(), target.height(), toColor, drawShapeFilter);
 
         restore();
     }
@@ -905,7 +905,7 @@ public class GLES20Canvas implements GLCanvas {
 
     @Override
     public void texSubImage2D(BasicTexture texture, int xOffset, int yOffset, Bitmap bitmap,
-            int format, int type) {
+                              int format, int type) {
         int target = texture.getTarget();
         GLES20.glBindTexture(target, texture.getId());
         checkError();
@@ -981,7 +981,21 @@ public class GLES20Canvas implements GLCanvas {
         return mGLId;
     }
 
-    private void setTextureFilter(int target, TextureFilter textureFilter) {
+    private void setupDrawShapeFilter(DrawShapeFilter drawShapeFilter) {
+        if (drawShapeFilter == null) {
+            throw new NullPointerException("draw shape filter is null.");
+        }
+        mDrawShapeFilter = drawShapeFilter;
+        if (mDrawShapeFilterMapProgramId.containsKey(drawShapeFilter)) {
+            mDrawProgram = mDrawShapeFilterMapProgramId.get(drawShapeFilter);
+            loadHandles(mDrawParameters, mDrawProgram);
+            return;
+        }
+        mDrawProgram = loadAndAssemble(mDrawParameters, drawShapeFilter.getVertexShader(), drawShapeFilter.getFragmentShader());
+        mDrawShapeFilterMapProgramId.put(drawShapeFilter, mDrawProgram);
+    }
+
+    private void setupTextureFilter(int target, TextureFilter textureFilter) {
         if (textureFilter == null) {
             throw new NullPointerException("Texture filter is null.");
         }
@@ -1010,18 +1024,19 @@ public class GLES20Canvas implements GLCanvas {
     private int loadAndAssemble(ShaderParameter[] shaderParameters, String vertexProgram, String fragmentProgram) {
         int vertexShaderHandle = loadShader(GLES20.GL_VERTEX_SHADER, vertexProgram);
         int fragmentShaderHandle = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentProgram);
-        return assembleProgram(vertexShaderHandle, fragmentShaderHandle, shaderParameters);
+        return assembleProgram(vertexShaderHandle, fragmentShaderHandle, shaderParameters, mTempIntArray);
     }
 
-    private OnPreDrawListener onPreDrawListener;
 
     @Override
-    public void setOnPreDrawListener(OnPreDrawListener l) {
-        this.onPreDrawListener = l;
+    public void setOnPreDrawTextureListener(OnPreDrawTextureListener l) {
+        this.onPreDrawTextureListener = l;
     }
 
-    public interface OnPreDrawListener {
-        void onPreDraw(int mTextureProgram, BasicTexture texture, TextureFilter textureFilter);
+
+    @Override
+    public void setOnPreDrawShapeListener(OnPreDrawShapeListener l) {
+        this.onPreDrawShapeListener = l;
     }
 
 }

@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 
 //
@@ -86,16 +87,18 @@ public interface GLCanvas {
     // last save call.
     public abstract void restore();
 
+    void drawCircle(float x, float y, float radius, GLPaint paint, DrawShapeFilter drawShapeFilter);
+
     // Draws a line using the specified paint from (x1, y1) to (x2, y2).
     // (Both end points are included).
-    public abstract void drawLine(float x1, float y1, float x2, float y2, GLPaint paint);
+    public abstract void drawLine(float x1, float y1, float x2, float y2, GLPaint paint, DrawShapeFilter drawShapeFilter);
 
     // Draws a rectangle using the specified paint from (x1, y1) to (x2, y2).
     // (Both end points are included).
-    public abstract void drawRect(float x1, float y1, float x2, float y2, GLPaint paint);
+    public abstract void drawRect(float x1, float y1, float x2, float y2, GLPaint paint, DrawShapeFilter drawShapeFilter);
 
     // Fills the specified rectangle with the specified color.
-    public abstract void fillRect(float x, float y, float width, float height, int color);
+    public abstract void fillRect(float x, float y, float width, float height, int color, DrawShapeFilter drawShapeFilter);
 
     // Draws a secondBitmap to the specified rectangle.
     public abstract void drawTexture(
@@ -115,14 +118,14 @@ public interface GLCanvas {
     // from * (1 - ratio) + to * ratio
     // The two textures must have the same size.
     public abstract void drawMixed(BasicTexture from, int toColor,
-                                   float ratio, int x, int y, int w, int h);
+                                   float ratio, int x, int y, int w, int h, DrawShapeFilter drawShapeFilter);
 
     // Draw a region of a secondBitmap and a specified color to the specified
     // rectangle. The actual color used is from * (1 - ratio) + to * ratio.
     // The region of the secondBitmap is defined by parameter "src". The target
     // rectangle is specified by parameter "target".
     public abstract void drawMixed(BasicTexture from, int toColor,
-                                   float ratio, RectF src, RectF target);
+                                   float ratio, RectF src, RectF target, DrawShapeFilter drawShapeFilter);
 
     // Unloads the specified secondBitmap from the canvas. The resource allocated
     // to draw the secondBitmap will be released. The specified secondBitmap will return
@@ -221,5 +224,15 @@ public interface GLCanvas {
      */
     public abstract void getBounds(Rect bounds, int x, int y, int width, int height);
 
-    void setOnPreDrawListener(GLES20Canvas.OnPreDrawListener l);
+    void setOnPreDrawTextureListener(GLES20Canvas.OnPreDrawTextureListener l);
+
+    void setOnPreDrawShapeListener(OnPreDrawShapeListener l);
+
+    public interface OnPreDrawTextureListener {
+        void onPreDraw(int textureProgram, BasicTexture texture, TextureFilter textureFilter);
+    }
+
+    public interface OnPreDrawShapeListener {
+        void onPreDraw(int program, DrawShapeFilter drawShapeFilter);
+    }
 }

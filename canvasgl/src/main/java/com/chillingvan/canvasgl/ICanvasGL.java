@@ -65,6 +65,8 @@ public interface ICanvasGL {
 
     void drawBitmap(Bitmap bitmap, int left, int top, int width, int height, @NonNull TextureFilter textureFilter);
 
+    void drawCircle(float x, float y, float radius, GLPaint paint);
+
     void drawLine(float startX, float startY, float stopX, float stopY, GLPaint paint);
 
 

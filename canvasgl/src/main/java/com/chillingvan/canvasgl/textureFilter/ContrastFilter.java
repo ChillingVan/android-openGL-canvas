@@ -53,7 +53,6 @@ public class ContrastFilter extends BasicTextureFilter implements OneValueFilter
             + "}\n";
 
     private float mContrast;
-    private int mContrastLocation;
 
 
     public ContrastFilter(@FloatRange(from = 0.0, to = 4.0f) float contrast) {
@@ -71,8 +70,8 @@ public class ContrastFilter extends BasicTextureFilter implements OneValueFilter
     @Override
     public void onPreDraw(int program, BasicTexture texture, ICanvasGL canvas) {
         super.onPreDraw(program, texture, canvas);
-        mContrastLocation = GLES20.glGetUniformLocation(program, UNIFORM_CONTRAST);
-        OpenGLUtil.setFloat(mContrastLocation, mContrast);
+        int contrastLocation = GLES20.glGetUniformLocation(program, UNIFORM_CONTRAST);
+        OpenGLUtil.setFloat(contrastLocation, mContrast);
     }
 
     @Override

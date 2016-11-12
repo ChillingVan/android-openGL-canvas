@@ -21,27 +21,19 @@
 package com.chillingvan.canvasgl.glview.texture;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
-import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.TextureView;
 
-import com.chillingvan.canvasgl.CanvasGL;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.Loggers;
-import com.chillingvan.canvasgl.OpenGLUtil;
-import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -50,12 +42,10 @@ import javax.microedition.khronos.opengles.GL10;
  * Can be used in ScrollView or ListView.
  * Can make it not opaque by setOpaque(false).
  */
-abstract class BaseGLTextureView extends TextureView implements GLSurfaceView.Renderer, TextureView.SurfaceTextureListener {
+abstract class BaseGLTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
     protected GLThread mGLThread;
     protected GLThread.Builder glThreadBuilder = new GLThread.Builder();
-    protected ICanvasGL mCanvas;
-    private int backgroundColor = Color.TRANSPARENT;
     private List<Runnable> cacheEvents = new ArrayList<>();
     public GL10 mGL;
     private SurfaceTextureListener surfaceTextureListener;
@@ -63,6 +53,7 @@ abstract class BaseGLTextureView extends TextureView implements GLSurfaceView.Re
 
     private boolean shouldBeCreated = false;
     private boolean surfaceAvailable = false;
+    private GLSurfaceView.Renderer renderer;
 
     public BaseGLTextureView(Context context) {
         super(context);
@@ -185,58 +176,14 @@ abstract class BaseGLTextureView extends TextureView implements GLSurfaceView.Re
         return GLThread.RENDERMODE_WHEN_DIRTY;
     }
 
-    /**
-     * If setOpaque(false) used, this method will not work.
-     */
-    public void setRenderBackgroundColor(@ColorInt int color) {
-        this.backgroundColor = color;
-    }
 
     protected abstract void onGLDraw(ICanvasGL canvas);
 
 
-    public void getDrawingBitmap(final Rect rect, final GLView.GetDrawingCacheCallback getDrawingCacheCallback) {
-
-        queueEvent(new Runnable() {
-            @Override
-            public void run() {
-                if (mGL == null) {
-                    return;
-                }
-                onDrawFrame(mGL);
-                onDrawFrame(mGL);
-                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, mGL, getHeight());
-
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        getDrawingCacheCallback.onFetch(bitmapFromGLSurface);
-                    }
-                });
-            }
-        });
-        requestRender();
+    public void setRenderer(GLSurfaceView.Renderer renderer) {
+        this.renderer = renderer;
     }
 
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        Loggers.d("BaseGLTextureView", "onSurfaceCreated: ");
-        mCanvas = new CanvasGL();
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        Loggers.d("BaseGLTextureView", "onSurfaceChanged: ");
-        mCanvas.setSize(width, height);
-
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl) {
-        mGL = gl;
-        mCanvas.clearBuffer(backgroundColor);
-        onGLDraw(mCanvas);
-    }
 
 
     @Override
@@ -246,7 +193,7 @@ abstract class BaseGLTextureView extends TextureView implements GLSurfaceView.Re
         if (mGLThread == null) {
             glThreadBuilder.setRenderMode(getRenderMode())
                     .setSurface(surface)
-                    .setRenderer(BaseGLTextureView.this);
+                    .setRenderer(renderer);
             if (shouldBeCreated) {
                 createGLThread();
             }

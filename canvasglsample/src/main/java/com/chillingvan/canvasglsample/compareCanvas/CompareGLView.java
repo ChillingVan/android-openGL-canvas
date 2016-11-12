@@ -75,16 +75,17 @@ public class CompareGLView extends GLView {
         paint.setColor(Color.parseColor("#88FF0000"));
         paint.setLineWidth(4);
         paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(360, 0, 380, 40, paint);
 
-        canvas.drawRect(360, 0, 380, 20, paint);
         GLPaint paint2 = new GLPaint();
         paint2.setColor(Color.parseColor("#8800FF00"));
         paint2.setLineWidth(4);
         paint2.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(360, 20, 380, 40, paint2);
+        canvas.drawRect(360, 40, 380, 80, paint2);
 
-        canvas.drawLine(360, 40, 360, 60, paint);
+        canvas.drawLine(360, 80, 360, 120, paint);
 
+        // text
         Bitmap textBitmap = Bitmap.createBitmap(180, 100, Bitmap.Config.ARGB_8888);
         Canvas normalCanvas = new Canvas(textBitmap);
         String text = "text";
@@ -94,7 +95,19 @@ public class CompareGLView extends GLView {
         textPaint.setTextSize(40);
         normalCanvas.drawColor(Color.WHITE);
         normalCanvas.drawText(text, 20, 30, textPaint);
+        canvas.drawBitmap(textBitmap, 500, 80);
 
-        canvas.drawBitmap(textBitmap, 400, 80);
+
+        //circle
+        GLPaint circlePaint = new GLPaint();
+        circlePaint.setColor(Color.parseColor("#88FF0000"));
+        circlePaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(430, 30, 30, circlePaint);
+
+        GLPaint strokeCirclePaint = new GLPaint();
+        strokeCirclePaint.setColor(Color.parseColor("#88FF0000"));
+        strokeCirclePaint.setLineWidth(4);
+        strokeCirclePaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(490, 30, 30, strokeCirclePaint);
     }
 }

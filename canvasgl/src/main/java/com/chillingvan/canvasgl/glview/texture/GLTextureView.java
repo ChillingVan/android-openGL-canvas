@@ -28,7 +28,7 @@ import android.util.AttributeSet;
  * Created by Chilling on 2016/11/5.
  */
 
-public abstract class GLTextureView extends BaseGLTextureView {
+public abstract class GLTextureView extends BaseGLCanvasTextureView {
     public GLTextureView(Context context) {
         super(context);
     }

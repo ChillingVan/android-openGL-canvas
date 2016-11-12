@@ -1,20 +1,26 @@
 # OpenGL canvas
 
-此项目灵感来源: 
-* Android package com.android.gallery3d.glrenderer 下的源代码
+
+Idea from: 
+* Codes of Android source code under package com.android.gallery3d.glrenderer
 * [GPUImage](https://github.com/CyberAgent/android-gpuimage)
 * [grafika](https://github.com/google/grafika)
 
-## 功能
-* 提供一个类似Android Canvas类的使用OpenGL来实现绘制的canvasGL。可以像传统自定义View那样直接继承 GLViews, 再使用这个canvas绘制需要的东西。
-* 提供类似 GPUImage 里的Filter的API，可以在使用canvasGL画东西时实现图像处理。
-* 提供的View是继承 GLSurfaceView 或 TextureView 的，可以使用这两种View的特性，特别是TextureView的特性。
-* 另外,因为使用OpenGL在另一线程渲染，所以里面的 GLContinuousView 还提供能够实现高性能的动画的方法。
+## Features
+* The canvasGL provides similar API as android canvas. And there are GLViews that can be extended to custom your own view to draw things with OpenGL.
+* Similar to the filters of GPUImage, you can apply the filter to the bitmap draw into the GLViews. 
+* Provides GLViews that using GLSurfaceView and TextureView. 
+* The GLContinuousView can provide high performance continuous rendering animation because it uses openGL to draw in its own thread.
 
-## 使用要求
-* Android API14 以上(OpenGL ES 2.0 以上)
+Compare to GPUImage:
+* Provide the continuous rendering Thread in GLContinuousView and GLContinuousTextureView.
+* Using TextureView has this benefit:
+    TextureView does not create a separate window but behaves as a regular View. This key difference allows a TextureView to be moved, transformed, animated, etc. For instance, you can make a TextureView semi-translucent by calling myView.setAlpha(0.5f)
 
-## 用法
+## Requirements
+* Android API14 or higher (OpenGL ES 2.0)
+
+## Usage
 
 ### Gradle dependency
 
@@ -29,9 +35,9 @@ dependencies {
 }
 ```
 
-### 样例代码 
+### Sample Code
 
-* 自定义一个View.
+* Custom your view.
 ```java
 public class MyGLView extends GLView {
 
@@ -54,10 +60,10 @@ public class MyGLView extends GLView {
 
 ![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example.png)
 
-* 其中, GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView 用法相似.
+* The Usage of GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView is similar.
 
 
-* 使用CanvasGL实现绘制
+* Using canvas to draw
 ```java
         canvas.drawBitmap(textBitmap, left, top);
         
@@ -80,17 +86,19 @@ public class MyGLView extends GLView {
 ![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example.png)
 
 
-* 可以与Camera结合，注意运行样例代码的时候尽量使用真机而不是模拟器。
+* And can be used with camera, just run the camera sample code on a real device(not in emulator) to see what will happen.
+
 ![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example.jpg)
 
-* 如果不想使用View，可以使用 OffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
 
+* If you do not want to use GLView, you can use OffScreenCanvas to draw things and fetch it by getDrawingBitmap.
 
-[更多用例请查看wiki](https://github.com/ChillingVan/android-openGL-canvas/wiki)
+See the wiki page for more use case.[here](https://github.com/ChillingVan/android-openGL-canvas/wiki)
 
-## 注意事项
-* 每一个View的onGLDraw都运行在自己的线程而非主线程。
-* 目前的Filter没有GPUImage里那么多，后续会陆续增加，如果有需要，参照我的代码自己实现即可，难度不高。
+## Notice
+* The onGLDraw method in GLView runs in its own thread but not the main thread. 
+* I haven't implemented all the filters in GPUImage. I will add more later. If you need, you can take my code as example to implement your filter. It is simple.
+* Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
 
 ## License
     Copyright 2016 ChillingVan.

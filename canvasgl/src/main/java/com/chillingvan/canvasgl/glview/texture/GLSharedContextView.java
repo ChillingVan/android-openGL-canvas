@@ -33,7 +33,7 @@ import javax.microedition.khronos.egl.EGLContext;
  * Created by Chilling on 2016/11/5.
  */
 
-public abstract class GLSharedContextView extends BaseGLTextureView {
+public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
 
 
     private BasicTexture sharedTexture;

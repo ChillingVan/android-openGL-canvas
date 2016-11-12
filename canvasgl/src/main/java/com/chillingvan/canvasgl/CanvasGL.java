@@ -38,6 +38,9 @@ import com.chillingvan.canvasgl.glcanvas.BitmapTexture;
 import com.chillingvan.canvasgl.glcanvas.GLCanvas;
 import com.chillingvan.canvasgl.glcanvas.GLES20Canvas;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
+import com.chillingvan.canvasgl.shapeFilter.BasicDrawShapeFilter;
+import com.chillingvan.canvasgl.shapeFilter.DrawCircleFilter;
+import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasgl.textureFilter.FilterGroup;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
@@ -58,6 +61,8 @@ public class CanvasGL implements ICanvasGL {
     private float[] surfaceTextureMatrix = new float[16];
     private int width;
     private int height;
+    private BasicDrawShapeFilter basicDrawShapeFilter;
+    private DrawCircleFilter drawCircleFilter = new DrawCircleFilter();
 
     public CanvasGL() {
         this(new GLES20Canvas());
@@ -65,13 +70,20 @@ public class CanvasGL implements ICanvasGL {
 
     public CanvasGL(GLCanvas glCanvas) {
         this.glCanvas = glCanvas;
-        glCanvas.setOnPreDrawListener(new GLES20Canvas.OnPreDrawListener() {
+        glCanvas.setOnPreDrawShapeListener(new GLCanvas.OnPreDrawShapeListener() {
+            @Override
+            public void onPreDraw(int program, DrawShapeFilter drawShapeFilter) {
+                drawShapeFilter.onPreDraw(program, CanvasGL.this);
+            }
+        });
+        glCanvas.setOnPreDrawTextureListener(new GLES20Canvas.OnPreDrawTextureListener() {
             @Override
             public void onPreDraw(int textureProgram, BasicTexture texture, TextureFilter textureFilter) {
                 textureFilter.onPreDraw(textureProgram, texture, CanvasGL.this);
             }
         });
         basicTextureFilter = new BasicTextureFilter();
+        basicDrawShapeFilter = new BasicDrawShapeFilter();
         canvasBackgroundColor = new float[4];
     }
 
@@ -178,8 +190,18 @@ public class CanvasGL implements ICanvasGL {
     }
 
     @Override
+    public void drawCircle(float x, float y, float radius, GLPaint paint) {
+        if (paint.getStyle() == Paint.Style.FILL) {
+            drawCircleFilter.setLineWidth(0.5f);
+        } else {
+            drawCircleFilter.setLineWidth(paint.getLineWidth() / (2*radius));
+        }
+        glCanvas.drawCircle(x - radius, y - radius, radius, paint, drawCircleFilter);
+    }
+
+    @Override
     public void drawLine(float startX, float startY, float stopX, float stopY, GLPaint paint) {
-        glCanvas.drawLine(startX, startY, stopX, stopY, paint);
+        glCanvas.drawLine(startX, startY, stopX, stopY, paint, basicDrawShapeFilter);
     }
 
 
@@ -196,9 +218,9 @@ public class CanvasGL implements ICanvasGL {
     @Override
     public void drawRect(float left, float top, float right, float bottom, GLPaint paint) {
         if (paint.getStyle() == Paint.Style.STROKE) {
-            glCanvas.drawRect(left, top, right - left, bottom - top, paint);
+            glCanvas.drawRect(left, top, right - left, bottom - top, paint, basicDrawShapeFilter);
         } else {
-            glCanvas.fillRect(left, top, right - left, bottom - top, paint.getColor());
+            glCanvas.fillRect(left, top, right - left, bottom - top, paint.getColor(), basicDrawShapeFilter);
         }
     }
 

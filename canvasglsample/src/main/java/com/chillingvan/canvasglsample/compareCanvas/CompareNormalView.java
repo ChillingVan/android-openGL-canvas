@@ -81,22 +81,35 @@ public class CompareNormalView extends View {
         paint.setColor(Color.parseColor("#88FF0000"));
         paint.setStrokeWidth(4);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(360, 0, 380, 20, paint);
+        canvas.drawRect(360, 0, 380, 40, paint);
 
         Paint paint2 = new Paint();
         paint2.setColor(Color.parseColor("#8800FF00"));
         paint2.setStrokeWidth(4);
         paint2.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(360, 20, 380, 40, paint2);
+        canvas.drawRect(360, 40, 380, 80, paint2);
 
-        canvas.drawLine(360, 40, 360, 60, paint);
+        canvas.drawLine(360, 80, 360, 120, paint);
 
 
         String text = "text";
         Paint textPaint = new Paint();
         textPaint.setColor(Color.BLUE);
         textPaint.setTextSize(30);
-        canvas.drawText(text,0, text.length(), 400, 80, textPaint);
+        canvas.drawText(text,0, text.length(), 500, 80, textPaint);
+
+
+        //circle
+        Paint circlePaint = new Paint();
+        circlePaint.setColor(Color.parseColor("#88FF0000"));
+        circlePaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(430, 30, 30, circlePaint);
+
+        Paint strokeCirclePaint = new Paint();
+        strokeCirclePaint.setColor(Color.parseColor("#88FF0000"));
+        strokeCirclePaint.setStrokeWidth(4);
+        strokeCirclePaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(490, 30, 30, strokeCirclePaint);
     }
 
 
