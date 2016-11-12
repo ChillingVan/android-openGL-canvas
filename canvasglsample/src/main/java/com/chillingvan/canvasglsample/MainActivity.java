@@ -54,6 +54,7 @@ public class MainActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CrashHandler.init(getApplicationContext());
         Loggers.DEBUG = true;
         getPermission();
 

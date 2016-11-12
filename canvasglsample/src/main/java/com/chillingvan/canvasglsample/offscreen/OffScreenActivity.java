@@ -48,19 +48,15 @@ public class OffScreenActivity extends Activity {
             protected void onGLDraw(ICanvasGL canvas) {
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lenna);
                 canvas.drawBitmap(bitmap, 0, 0);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
-                            @Override
-                            public void onFetch(final Bitmap bitmap) {
-                                imageView.setImageBitmap(bitmap);
-                            }
-                        });
-                    }
-                });
             }
         };
         offScreenCanvas.start();
+
+        offScreenCanvas.getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
+            @Override
+            public void onFetch(final Bitmap bitmap) {
+                imageView.setImageBitmap(bitmap);
+            }
+        });
     }
 }

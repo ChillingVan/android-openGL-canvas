@@ -206,7 +206,7 @@ public class GLThread extends Thread {
                             return;
                         }
 
-                        if (!mEventQueue.isEmpty()) {
+                        if (!mEventQueue.isEmpty() && mEglContext != EGL10.EGL_NO_CONTEXT) {
                             event = mEventQueue.remove(0);
                             break;
                         }

@@ -67,7 +67,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
         mGLThread.start();
         mGLThread.surfaceCreated();
         mGLThread.onWindowResize(width, height);
-        mGLThread.requestRender();
+        mGLThread.requestRenderAndWait();
 
     }
 
@@ -110,6 +110,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        mGL = gl;
         Loggers.d("BaseGLTextureView", "onSurfaceCreated: ");
         mCanvas = new CanvasGL();
     }
@@ -123,7 +124,6 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        mGL = gl;
         onGLDraw(mCanvas);
     }
 
@@ -150,7 +150,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
     public void getDrawingBitmap(final Rect rect, final GLView.GetDrawingCacheCallback getDrawingCacheCallback) {
         final Handler handler = new Handler();
 
-        mGLThread.queueEvent(new Runnable() {
+        queueEvent(new Runnable() {
             @Override
             public void run() {
                 if (mGL == null) {
@@ -167,6 +167,6 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
                 });
             }
         });
-        mGLThread.requestRender();
+        requestRender();
     }
 }
