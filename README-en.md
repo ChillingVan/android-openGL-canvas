@@ -18,20 +18,25 @@ Compare to GPUImage:
     TextureView does not create a separate window but behaves as a regular View. This key difference allows a TextureView to be moved, transformed, animated, etc. For instance, you can make a TextureView semi-translucent by calling myView.setAlpha(0.5f)
 
 ## Requirements
-* Android API14 or higher (OpenGL ES 2.0)
+* Android API 14 or higher (OpenGL ES 2.0)
 
 ## Usage
 
 ### Gradle dependency
 
+sample:
 ```groovy
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
+// in root build.gradle
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
 }
 
+// module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.0'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.1'
 }
 ```
 

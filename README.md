@@ -20,20 +20,25 @@
 
 
 ## 使用要求
-* Android API14 以上(OpenGL ES 2.0 以上)
+* Android API 14 以上(OpenGL ES 2.0 以上)
 
 ## 用法
 
 ### Gradle dependency
 
+sample:
 ```groovy
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
+// in root build.gradle
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
 }
 
+// module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.0'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.1'
 }
 ```
 
