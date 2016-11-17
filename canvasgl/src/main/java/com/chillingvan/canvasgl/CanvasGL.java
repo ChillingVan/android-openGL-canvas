@@ -38,6 +38,7 @@ import com.chillingvan.canvasgl.glcanvas.BitmapTexture;
 import com.chillingvan.canvasgl.glcanvas.GLCanvas;
 import com.chillingvan.canvasgl.glcanvas.GLES20Canvas;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
+import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.shapeFilter.BasicDrawShapeFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawCircleFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
@@ -99,6 +100,16 @@ public class CanvasGL implements ICanvasGL {
     }
 
     @Override
+    public void beginRenderTarget(RawTexture texture) {
+        glCanvas.beginRenderTarget(texture);
+    }
+
+    @Override
+    public void endRenderTarget() {
+        glCanvas.endRenderTarget();
+    }
+
+    @Override
     public GLCanvas getGlCanvas() {
         return glCanvas;
     }
@@ -110,8 +121,12 @@ public class CanvasGL implements ICanvasGL {
 
     @Override
     public void drawSurfaceTexture(BasicTexture texture, SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
-        surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
-        glCanvas.drawTexture(texture, surfaceTextureMatrix, left, top, right - left, bottom - top, basicTextureFilter);
+        if (surfaceTexture == null) {
+            glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter);
+        } else {
+            surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
+            glCanvas.drawTexture(texture, surfaceTextureMatrix, left, top, right - left, bottom - top, basicTextureFilter);
+        }
     }
 
 

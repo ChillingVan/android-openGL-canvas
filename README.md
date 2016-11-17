@@ -11,7 +11,10 @@
 * 提供一个类似Android Canvas类的使用OpenGL来实现绘制的canvasGL。可以像传统自定义View那样直接继承 GLViews, 再使用这个canvas绘制需要的东西。
 * 提供类似 GPUImage 里的Filter的API，可以在使用canvasGL画东西时实现图像处理。
 * 提供的View是继承 GLSurfaceView 或 TextureView 的，可以使用这两种View的特性，特别是TextureView的特性。
+
 * 另外,因为使用OpenGL在另一线程渲染，所以里面的 GLContinuousView 还提供能够实现高性能的动画的方法。
+![anim](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/anim-activity-example.png)
+
 
 与GPUImage对比：
 * 提供无限循环渲染线程的 GLContinuousView 和 GLContinuousTextureView。
@@ -38,7 +41,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.2'
 }
 ```
 
@@ -104,6 +107,11 @@ public class MyGLView extends GLView {
 ## 注意事项
 * 每一个View的onGLDraw都运行在自己的线程而非主线程。
 * 目前的Filter没有GPUImage里那么多，后续会陆续增加，如果有需要，参照我的代码自己实现即可，难度不高。
+
+## 相关博客文章
+[OpenGL绘制一张图片的流程](http://www.jianshu.com/p/40521c92ef85)
+[如何封装 opengl 流程](http://www.jianshu.com/p/c45d11627c70)
+[代替GLSurfaceView的GLTextureView](http://www.jianshu.com/p/5a127d43b39a)
 
 ## License
     Copyright 2016 ChillingVan.

@@ -20,14 +20,15 @@
 
 package com.chillingvan.canvasgl.glcanvas;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import junit.framework.Assert;
 
 public class GLPaint {
     private float mLineWidth = 1f;
-    private int mColor = 0;
-    private Paint.Style style;
+    private int mColor = Color.WHITE;
+    private Paint.Style style = Paint.Style.FILL;
 
     public void setColor(int color) {
         mColor = color;

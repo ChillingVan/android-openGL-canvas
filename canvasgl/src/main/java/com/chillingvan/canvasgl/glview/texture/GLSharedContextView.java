@@ -22,6 +22,7 @@ package com.chillingvan.canvasgl.glview.texture;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
@@ -36,8 +37,8 @@ import javax.microedition.khronos.egl.EGLContext;
 public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
 
 
-    private BasicTexture sharedTexture;
-    private SurfaceTexture sharedSurfaceTexture;
+    protected BasicTexture outsideSharedTexture;
+    protected SurfaceTexture outsideSharedSurfaceTexture;
 
     public GLSharedContextView(Context context) {
         super(context);
@@ -57,20 +58,18 @@ public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
     }
 
     public void setSharedTexture(BasicTexture outsideTexture, SurfaceTexture outsideSurfaceTexture) {
-        this.sharedTexture = outsideTexture;
-        this.sharedSurfaceTexture = outsideSurfaceTexture;
+        this.outsideSharedTexture = outsideTexture;
+        this.outsideSharedSurfaceTexture = outsideSurfaceTexture;
     }
 
     /**
      *
      * Will not call until @param surfaceTexture not null
      */
-    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture);
+    protected abstract void onGLDraw(ICanvasGL canvas, @Nullable SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture);
 
     @Override
-    protected void onGLDraw(ICanvasGL canvas) {
-        if (sharedSurfaceTexture != null) {
-            onGLDraw(canvas, sharedSurfaceTexture, sharedTexture);
-        }
+    protected final void onGLDraw(ICanvasGL canvas) {
+        onGLDraw(canvas, outsideSharedSurfaceTexture, outsideSharedTexture);
     }
 }

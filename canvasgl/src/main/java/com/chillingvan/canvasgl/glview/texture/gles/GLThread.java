@@ -206,7 +206,7 @@ public class GLThread extends Thread {
                             return;
                         }
 
-                        if (!mEventQueue.isEmpty() && mEglContext != EGL10.EGL_NO_CONTEXT) {
+                        if (!mEventQueue.isEmpty() && mHaveEglContext) {
                             event = mEventQueue.remove(0);
                             break;
                         }
@@ -1043,8 +1043,9 @@ public class GLThread extends Thread {
             return this;
         }
 
-        public void setSharedEglContext(@NonNull EGLContext sharedEglContext) {
+        public Builder setSharedEglContext(@NonNull EGLContext sharedEglContext) {
             this.eglContext = sharedEglContext;
+            return this;
         }
 
         public GLThread createGLThread() {

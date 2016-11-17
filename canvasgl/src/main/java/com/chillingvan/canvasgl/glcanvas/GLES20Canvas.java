@@ -22,6 +22,7 @@ package com.chillingvan.canvasgl.glcanvas;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
@@ -507,12 +508,9 @@ public class GLES20Canvas implements GLCanvas {
             checkError();
         }
         float[] colorArray = getColor(color);
-        boolean blendingEnabled = (colorArray[3] < 1f);
-        enableBlending(blendingEnabled);
-        if (blendingEnabled) {
-            GLES20.glBlendColor(colorArray[0], colorArray[1], colorArray[2], colorArray[3]);
-            checkError();
-        }
+        enableBlending(true);
+        GLES20.glBlendColor(colorArray[0], colorArray[1], colorArray[2], colorArray[3]);
+        checkError();
 
         GLES20.glUniform4fv(mDrawParameters[INDEX_COLOR].handle, 1, colorArray, 0);
         setPosition(mDrawParameters, offset);
@@ -531,7 +529,7 @@ public class GLES20Canvas implements GLCanvas {
         return mTempColor;
     }
 
-    private void enableBlending(boolean enableBlending) {
+    private static void enableBlending(boolean enableBlending) {
         if (enableBlending) {
             GLES20.glEnable(GLES20.GL_BLEND);
             checkError();
@@ -824,15 +822,29 @@ public class GLES20Canvas implements GLCanvas {
 
     private void setRenderTarget(BasicTexture oldTexture, RawTexture texture) {
         if (oldTexture == null && texture != null) {
-            GLES20.glGenFramebuffers(1, mFrameBuffer, 0);
-            checkError();
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffer[0]);
-            checkError();
+            if (texture.getTarget() == GLES20.GL_TEXTURE_2D) {
+                GLES20.glGenFramebuffers(1, mFrameBuffer, 0);
+                checkError();
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffer[0]);
+                checkError();
+            } else {
+                GLES11Ext.glGenFramebuffersOES(1, mFrameBuffer, 0);
+                checkError();
+                GLES11Ext.glBindFramebufferOES(GLES11Ext.GL_FRAMEBUFFER_OES, mFrameBuffer[0]);
+                checkError();
+            }
         } else if (oldTexture != null && texture == null) {
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-            checkError();
-            GLES20.glDeleteFramebuffers(1, mFrameBuffer, 0);
-            checkError();
+            if (oldTexture.getTarget() == GLES20.GL_TEXTURE_2D) {
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                checkError();
+                GLES20.glDeleteFramebuffers(1, mFrameBuffer, 0);
+                checkError();
+            } else {
+                GLES11Ext.glBindFramebufferOES(GLES11Ext.GL_FRAMEBUFFER_OES, 0);
+                checkError();
+                GLES11Ext.glDeleteFramebuffersOES(1, mFrameBuffer, 0);
+                checkError();
+            }
         }
 
         if (texture == null) {
@@ -844,11 +856,18 @@ public class GLES20Canvas implements GLCanvas {
                 texture.prepare(this);
             }
 
-            GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                    texture.getTarget(), texture.getId(), 0);
-            checkError();
+            if (texture.getTarget() == GLES20.GL_TEXTURE_2D) {
+                GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                        texture.getTarget(), texture.getId(), 0);
+                checkError();
+                checkFramebufferStatus();
+            } else {
+                GLES11Ext.glFramebufferTexture2DOES(GLES11Ext.GL_FRAMEBUFFER_OES, GLES11Ext.GL_COLOR_ATTACHMENT0_OES,
+                        texture.getTarget(), texture.getId(), 0);
+                checkError();
+                checkFramebufferStatusOes();
+            }
 
-            checkFramebufferStatus();
         }
     }
 
@@ -867,6 +886,29 @@ public class GLES20Canvas implements GLCanvas {
                     msg = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
                     break;
                 case GLES20.GL_FRAMEBUFFER_UNSUPPORTED:
+                    msg = "GL_FRAMEBUFFER_UNSUPPORTED";
+                    break;
+            }
+            throw new RuntimeException(msg + ":" + Integer.toHexString(status));
+        }
+    }
+
+
+    private static void checkFramebufferStatusOes() {
+        int status = GLES11Ext.glCheckFramebufferStatusOES(GLES11Ext.GL_FRAMEBUFFER_OES);
+        if (status != GLES11Ext.GL_FRAMEBUFFER_COMPLETE_OES) {
+            String msg = "";
+            switch (status) {
+                case GLES11Ext.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES:
+                    msg = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+                    break;
+                case GLES11Ext.GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_OES:
+                    msg = "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
+                    break;
+                case GLES11Ext.GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_OES:
+                    msg = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+                    break;
+                case GLES11Ext.GL_FRAMEBUFFER_UNSUPPORTED_OES:
                     msg = "GL_FRAMEBUFFER_UNSUPPORTED";
                     break;
             }

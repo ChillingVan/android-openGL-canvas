@@ -22,14 +22,21 @@ package com.chillingvan.canvasgl;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.SurfaceTexture;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 
+import com.chillingvan.canvasgl.glcanvas.BasicTexture;
+import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
+import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
@@ -38,7 +45,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Chilling on 2016/11/7.
  */
 
-public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
+public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
 
     protected final GLThread mGLThread;
     private int width;
@@ -46,21 +53,69 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
     protected ICanvasGL mCanvas;
     public GL10 mGL;
 
+    private BasicTexture outsideSharedTexture;
+    private SurfaceTexture outsideSharedSurfaceTexture;
+
+
+    private GLSurfaceTextureProducerView.OnSurfaceTextureSet onSurfaceTextureSet;
+    private SurfaceTexture producedSurfaceTexture;
+    private RawTexture producedRawTexture;
+    private Handler handler;
+    private boolean isStart;
+    private int producedTextureTarget = GLES20.GL_TEXTURE_2D;
+
     public OffScreenCanvas() {
-        this(0, 0);
+        this(0, 0, EGL10.EGL_NO_CONTEXT);
     }
 
     public OffScreenCanvas(int width, int height) {
+        this(width, height, EGL10.EGL_NO_CONTEXT);
+    }
+
+    public OffScreenCanvas(int width, int height, EGLContext sharedEglContext) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
+                .setSharedEglContext(sharedEglContext)
                 .setEglWindowSurfaceFactory(new SurfaceFactory())
                 .setRenderer(this).createGLThread();
+        handler = new Handler();
+    }
+
+    /**
+     * If it is used, it must be called before start() called.
+     * @param producedTextureTarget GLES20.GL_TEXTURE_2D or GLES11Ext.GL_TEXTURE_EXTERNAL_OES
+     */
+    public void setProducedTextureTarget(int producedTextureTarget) {
+        this.producedTextureTarget = producedTextureTarget;
+    }
+
+    /**
+     * If it is used, it must be called before start() called.
+     */
+    public void setOnCreateGLContextListener(GLThread.OnCreateGLContextListener onCreateGLContextListener) {
+        mGLThread.setOnCreateGLContextListener(onCreateGLContextListener);
+    }
+
+
+    /**
+     * If it is used, it must be called before start() called.
+     */
+    public void setOnSurfaceTextureSet(GLSurfaceTextureProducerView.OnSurfaceTextureSet onSurfaceTextureSet) {
+        this.onSurfaceTextureSet = onSurfaceTextureSet;
+    }
+
+    public void setSharedTexture(BasicTexture outsideTexture, @Nullable SurfaceTexture outsideSurfaceTexture) {
+        this.outsideSharedTexture = outsideTexture;
+        this.outsideSharedSurfaceTexture = outsideSurfaceTexture;
     }
 
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+        if (isStart) {
+            mGLThread.onWindowResize(width, height);
+        }
     }
 
     public void start() {
@@ -68,23 +123,28 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
         mGLThread.surfaceCreated();
         mGLThread.onWindowResize(width, height);
         mGLThread.requestRenderAndWait();
-
+        isStart = true;
     }
 
     public void end() {
         if (mGLThread != null) {
             mGLThread.requestExitAndWait();
         }
+
+        if (producedRawTexture != null) {
+            producedRawTexture.recycle();
+            producedRawTexture = null;
+        }
+        if (producedSurfaceTexture != null) {
+            producedSurfaceTexture.release();
+            producedSurfaceTexture = null;
+        }
     }
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            if (mGLThread != null) {
-                // GLThread may still be running if this view was never
-                // attached to a window.
-                mGLThread.requestExitAndWait();
-            }
+            end();
         } finally {
             super.finalize();
         }
@@ -93,7 +153,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
     private class SurfaceFactory implements GLThread.EGLWindowSurfaceFactory {
         @Override
         public EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display, EGLConfig config, Object nativeWindow) {
-            int[] attribList = new int[] {
+            int[] attribList = new int[]{
                     EGL10.EGL_WIDTH, width,
                     EGL10.EGL_HEIGHT, height,
                     EGL10.EGL_NONE
@@ -119,12 +179,32 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         Loggers.d("BaseGLTextureView", "onSurfaceChanged: ");
         mCanvas.setSize(width, height);
+        if (producedRawTexture == null) {
+//            producedRawTexture = new RawTexture(width, height, false, GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
+            producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
+            if (!producedRawTexture.isLoaded()) {
+                producedRawTexture.prepare(mCanvas.getGlCanvas());
+            }
+            producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (onSurfaceTextureSet != null) {
+                        onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
+                    }
+                }
+            });
+        } else {
+            producedRawTexture.setSize(width, height);
+        }
 
     }
 
+
     @Override
     public void onDrawFrame(GL10 gl) {
-        onGLDraw(mCanvas);
+        producedSurfaceTexture.updateTexImage();
+        onGLDraw(mCanvas, producedSurfaceTexture, producedRawTexture, outsideSharedSurfaceTexture, outsideSharedTexture);
     }
 
 
@@ -132,7 +212,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer{
         return GLThread.RENDERMODE_WHEN_DIRTY;
     }
 
-    protected abstract void onGLDraw(ICanvasGL canvas);
+    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture outsideSharedSurfaceTexture, @Nullable BasicTexture outsideSharedTexture);
 
     public void queueEvent(Runnable r) {
         if (mGLThread == null) {

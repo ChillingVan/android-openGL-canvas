@@ -66,6 +66,9 @@ public class PreviewConsumerTextureView extends GLSharedContextView {
 
     @Override
     protected void onGLDraw(ICanvasGL canvas, SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture) {
+        if (sharedTexture == null) {
+            return;
+        }
         canvas.drawSurfaceTexture(sharedTexture, sharedSurfaceTexture, 0, 0, sharedTexture.getWidth(), sharedTexture.getHeight(), textureFilter);
         canvas.drawBitmap(robot, 0, 0 , 60, 60);
     }

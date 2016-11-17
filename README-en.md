@@ -10,7 +10,9 @@ Idea from:
 * The canvasGL provides similar API as android canvas. And there are GLViews that can be extended to custom your own view to draw things with OpenGL.
 * Similar to the filters of GPUImage, you can apply the filter to the bitmap draw into the GLViews. 
 * Provides GLViews that using GLSurfaceView and TextureView. 
+
 * The GLContinuousView can provide high performance continuous rendering animation because it uses openGL to draw in its own thread.
+![anim](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/anim-activity-example.png)
 
 Compare to GPUImage:
 * Provide the continuous rendering Thread in GLContinuousView and GLContinuousTextureView.
@@ -36,7 +38,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.2'
 }
 ```
 

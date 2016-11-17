@@ -23,14 +23,25 @@ package com.chillingvan.canvasglsample.offscreen;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.OffScreenCanvas;
+import com.chillingvan.canvasgl.glcanvas.BasicTexture;
+import com.chillingvan.canvasgl.glcanvas.GLPaint;
+import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
+import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasglsample.R;
+
+import javax.microedition.khronos.egl.EGLContext;
 
 public class OffScreenActivity extends Activity {
 
@@ -43,20 +54,56 @@ public class OffScreenActivity extends Activity {
 
         imageView = (ImageView) findViewById(R.id.off_screen_img_v);
 
-        OffScreenCanvas offScreenCanvas = new OffScreenCanvas(400, 400) {
+        final OffScreenCanvas offScreenCanvas = new OffScreenCanvas(400, 400) {
             @Override
-            protected void onGLDraw(ICanvasGL canvas) {
+            protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, SurfaceTexture outsideSharedSurfaceTexture, BasicTexture outsideSharedTexture) {
+                canvas.beginRenderTarget(producedRawTexture);
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lenna);
                 canvas.drawBitmap(bitmap, 0, 0);
+                canvas.endRenderTarget();
             }
         };
-        offScreenCanvas.start();
 
-        offScreenCanvas.getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
+        offScreenCanvas.setOnCreateGLContextListener(new GLThread.OnCreateGLContextListener() {
             @Override
-            public void onFetch(final Bitmap bitmap) {
-                imageView.setImageBitmap(bitmap);
+            public void onCreate(final EGLContext eglContext) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final OffScreenCanvas secondOffScreenCanvas = new OffScreenCanvas(400, 300, eglContext) {
+                            @Override
+                            protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture outsideSharedSurfaceTexture, @Nullable BasicTexture outsideSharedTexture) {
+                                if (outsideSharedTexture != null) {
+                                    canvas.drawSurfaceTexture(outsideSharedTexture, null, 0, 0, outsideSharedTexture.getWidth(), outsideSharedTexture.getHeight());
+                                }
+
+                                GLPaint paint = new GLPaint();
+                                paint.setColor(Color.RED);
+                                paint.setStyle(Paint.Style.FILL);
+                                canvas.drawCircle(40, 40, 40, paint);
+                            }
+                        };
+
+                        offScreenCanvas.setOnSurfaceTextureSet(new GLSurfaceTextureProducerView.OnSurfaceTextureSet() {
+                            @Override
+                            public void onSet(SurfaceTexture surfaceTexture, RawTexture surfaceTextureRelatedTexture) {
+                                secondOffScreenCanvas.setSharedTexture(surfaceTextureRelatedTexture, surfaceTexture);
+                                secondOffScreenCanvas.start();
+                                secondOffScreenCanvas.getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
+                                    @Override
+                                    public void onFetch(final Bitmap bitmap) {
+                                        imageView.setImageBitmap(bitmap);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
             }
         });
+
+
+        offScreenCanvas.start();
     }
 }

@@ -22,9 +22,11 @@ package com.chillingvan.canvasglsample.textureView;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
@@ -56,7 +58,7 @@ public class CameraPreviewTextureView extends GLSurfaceTextureProducerView {
     }
 
     @Override
-    protected void onGLDraw(ICanvasGL canvas, SurfaceTexture inputSurfaceTexture, RawTexture surfaceTextureHolder) {
-        canvas.drawSurfaceTexture(surfaceTextureHolder, inputSurfaceTexture, 0, 0, surfaceTextureHolder.getWidth(), surfaceTextureHolder.getHeight(), textureFilter);
+    protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture sharedSurfaceTexture, @Nullable BasicTexture sharedTexture) {
+        canvas.drawSurfaceTexture(producedRawTexture, producedSurfaceTexture, 0, 0, producedRawTexture.getWidth(), producedRawTexture.getHeight(), textureFilter);
     }
 }

@@ -26,11 +26,13 @@ import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.BitmapTexture;
 import com.chillingvan.canvasgl.glcanvas.GLCanvas;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
+import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 
 /**
@@ -41,11 +43,15 @@ public interface ICanvasGL {
 
     BitmapTexture bindBitmapToTexture(int whichTexture, Bitmap bitmap);
 
+    void beginRenderTarget(RawTexture texture);
+
+    void endRenderTarget();
+
     GLCanvas getGlCanvas();
 
-    void drawSurfaceTexture(BasicTexture texture, @NonNull SurfaceTexture surfaceTexture, int left, int top, int right, int bottom);
+    void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, int left, int top, int right, int bottom);
 
-    void drawSurfaceTexture(BasicTexture texture, @NonNull SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter textureFilter);
+    void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter textureFilter);
 
     void drawBitmap(Bitmap bitmap, @NonNull CanvasGL.BitmapMatrix matrix);
 

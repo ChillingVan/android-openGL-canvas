@@ -23,22 +23,26 @@ package com.chillingvan.canvasgl.glview.texture;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
+import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Chilling on 2016/11/3.
  */
 
-public abstract class GLSurfaceTextureProducerView extends GLTextureView {
-    private SurfaceTexture inputSurfaceTexture;
+public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
+    private SurfaceTexture producedSurfaceTexture;
     private OnSurfaceTextureSet onSurfaceTextureSet;
-    private RawTexture surfaceTextureHolderTexture;
+    private RawTexture producedRawTexture;
+    private int producedTextureTarget = GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
 
     public GLSurfaceTextureProducerView(Context context) {
         super(context);
@@ -53,11 +57,11 @@ public abstract class GLSurfaceTextureProducerView extends GLTextureView {
     }
 
     @Override
-    protected final void onGLDraw(ICanvasGL canvas) {
-        onGLDraw(canvas, inputSurfaceTexture, surfaceTextureHolderTexture);
+    protected final void onGLDraw(ICanvasGL canvas, @Nullable SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture) {
+        onGLDraw(canvas, producedSurfaceTexture, producedRawTexture, sharedSurfaceTexture, sharedTexture);
     }
 
-    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture surfaceTexture, RawTexture surfaceTextureHolder);
+    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture sharedSurfaceTexture, @Nullable BasicTexture sharedTexture);
 
     public void setOnSurfaceTextureSet(OnSurfaceTextureSet onSurfaceTextureSet) {
         this.onSurfaceTextureSet = onSurfaceTextureSet;
@@ -68,31 +72,48 @@ public abstract class GLSurfaceTextureProducerView extends GLTextureView {
         return GLThread.RENDERMODE_WHEN_DIRTY;
     }
 
+
+    /**
+     * If it is used, it must be called before start() called.
+     * @param producedTextureTarget GLES20.GL_TEXTURE_2D or GLES11Ext.GL_TEXTURE_EXTERNAL_OES
+     */
+    public void setProducedTextureTarget(int producedTextureTarget) {
+        this.producedTextureTarget = producedTextureTarget;
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        super.onSurfaceTextureAvailable(surface, width, height);
+        if (mGLThread == null) {
+            setSharedEglContext(EGL10.EGL_NO_CONTEXT);
+        }
+    }
+
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         super.onSurfaceChanged(gl, width, height);
-        if (surfaceTextureHolderTexture == null) {
-            surfaceTextureHolderTexture = new RawTexture(width, height, false, GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
-            if (!surfaceTextureHolderTexture.isLoaded()) {
-                surfaceTextureHolderTexture.prepare(mCanvas.getGlCanvas());
+        if (producedRawTexture == null) {
+            producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
+            if (!producedRawTexture.isLoaded()) {
+                producedRawTexture.prepare(mCanvas.getGlCanvas());
             }
-            inputSurfaceTexture = new SurfaceTexture(surfaceTextureHolderTexture.getId());
+            producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
             post(new Runnable() {
                 @Override
                 public void run() {
                     if (onSurfaceTextureSet != null) {
-                        onSurfaceTextureSet.onSet(inputSurfaceTexture, surfaceTextureHolderTexture);
+                        onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
                     }
                 }
             });
         } else {
-            surfaceTextureHolderTexture.setSize(width, height);
+            producedRawTexture.setSize(width, height);
         }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        inputSurfaceTexture.updateTexImage();
+        producedSurfaceTexture.updateTexImage();
         super.onDrawFrame(gl);
     }
 
@@ -103,13 +124,13 @@ public abstract class GLSurfaceTextureProducerView extends GLTextureView {
     @Override
     protected void surfaceDestroyed() {
         super.surfaceDestroyed();
-        if (surfaceTextureHolderTexture != null) {
-            surfaceTextureHolderTexture.recycle();
-            surfaceTextureHolderTexture = null;
+        if (producedRawTexture != null) {
+            producedRawTexture.recycle();
+            producedRawTexture = null;
         }
-        if (inputSurfaceTexture != null) {
-            inputSurfaceTexture.release();
-            inputSurfaceTexture = null;
+        if (producedSurfaceTexture != null) {
+            producedSurfaceTexture.release();
+            producedSurfaceTexture = null;
         }
     }
 
