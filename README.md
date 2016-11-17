@@ -68,7 +68,7 @@ public class MyGLView extends GLView {
 ```
 
 
-![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example.png)
+![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example-v1.png)
 
 * 其中, GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView 用法相似.
 
@@ -93,11 +93,11 @@ public class MyGLView extends GLView {
         canvas.drawBitmap(bitmap, left, top, textureFilter);
 ```
 
-![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example.png)
+![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example-v1.png)
 
 
 * 可以与Camera结合，注意运行样例代码的时候尽量使用真机而不是模拟器。
-![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example.jpg)
+![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example-v1.jpg)
 
 * 如果不想使用View，可以使用 OffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
 
@@ -109,9 +109,9 @@ public class MyGLView extends GLView {
 * 目前的Filter没有GPUImage里那么多，后续会陆续增加，如果有需要，参照我的代码自己实现即可，难度不高。
 
 ## 相关博客文章
-[OpenGL绘制一张图片的流程](http://www.jianshu.com/p/40521c92ef85)
-[如何封装 opengl 流程](http://www.jianshu.com/p/c45d11627c70)
-[代替GLSurfaceView的GLTextureView](http://www.jianshu.com/p/5a127d43b39a)
+* [OpenGL绘制一张图片的流程](http://www.jianshu.com/p/40521c92ef85)
+* [如何封装 opengl 流程](http://www.jianshu.com/p/c45d11627c70)
+* [代替GLSurfaceView的GLTextureView](http://www.jianshu.com/p/5a127d43b39a)
 
 ## License
     Copyright 2016 ChillingVan.

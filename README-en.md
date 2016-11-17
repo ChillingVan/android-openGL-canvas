@@ -65,7 +65,7 @@ public class MyGLView extends GLView {
 ```
 
 
-![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example.png)
+![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example-v1.png)
 
 * The Usage of GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView is similar.
 
@@ -90,12 +90,12 @@ public class MyGLView extends GLView {
         canvas.drawBitmap(bitmap, left, top, textureFilter);
 ```
 
-![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example.png)
+![filters](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/filter_example-v1.png)
 
 
 * And can be used with camera, just run the camera sample code on a real device(not in emulator) to see what will happen.
 
-![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example.jpg)
+![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example-v1.jpg)
 
 
 * If you do not want to use GLView, you can use OffScreenCanvas to draw things and fetch it by getDrawingBitmap.
