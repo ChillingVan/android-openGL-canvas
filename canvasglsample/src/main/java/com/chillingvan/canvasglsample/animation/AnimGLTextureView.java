@@ -32,13 +32,14 @@ import com.chillingvan.canvasglsample.animation.bubble.Wall;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.chillingvan.canvasglsample.animation.AnimGLView.INTERNVAL_TIME_MS;
+
 /**
  * Created by Chilling on 2016/11/5.
  */
 
 public class AnimGLTextureView extends GLContinuousTextureView {
 
-    public static final int INTERNVAL_TIME_MS = 16;
     private List<Bubble> bubbles = new ArrayList<>();
     private Wall wallTop = new Wall.WallY(0);
     private Wall wallLeft = new Wall.WallX(0);
@@ -72,7 +73,7 @@ public class AnimGLTextureView extends GLContinuousTextureView {
     @Override
     protected void onGLDraw(ICanvasGL canvas) {
         for (Bubble bubble : bubbles) {
-            bubble.draw(canvas);
+            bubble.glDraw(canvas);
             if (wallTop.isTouch(bubble.point, bubble.collisionRadius) || wallBottom.isTouch(bubble.point, bubble.collisionRadius)) {
                 bubble.onCollision(MovableObj.CollisionListener.DIRECTION_VERTICAL);
             } else if (wallLeft.isTouch(bubble.point, bubble.collisionRadius) || wallRight.isTouch(bubble.point, bubble.collisionRadius)) {

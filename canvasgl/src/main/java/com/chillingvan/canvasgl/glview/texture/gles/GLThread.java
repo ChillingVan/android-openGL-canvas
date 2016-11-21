@@ -92,6 +92,7 @@ public class GLThread extends Thread {
     private boolean mSizeChanged = true;
     private boolean changeSurface = false;
     private EGLContext mEglContext = EGL10.EGL_NO_CONTEXT;
+    private long mLastRunTime;
 
     GLThread(EGLConfigChooser configChooser, EGLContextFactory eglContextFactory
             , EGLWindowSurfaceFactory eglWindowSurfaceFactory, GLSurfaceView.Renderer renderer
@@ -200,6 +201,11 @@ public class GLThread extends Thread {
             Runnable event = null;
 
             while (true) {
+                long now = System.currentTimeMillis();
+                if (now - mLastRunTime < 1) {
+                    sleep(1 - (now - mLastRunTime));
+                }
+                mLastRunTime = System.currentTimeMillis();
                 synchronized (sGLThreadManager) {
                     while (true) {
                         if (mShouldExit) {
@@ -335,6 +341,7 @@ public class GLThread extends Thread {
                                     changeSurface = false;
                                 }
 
+
                                 mRequestRender = false;
                                 sGLThreadManager.notifyAll();
                                 if (mWantRenderNotification) {
@@ -363,90 +370,86 @@ public class GLThread extends Thread {
                     }
                 } // end of synchronized(sGLThreadManager)
 
-                synchronized (mEglContext) {
+                if (event != null) {
+                    event.run();
+                    event = null;
+                    continue;
+                }
 
-                    if (event != null) {
-                        event.run();
-                        event = null;
+                if (createEglSurface) {
+                    if (LOG_SURFACE) {
+                        Log.w("GLThread", "egl createSurface");
+                    }
+                    if (mEglHelper.createSurface(mSurface)) {
+                        synchronized (sGLThreadManager) {
+                            mFinishedCreatingEglSurface = true;
+                            sGLThreadManager.notifyAll();
+                        }
+                    } else {
+                        synchronized (sGLThreadManager) {
+                            mFinishedCreatingEglSurface = true;
+                            mSurfaceIsBad = true;
+                            sGLThreadManager.notifyAll();
+                        }
                         continue;
                     }
+                    createEglSurface = false;
+                }
 
-                    if (createEglSurface) {
+                if (createGlInterface) {
+                    gl = (GL10) mEglHelper.createGL();
+
+                    createGlInterface = false;
+                }
+
+                if (createEglContext) {
+                    if (LOG_RENDERER) {
+                        Log.w("GLThread", "onSurfaceCreated");
+                    }
+                    mRenderer.onSurfaceCreated(gl, mEglHelper.getEglConfig());
+                    createEglContext = false;
+                }
+
+                if (sizeChanged) {
+                    if (LOG_RENDERER) {
+                        Log.w("GLThread", "onSurfaceChanged(" + w + ", " + h + ")");
+                    }
+                    mRenderer.onSurfaceChanged(gl, w, h);
+                    sizeChanged = false;
+                }
+
+                if (LOG_RENDERER_DRAW_FRAME) {
+                    Log.w("GLThread", "onDrawFrame tid=" + getId());
+                }
+                mRenderer.onDrawFrame(gl);
+
+                int swapError = mEglHelper.swap();
+                switch (swapError) {
+                    case EGL10.EGL_SUCCESS:
+                        break;
+                    case EGL11.EGL_CONTEXT_LOST:
                         if (LOG_SURFACE) {
-                            Log.w("GLThread", "egl createSurface");
+                            Log.i("GLThread", "egl context lost tid=" + getId());
                         }
-                        if (mEglHelper.createSurface(mSurface)) {
-                            synchronized (sGLThreadManager) {
-                                mFinishedCreatingEglSurface = true;
-                                sGLThreadManager.notifyAll();
-                            }
-                        } else {
-                            synchronized (sGLThreadManager) {
-                                mFinishedCreatingEglSurface = true;
-                                mSurfaceIsBad = true;
-                                sGLThreadManager.notifyAll();
-                            }
-                            continue;
+                        lostEglContext = true;
+                        break;
+                    default:
+                        // Other errors typically mean that the current surface is bad,
+                        // probably because the SurfaceView surface has been destroyed,
+                        // but we haven't been notified yet.
+                        // Log the error to help developers understand why rendering stopped.
+                        EglHelper.logEglErrorAsWarning("GLThread", "eglSwapBuffers", swapError);
+
+                        synchronized (sGLThreadManager) {
+                            mSurfaceIsBad = true;
+                            sGLThreadManager.notifyAll();
                         }
-                        createEglSurface = false;
-                    }
+                        break;
+                }
 
-                    if (createGlInterface) {
-                        gl = (GL10) mEglHelper.createGL();
-
-                        createGlInterface = false;
-                    }
-
-                    if (createEglContext) {
-                        if (LOG_RENDERER) {
-                            Log.w("GLThread", "onSurfaceCreated");
-                        }
-                        mRenderer.onSurfaceCreated(gl, mEglHelper.getEglConfig());
-                        createEglContext = false;
-                    }
-
-                    if (sizeChanged) {
-                        if (LOG_RENDERER) {
-                            Log.w("GLThread", "onSurfaceChanged(" + w + ", " + h + ")");
-                        }
-                        mRenderer.onSurfaceChanged(gl, w, h);
-                        sizeChanged = false;
-                    }
-
-                    if (LOG_RENDERER_DRAW_FRAME) {
-                        Log.w("GLThread", "onDrawFrame tid=" + getId());
-                    }
-                    mRenderer.onDrawFrame(gl);
-
-                    int swapError = mEglHelper.swap();
-                    switch (swapError) {
-                        case EGL10.EGL_SUCCESS:
-                            break;
-                        case EGL11.EGL_CONTEXT_LOST:
-                            if (LOG_SURFACE) {
-                                Log.i("GLThread", "egl context lost tid=" + getId());
-                            }
-                            lostEglContext = true;
-                            break;
-                        default:
-                            // Other errors typically mean that the current surface is bad,
-                            // probably because the SurfaceView surface has been destroyed,
-                            // but we haven't been notified yet.
-                            // Log the error to help developers understand why rendering stopped.
-                            EglHelper.logEglErrorAsWarning("GLThread", "eglSwapBuffers", swapError);
-
-                            synchronized (sGLThreadManager) {
-                                mSurfaceIsBad = true;
-                                sGLThreadManager.notifyAll();
-                            }
-                            break;
-                    }
-
-                    if (wantRenderNotification) {
-                        doRenderNotification = true;
-                        wantRenderNotification = false;
-                    }
-
+                if (wantRenderNotification) {
+                    doRenderNotification = true;
+                    wantRenderNotification = false;
                 }
 
             }

@@ -5,6 +5,7 @@ Idea from:
 * Codes of Android source code under package com.android.gallery3d.glrenderer
 * [GPUImage](https://github.com/CyberAgent/android-gpuimage)
 * [grafika](https://github.com/google/grafika)
+Thanks to them!
 
 ## Features
 * The canvasGL provides similar API as android canvas. And there are GLViews that can be extended to custom your own view to draw things with OpenGL.
@@ -18,6 +19,7 @@ Compare to GPUImage:
 * Provide the continuous rendering Thread in GLContinuousView and GLContinuousTextureView.
 * Using TextureView has this benefit:
     TextureView does not create a separate window but behaves as a regular View. This key difference allows a TextureView to be moved, transformed, animated, etc. For instance, you can make a TextureView semi-translucent by calling myView.setAlpha(0.5f)
+* Canvas is provided. Not only the image processing but drawing thing what you want.
 
 ## Requirements
 * Android API 14 or higher (OpenGL ES 2.0)
@@ -38,7 +40,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.2'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.3'
 }
 ```
 

@@ -54,8 +54,17 @@
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>
-        <activity android:name=".offscreen.OffScreenActivity"
-                  android:label="OffScreenActivity"
+        <activity
+            android:name=".offscreen.OffScreenActivity"
+            android:label="OffScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".comparePerformance.ComparePerformanceActivity"
+                  android:label="ComparePerformanceActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

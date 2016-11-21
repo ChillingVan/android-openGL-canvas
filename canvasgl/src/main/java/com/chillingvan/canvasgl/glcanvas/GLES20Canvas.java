@@ -635,7 +635,7 @@ public class GLES20Canvas implements GLCanvas {
     private void drawTextureRect(BasicTexture texture, float[] textureMatrix, RectF target) {
         ShaderParameter[] params = prepareTexture(texture);
         setPosition(params, OFFSET_FILL_RECT);
-        printMatrix("texture matrix", textureMatrix, 0);
+//        printMatrix("texture matrix", textureMatrix, 0);
         GLES20.glUniformMatrix4fv(params[INDEX_TEXTURE_MATRIX].handle, 1, false, textureMatrix, 0);
         if (onPreDrawTextureListener != null) {
             onPreDrawTextureListener.onPreDraw(texture.getTarget() == GLES20.GL_TEXTURE_2D ? mTextureProgram : mOesTextureProgram, texture, mTextureFilter);
@@ -821,6 +821,7 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     private void setRenderTarget(BasicTexture oldTexture, RawTexture texture) {
+        // FIXME: 2016/11/18 If client version is 2, then bufferOES will crash...
         if (oldTexture == null && texture != null) {
             if (texture.getTarget() == GLES20.GL_TEXTURE_2D) {
                 GLES20.glGenFramebuffers(1, mFrameBuffer, 0);

@@ -21,9 +21,12 @@
 package com.chillingvan.canvasglsample.animation.bubble;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 
 import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 
 /**
@@ -33,21 +36,37 @@ import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 public class Bubble extends MovableObj implements MovableObj.CollisionListener {
     private Bitmap bitmap;
     private TextureFilter textureFilter;
+    private Paint paint = new Paint();
 
     public Bubble(PointF point, float vx, float vy, float vRotate, Bitmap bitmap, TextureFilter textureFilter) {
         super(point, vx, vy, vRotate, bitmap.getWidth()/(float)2);
         this.bitmap = bitmap;
-        this.textureFilter = textureFilter;
+        if (textureFilter == null) {
+            this.textureFilter = new BasicTextureFilter();
+        } else {
+            this.textureFilter = textureFilter;
+        }
     }
 
 
-    public void draw(ICanvasGL canvas) {
+    public void glDraw(ICanvasGL canvas) {
         canvas.save();
         int left = (int) (point.x - bitmap.getWidth() / (float)2);
         int top = (int) (point.y - bitmap.getHeight() / (float)2);
 
         canvas.rotate(rotateDegree, point.x, point.y);
         canvas.drawBitmap(bitmap, left, top, textureFilter);
+
+        canvas.restore();
+    }
+
+    public void normalDraw(Canvas canvas) {
+        canvas.save();
+        int left = (int) (point.x - bitmap.getWidth() / (float)2);
+        int top = (int) (point.y - bitmap.getHeight() / (float)2);
+
+        canvas.rotate(rotateDegree, point.x, point.y);
+        canvas.drawBitmap(bitmap, left, top, paint);
 
         canvas.restore();
     }

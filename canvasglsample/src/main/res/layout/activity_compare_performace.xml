@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_compare_performace"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.chillingvan.canvasglsample.comparePerformance.ComparePerformanceActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="fire"
+        android:onClick="onFire"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/count_one"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
+
+
+        <TextView
+            android:id="@+id/count_two"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
+
+
+        <TextView
+            android:id="@+id/count_three"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:textSize="15sp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        >
+
+        <com.chillingvan.canvasglsample.comparePerformance.NormalBubblesView
+            android:id="@+id/hw_bubble_view"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            />
+
+        <com.chillingvan.canvasglsample.comparePerformance.SurfaceBubblesView
+            android:id="@+id/sw_bubble_view"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+
+        <com.chillingvan.canvasglsample.comparePerformance.GLBubblesView
+            android:id="@+id/gl_bubble_view"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

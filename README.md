@@ -1,11 +1,12 @@
 # OpenGL canvas
 
-[ENGLISH_VERSION README](https://github.com/ChillingVan/android-openGL-canvas/blob/master/README-en.md) 
+[English README](https://github.com/ChillingVan/android-openGL-canvas/blob/master/README-en.md) 
 
 此项目灵感来源: 
 * Android package com.android.gallery3d.glrenderer 下的源代码
 * [GPUImage](https://github.com/CyberAgent/android-gpuimage)
 * [grafika](https://github.com/google/grafika)
+感谢这些源代码提供者！
 
 ## 功能
 * 提供一个类似Android Canvas类的使用OpenGL来实现绘制的canvasGL。可以像传统自定义View那样直接继承 GLViews, 再使用这个canvas绘制需要的东西。
@@ -19,6 +20,7 @@
 与GPUImage对比：
 * 提供无限循环渲染线程的 GLContinuousView 和 GLContinuousTextureView。
 * 使用TextureView来实现OpenGL的绘制，可以利用TextureView的优点--TextureView 不会创建一个分离的window，而是像一个普通的view那样显示， 这样就不会像GLSurfaceView那样，要么在所有View上方，要么被其它View遮住(看 setZOrderOnTop(boolean) 的说明)。而且像myView.setAlpha(0.5f)这种方法调用后也会有效果了。 
+* 提供一个canvas，不只是图片处理，可以画上想画的其它东西。
 
 
 
@@ -41,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.2'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.1.3'
 }
 ```
 

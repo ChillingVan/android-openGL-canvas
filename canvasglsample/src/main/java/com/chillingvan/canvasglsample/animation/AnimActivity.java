@@ -93,12 +93,12 @@ public class AnimActivity extends AppCompatActivity {
     private Bubble createBubble(List<TextureFilter> filterList) {
         Random random = new Random();
         TextureFilter textureFilter = filterList.get(random.nextInt(filterList.size()));
-        float minVY = -(MIN_VY + random.nextInt(MAX_VY)) * VY_MULTIPLIER;
-        float minVX = (MIN_VX + random.nextInt(MAX_VX)) * VX_MULTIPLIER;
-        minVX = random.nextBoolean() ? minVX : -minVX;
+        float vy = -(MIN_VY + random.nextInt(MAX_VY)) * VY_MULTIPLIER;
+        float vx = (MIN_VX + random.nextInt(MAX_VX)) * VX_MULTIPLIER;
+        vx = random.nextBoolean() ? vx : -vx;
         float vRotate = 0.05f;
 
-        return new Bubble(new PointF(260, 260), minVX, minVY, vRotate, bitmap, textureFilter);
+        return new Bubble(new PointF(260, 260), vx, vy, vRotate, bitmap, textureFilter);
     }
 
     @Override

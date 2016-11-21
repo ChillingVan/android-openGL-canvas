@@ -67,7 +67,7 @@ public class AnimGLView extends GLContinuousView {
     @Override
     protected void onGLDraw(ICanvasGL canvas) {
         for (Bubble bubble : bubbles) {
-            bubble.draw(canvas);
+            bubble.glDraw(canvas);
             if (wallTop.isTouch(bubble.point, bubble.collisionRadius) || wallBottom.isTouch(bubble.point, bubble.collisionRadius)) {
                 bubble.onCollision(MovableObj.CollisionListener.DIRECTION_VERTICAL);
             } else if (wallLeft.isTouch(bubble.point, bubble.collisionRadius) || wallRight.isTouch(bubble.point, bubble.collisionRadius)) {

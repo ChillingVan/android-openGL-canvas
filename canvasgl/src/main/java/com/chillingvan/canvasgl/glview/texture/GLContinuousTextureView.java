@@ -27,6 +27,8 @@ import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 /**
  * Created by Chilling on 2016/11/1.
+ *
+ * {@link com.chillingvan.canvasgl.glview.GLContinuousView} is better.
  */
 
 public abstract class GLContinuousTextureView extends GLTextureView {
