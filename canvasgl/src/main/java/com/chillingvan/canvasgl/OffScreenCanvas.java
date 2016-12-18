@@ -72,6 +72,26 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         this(width, height, EGL10.EGL_NO_CONTEXT);
     }
 
+
+    public OffScreenCanvas(Object surface) {
+        this(0, 0, EGL10.EGL_NO_CONTEXT, surface);
+    }
+
+    public OffScreenCanvas(int width, int height, Object surface) {
+        this(width, height, EGL10.EGL_NO_CONTEXT, surface);
+    }
+
+
+    public OffScreenCanvas(int width, int height, EGLContext sharedEglContext, Object surface) {
+        this.width = width;
+        this.height = height;
+        mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
+                .setSharedEglContext(sharedEglContext)
+                .setSurface(surface)
+                .setRenderer(this).createGLThread();
+        handler = new Handler();
+    }
+
     public OffScreenCanvas(int width, int height, EGLContext sharedEglContext) {
         this.width = width;
         this.height = height;
@@ -122,8 +142,19 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         mGLThread.start();
         mGLThread.surfaceCreated();
         mGLThread.onWindowResize(width, height);
-        mGLThread.requestRenderAndWait();
         isStart = true;
+    }
+
+    public void onResume() {
+        if(mGLThread != null) {
+            mGLThread.onResume();
+        }
+    }
+
+    public void onPause() {
+        if(mGLThread != null) {
+            mGLThread.onPause();
+        }
     }
 
     public void end() {
@@ -180,7 +211,6 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         Loggers.d("BaseGLTextureView", "onSurfaceChanged: ");
         mCanvas.setSize(width, height);
         if (producedRawTexture == null) {
-//            producedRawTexture = new RawTexture(width, height, false, GLES11Ext.GL_TEXTURE_EXTERNAL_OES);
             producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
             if (!producedRawTexture.isLoaded()) {
                 producedRawTexture.prepare(mCanvas.getGlCanvas());
