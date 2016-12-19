@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -35,7 +34,7 @@ public class SimpleOffScreenActivity extends AppCompatActivity {
             @Override
             protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture,
                                     @Nullable SurfaceTexture outsideSharedSurfaceTexture, @Nullable BasicTexture outsideSharedTexture) {
-                canvas.drawBitmap(bitmap, 0, 0);
+                canvas.drawBitmap(bitmap, 0, 0, 256, 256);
             }
         };
 
@@ -46,16 +45,11 @@ public class SimpleOffScreenActivity extends AppCompatActivity {
         super.onResume();
         offScreenCanvas.start();
         offScreenCanvas.onResume();
-        new Handler().postDelayed(new Runnable() {
+        offScreenCanvas.getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
             @Override
-            public void run() {
-                offScreenCanvas.getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
-                    @Override
-                    public void onFetch(final Bitmap bitmap) {
-                        imageView.setImageBitmap(bitmap);
-                    }
-                });
+            public void onFetch(final Bitmap bitmap) {
+                imageView.setImageBitmap(bitmap);
             }
-        }, 4000);
+        });
     }
 }
