@@ -241,7 +241,9 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        producedSurfaceTexture.updateTexImage();
+        if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
+            producedSurfaceTexture.updateTexImage();
+        }
         mCanvas.clearBuffer(backgroundColor);
         onGLDraw(mCanvas, producedSurfaceTexture, producedRawTexture, outsideSharedSurfaceTexture, outsideSharedTexture);
     }
