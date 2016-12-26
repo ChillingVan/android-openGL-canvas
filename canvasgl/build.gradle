@@ -29,7 +29,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 101041
-        versionName "1.1.4.1"
+        versionName "1.1.4.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

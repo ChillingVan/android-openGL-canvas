@@ -23,6 +23,7 @@ package com.chillingvan.canvasgl.glview.texture;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
+import android.opengl.GLES20;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
@@ -113,7 +114,9 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        producedSurfaceTexture.updateTexImage();
+        if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
+            producedSurfaceTexture.updateTexImage();
+        }
         super.onDrawFrame(gl);
     }
 

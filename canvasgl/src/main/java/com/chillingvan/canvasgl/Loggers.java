@@ -41,4 +41,10 @@ public class Loggers {
             Log.v(tag, msg);
         }
     }
+
+    public static void i(String tag, String msg) {
+        if (DEBUG) {
+            Log.i(tag, msg);
+        }
+    }
 }
