@@ -268,6 +268,12 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         }
     }
 
+    public void requestRenderAndWait() {
+        if (mGLThread != null) {
+            mGLThread.requestRenderAndWait();
+        }
+    }
+
     public void getDrawingBitmap(final Rect rect, final GLView.GetDrawingCacheCallback getDrawingCacheCallback) {
         final Handler handler = new Handler();
 
