@@ -22,7 +22,6 @@ package com.chillingvan.canvasgl.glview.texture;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.opengl.GLSurfaceView;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.TextureView;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Chilling on 2016/10/31.
@@ -47,13 +45,12 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     protected GLThread mGLThread;
     protected GLThread.Builder glThreadBuilder = new GLThread.Builder();
     private List<Runnable> cacheEvents = new ArrayList<>();
-    public GL10 mGL;
     private SurfaceTextureListener surfaceTextureListener;
     private GLThread.OnCreateGLContextListener onCreateGLContextListener;
 
     private boolean shouldBeCreated = false;
     private boolean surfaceAvailable = false;
-    private GLSurfaceView.Renderer renderer;
+    private GLViewRenderer renderer;
 
     public BaseGLTextureView(Context context) {
         super(context);
@@ -180,7 +177,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     protected abstract void onGLDraw(ICanvasGL canvas);
 
 
-    public void setRenderer(GLSurfaceView.Renderer renderer) {
+    public void setRenderer(GLViewRenderer renderer) {
         this.renderer = renderer;
     }
 

@@ -26,7 +26,6 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
@@ -34,6 +33,7 @@ import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -41,19 +41,17 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Chilling on 2016/11/7.
  */
 
-public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
+public abstract class OffScreenCanvas implements GLViewRenderer {
 
     protected final GLThread mGLThread;
     private int width;
     private int height;
     protected ICanvasGL mCanvas;
-    public GL10 mGL;
 
     private BasicTexture outsideSharedTexture;
     private SurfaceTexture outsideSharedSurfaceTexture;
@@ -208,14 +206,13 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
 
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mGL = gl;
+    public void onSurfaceCreated() {
         Loggers.d("OffScreenCanvas", "onSurfaceCreated: ");
         mCanvas = new CanvasGL();
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(int width, int height) {
         Loggers.d("OffScreenCanvas", "onSurfaceChanged: ");
         mCanvas.setSize(width, height);
         if (producedRawTexture == null) {
@@ -240,7 +237,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
 
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame() {
         if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
             producedSurfaceTexture.updateTexImage();
         }
@@ -280,12 +277,9 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         queueEvent(new Runnable() {
             @Override
             public void run() {
-                if (mGL == null) {
-                    return;
-                }
-                onDrawFrame(mGL);
-                onDrawFrame(mGL);
-                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, mGL, height);
+                onDrawFrame();
+                onDrawFrame();
+                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, height);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

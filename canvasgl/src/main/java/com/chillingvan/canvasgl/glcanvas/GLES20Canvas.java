@@ -777,13 +777,13 @@ public class GLES20Canvas implements GLCanvas {
         synchronized (mUnboundTextures) {
             IntArray ids = mUnboundTextures;
             if (mUnboundTextures.size() > 0) {
-                mGLId.glDeleteTextures(null, ids.size(), ids.getInternalArray(), 0);
+                mGLId.glDeleteTextures(ids.size(), ids.getInternalArray(), 0);
                 ids.clear();
             }
 
             ids = mDeleteBuffers;
             if (ids.size() > 0) {
-                mGLId.glDeleteBuffers(null, ids.size(), ids.getInternalArray(), 0);
+                mGLId.glDeleteBuffers(ids.size(), ids.getInternalArray(), 0);
                 ids.clear();
             }
         }

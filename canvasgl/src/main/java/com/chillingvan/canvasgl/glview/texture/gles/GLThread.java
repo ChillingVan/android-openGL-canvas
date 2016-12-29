@@ -22,9 +22,10 @@ package com.chillingvan.canvasgl.glview.texture.gles;
 
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
-import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
 
 import java.util.ArrayList;
 
@@ -64,7 +65,7 @@ public class GLThread extends Thread {
     private EGLContextFactory mEGLContextFactory;
     private GLWrapper mGLWrapper;
     private int mDebugFlags;
-    private GLSurfaceView.Renderer mRenderer;
+    private GLViewRenderer mRenderer;
     private Object mSurface;
 
     private OnCreateGLContextListener onCreateGLContextListener;
@@ -95,7 +96,7 @@ public class GLThread extends Thread {
     private long mLastRunTime;
 
     GLThread(EGLConfigChooser configChooser, EGLContextFactory eglContextFactory
-            , EGLWindowSurfaceFactory eglWindowSurfaceFactory, GLSurfaceView.Renderer renderer
+            , EGLWindowSurfaceFactory eglWindowSurfaceFactory, GLViewRenderer renderer
             , GLWrapper glWrapper, int debugFlags, int renderMode, Object surface, EGLContext sharedEglContext) {
         super();
         mWidth = 0;
@@ -406,7 +407,7 @@ public class GLThread extends Thread {
                     if (LOG_RENDERER) {
                         Log.w("GLThread", "onSurfaceCreated");
                     }
-                    mRenderer.onSurfaceCreated(gl, mEglHelper.getEglConfig());
+                    mRenderer.onSurfaceCreated();
                     createEglContext = false;
                 }
 
@@ -414,14 +415,14 @@ public class GLThread extends Thread {
                     if (LOG_RENDERER) {
                         Log.w("GLThread", "onSurfaceChanged(" + w + ", " + h + ")");
                     }
-                    mRenderer.onSurfaceChanged(gl, w, h);
+                    mRenderer.onSurfaceChanged(w, h);
                     sizeChanged = false;
                 }
 
                 if (LOG_RENDERER_DRAW_FRAME) {
                     Log.w("GLThread", "onDrawFrame tid=" + getId());
                 }
-                mRenderer.onDrawFrame(gl);
+                mRenderer.onDrawFrame();
 
                 int swapError = mEglHelper.swap();
                 switch (swapError) {
@@ -979,7 +980,7 @@ public class GLThread extends Thread {
         private EGLConfigChooser configChooser;
         private EGLContextFactory eglContextFactory;
         private EGLWindowSurfaceFactory eglWindowSurfaceFactory;
-        private GLSurfaceView.Renderer renderer;
+        private GLViewRenderer renderer;
         private GLWrapper mGLWrapper = null;
         private int eglContextClientVersion = 2;
         private int debugFlags = 0;
@@ -1021,7 +1022,7 @@ public class GLThread extends Thread {
             return this;
         }
 
-        public Builder setRenderer(GLSurfaceView.Renderer renderer) {
+        public Builder setRenderer(GLViewRenderer renderer) {
             this.renderer = renderer;
             return this;
         }

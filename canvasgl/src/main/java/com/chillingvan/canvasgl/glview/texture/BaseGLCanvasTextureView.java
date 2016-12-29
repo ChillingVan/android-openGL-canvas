@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.opengl.GLSurfaceView;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 
@@ -13,14 +12,11 @@ import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glview.GLView;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 /**
  * Created by Chilling on 2016/11/11.
  */
 
-abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLSurfaceView.Renderer {
+abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLViewRenderer {
 
 
     protected ICanvasGL mCanvas;
@@ -45,19 +41,18 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLSu
     }
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    public void onSurfaceCreated() {
         mCanvas = new CanvasGL();
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(int width, int height) {
         mCanvas.setSize(width, height);
 
     }
 
     @Override
-    public void onDrawFrame(GL10 gl) {
-        mGL = gl;
+    public void onDrawFrame() {
         mCanvas.clearBuffer(backgroundColor);
         onGLDraw(mCanvas);
     }
@@ -78,12 +73,9 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLSu
         queueEvent(new Runnable() {
             @Override
             public void run() {
-                if (mGL == null) {
-                    return;
-                }
-                onDrawFrame(mGL);
-                onDrawFrame(mGL);
-                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, mGL, getHeight());
+                onDrawFrame();
+                onDrawFrame();
+                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, getHeight());
 
                 post(new Runnable() {
                     @Override

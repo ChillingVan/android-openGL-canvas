@@ -21,6 +21,7 @@
 package com.chillingvan.canvasgl;
 
 import android.graphics.Bitmap;
+import android.opengl.GLES11;
 import android.opengl.GLES20;
 import android.opengl.GLException;
 
@@ -39,7 +40,7 @@ public class OpenGLUtil {
         GLES20.glUniform1f(location, floatValue);
     }
 
-    public static Bitmap createBitmapFromGLSurface(int x, int y, int w, int h, GL10 gl, int glHeight)
+    public static Bitmap createBitmapFromGLSurface(int x, int y, int w, int h, int glHeight)
             throws OutOfMemoryError {
         int bitmapBuffer[] = new int[w * h];
         int bitmapSource[] = new int[w * h];
@@ -47,7 +48,7 @@ public class OpenGLUtil {
         intBuffer.position(0);
 
         try {
-            gl.glReadPixels(x, glHeight - h - y, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer);
+            GLES11.glReadPixels(x, glHeight - h - y, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer);
             int offset1, offset2;
             for (int i = 0; i < h; i++) {
                 offset1 = i * w;
