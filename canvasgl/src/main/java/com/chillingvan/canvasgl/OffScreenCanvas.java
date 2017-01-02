@@ -20,12 +20,14 @@
 
 package com.chillingvan.canvasgl;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.GLES20;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
@@ -34,11 +36,11 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
@@ -66,24 +68,24 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
     private int backgroundColor = Color.TRANSPARENT;
 
     public OffScreenCanvas() {
-        this(0, 0, EGL10.EGL_NO_CONTEXT);
+        this(0, 0, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
     }
 
     public OffScreenCanvas(int width, int height) {
-        this(width, height, EGL10.EGL_NO_CONTEXT);
+        this(width, height, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
     }
 
 
     public OffScreenCanvas(Object surface) {
-        this(0, 0, EGL10.EGL_NO_CONTEXT, surface);
+        this(0, 0, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
     }
 
     public OffScreenCanvas(int width, int height, Object surface) {
-        this(width, height, EGL10.EGL_NO_CONTEXT, surface);
+        this(width, height, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
     }
 
 
-    public OffScreenCanvas(int width, int height, EGLContext sharedEglContext, Object surface) {
+    public OffScreenCanvas(int width, int height, EGLContextWrapper sharedEglContext, Object surface) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
@@ -93,7 +95,7 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
         handler = new Handler();
     }
 
-    public OffScreenCanvas(int width, int height, EGLContext sharedEglContext) {
+    public OffScreenCanvas(int width, int height, EGLContextWrapper sharedEglContext) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
@@ -201,6 +203,24 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
         @Override
         public void destroySurface(EGL10 egl, EGLDisplay display, EGLSurface surface) {
             egl.eglDestroySurface(display, surface);
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public android.opengl.EGLSurface createWindowSurface(android.opengl.EGLDisplay display, android.opengl.EGLConfig config, Object nativeWindow) {
+            int[] attribList = new int[]{
+                    EGL14.EGL_WIDTH, width,
+                    EGL14.EGL_HEIGHT, height,
+                    EGL14.EGL_VG_ALPHA_FORMAT, EGL14.EGL_VG_ALPHA_FORMAT_PRE,
+                    EGL14.EGL_NONE
+            };
+            return EGL14.eglCreatePbufferSurface(display, config, attribList, 0);
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public void destroySurface(android.opengl.EGLDisplay display, android.opengl.EGLSurface surface) {
+            EGL14.eglDestroySurface(display, surface);
         }
     }
 

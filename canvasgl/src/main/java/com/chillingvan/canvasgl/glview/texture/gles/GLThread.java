@@ -20,8 +20,10 @@
 
 package com.chillingvan.canvasgl.glview.texture.gles;
 
+import android.annotation.TargetApi;
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -36,7 +38,6 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Chilling on 2016/10/30.
@@ -63,8 +64,6 @@ public class GLThread extends Thread {
     private EGLWindowSurfaceFactory mEGLWindowSurfaceFactory;
     private EGLConfigChooser mEGLConfigChooser;
     private EGLContextFactory mEGLContextFactory;
-    private GLWrapper mGLWrapper;
-    private int mDebugFlags;
     private GLViewRenderer mRenderer;
     private Object mSurface;
 
@@ -92,12 +91,12 @@ public class GLThread extends Thread {
     private ArrayList<Runnable> mEventQueue = new ArrayList<>();
     private boolean mSizeChanged = true;
     private boolean changeSurface = false;
-    private EGLContext mEglContext = EGL10.EGL_NO_CONTEXT;
+    private EGLContextWrapper mEglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
     private long mLastRunTime;
 
     GLThread(EGLConfigChooser configChooser, EGLContextFactory eglContextFactory
             , EGLWindowSurfaceFactory eglWindowSurfaceFactory, GLViewRenderer renderer
-            , GLWrapper glWrapper, int debugFlags, int renderMode, Object surface, EGLContext sharedEglContext) {
+            , int renderMode, Object surface, EGLContextWrapper sharedEglContext) {
         super();
         mWidth = 0;
         mHeight = 0;
@@ -108,10 +107,8 @@ public class GLThread extends Thread {
         this.mEGLConfigChooser = configChooser;
         mEGLContextFactory = eglContextFactory;
         mEGLWindowSurfaceFactory = eglWindowSurfaceFactory;
-        mDebugFlags = debugFlags;
         mSurface = surface;
         mRenderer = renderer;
-        mGLWrapper = glWrapper;
         this.mEglContext = sharedEglContext;
     }
 
@@ -144,20 +141,6 @@ public class GLThread extends Thread {
     }
 
 
-    /**
-     * Set the debug flags to a new value. The value is
-     * constructed by OR-together zero or more
-     * of the DEBUG_CHECK_* constants. The debug flags take effect
-     * whenever a surface is created. The default value is zero.
-     *
-     * @param debugFlags the new debug flags
-     * @see #DEBUG_CHECK_GL_ERROR
-     * @see #DEBUG_LOG_GL_CALLS
-     */
-    public void setDebugFlags(int debugFlags) {
-        mDebugFlags = debugFlags;
-    }
-
     /*
          * This private method should only be called inside a
          * synchronized(sGLThreadManager) block.
@@ -182,13 +165,12 @@ public class GLThread extends Thread {
     }
 
     private void guardedRun() throws InterruptedException {
-        mEglHelper = new EglHelper(mEGLConfigChooser, mEGLContextFactory, mEGLWindowSurfaceFactory, mGLWrapper, mDebugFlags);
+        mEglHelper = EglHelperFactory.create(mEGLConfigChooser, mEGLContextFactory, mEGLWindowSurfaceFactory);
         mHaveEglContext = false;
         mHaveEglSurface = false;
         mWantRenderNotification = false;
 
         try {
-            GL10 gl = null;
             boolean createEglContext = false;
             boolean createEglSurface = false;
             boolean createGlInterface = false;
@@ -398,7 +380,6 @@ public class GLThread extends Thread {
                 }
 
                 if (createGlInterface) {
-                    gl = (GL10) mEglHelper.createGL();
 
                     createGlInterface = false;
                 }
@@ -476,7 +457,7 @@ public class GLThread extends Thread {
                 && (mRequestRender || (mRenderMode == RENDERMODE_CONTINUOUSLY));
     }
 
-    public EGLContext getEglContext() {
+    public EGLContextWrapper getEglContext() {
         return mEglContext;
     }
 
@@ -485,7 +466,7 @@ public class GLThread extends Thread {
     }
 
     public interface OnCreateGLContextListener {
-        void onCreate(EGLContext eglContext);
+        void onCreate(EGLContextWrapper eglContext);
     }
 
     public void setRenderMode(int renderMode) {
@@ -685,7 +666,7 @@ public class GLThread extends Thread {
 
     // End of member variables protected by the sGLThreadManager monitor.
 
-    private EglHelper mEglHelper;
+    private IEglHelper mEglHelper;
 
 
     public interface GLWrapper {
@@ -755,11 +736,15 @@ public class GLThread extends Thread {
          * @return the chosen configuration.
          */
         EGLConfig chooseConfig(EGL10 egl, EGLDisplay display);
+
+        android.opengl.EGLConfig chooseConfig(android.opengl.EGLDisplay display, boolean recordable);
     }
 
     private static abstract class BaseConfigChooser
             implements EGLConfigChooser {
 
+
+        private static final int EGL_RECORDABLE_ANDROID = 0x3142;
         protected int[] mConfigSpec;
         private int contextClientVersion;
 
@@ -816,6 +801,42 @@ public class GLThread extends Thread {
             }
             newConfigSpec[len + 1] = EGL10.EGL_NONE;
             return newConfigSpec;
+        }
+
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        public android.opengl.EGLConfig chooseConfig(android.opengl.EGLDisplay display, boolean recordable) {
+            int renderableType = EGL14.EGL_OPENGL_ES2_BIT;
+            if (contextClientVersion >= 3) {
+                renderableType |= EGLExt.EGL_OPENGL_ES3_BIT_KHR;
+            }
+
+            // The actual surface is generally RGBA or RGBX, so situationally omitting alpha
+            // doesn't really help.  It can also lead to a huge performance hit on glReadPixels()
+            // when reading into a GL_RGBA buffer.
+            int[] attribList = {
+                    EGL14.EGL_RED_SIZE, 8,
+                    EGL14.EGL_GREEN_SIZE, 8,
+                    EGL14.EGL_BLUE_SIZE, 8,
+                    EGL14.EGL_ALPHA_SIZE, 8,
+                    //EGL14.EGL_DEPTH_SIZE, 16,
+                    //EGL14.EGL_STENCIL_SIZE, 8,
+                    EGL14.EGL_RENDERABLE_TYPE, renderableType,
+                    EGL14.EGL_NONE, 0,      // placeholder for recordable [@-3]
+                    EGL14.EGL_NONE
+            };
+            if (recordable) {
+                attribList[attribList.length - 3] = EGL_RECORDABLE_ANDROID;
+                attribList[attribList.length - 2] = 1;
+            }
+            android.opengl.EGLConfig[] configs = new android.opengl.EGLConfig[1];
+            int[] numConfigs = new int[1];
+            if (!EGL14.eglChooseConfig(display, attribList, 0, configs, 0, configs.length,
+                    numConfigs, 0)) {
+                Log.w("GLThread", "unable to find RGB8888 / " + contextClientVersion + " EGLConfig");
+                return null;
+            }
+            return configs[0];
         }
     }
 
@@ -903,6 +924,12 @@ public class GLThread extends Thread {
         EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig, EGLContext eglContext);
 
         void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context);
+
+
+        android.opengl.EGLContext createContextAPI17(android.opengl.EGLDisplay display, android.opengl.EGLConfig eglConfig, android.opengl.EGLContext eglContext);
+
+
+        void destroyContext(android.opengl.EGLDisplay display, android.opengl.EGLContext context);
     }
 
     public static class DefaultContextFactory implements EGLContextFactory {
@@ -916,7 +943,8 @@ public class GLThread extends Thread {
 
         @Override
         public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig config, EGLContext eglContext) {
-            int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, contextClientVersion,
+            int[] attrib_list = {
+                    EGL_CONTEXT_CLIENT_VERSION, contextClientVersion,
                     EGL10.EGL_NONE};
 
             return egl.eglCreateContext(display, config, eglContext,
@@ -931,7 +959,28 @@ public class GLThread extends Thread {
                 if (LOG_THREADS) {
                     Log.i("DefaultContextFactory", "tid=" + Thread.currentThread().getId());
                 }
-                EglHelper.throwEglException("eglDestroyContex", egl.eglGetError());
+                EglHelper.throwEglException("eglDestroyContext", egl.eglGetError());
+            }
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public android.opengl.EGLContext createContextAPI17(android.opengl.EGLDisplay display, android.opengl.EGLConfig eglConfig, android.opengl.EGLContext sharedContext) {
+            int[] attrib_list = {
+                    EGL14.EGL_CONTEXT_CLIENT_VERSION, contextClientVersion,
+                    EGL14.EGL_NONE};
+            return EGL14.eglCreateContext(display, eglConfig, sharedContext, attrib_list, 0);
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public void destroyContext(android.opengl.EGLDisplay display, android.opengl.EGLContext context) {
+            if (!EGL14.eglDestroyContext(display, context)) {
+                Log.e("DefaultContextFactory", "display:" + display + " context: " + context);
+                if (LOG_THREADS) {
+                    Log.i("DefaultContextFactory", "tid=" + Thread.currentThread().getId());
+                }
+                EglHelper.throwEglException("eglDestroyContext", EGL14.eglGetError());
             }
         }
     }
@@ -945,10 +994,16 @@ public class GLThread extends Thread {
                                        Object nativeWindow);
 
         void destroySurface(EGL10 egl, EGLDisplay display, EGLSurface surface);
+
+        android.opengl.EGLSurface createWindowSurface(android.opengl.EGLDisplay display, android.opengl.EGLConfig config,
+                                       Object nativeWindow);
+
+        void destroySurface(android.opengl.EGLDisplay display, android.opengl.EGLSurface surface);
     }
 
     public static class DefaultWindowSurfaceFactory implements EGLWindowSurfaceFactory {
 
+        @Override
         public EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display,
                                               EGLConfig config, Object nativeWindow) {
 
@@ -970,9 +1025,37 @@ public class GLThread extends Thread {
             return result;
         }
 
+        @Override
         public void destroySurface(EGL10 egl, EGLDisplay display,
                                    EGLSurface surface) {
             egl.eglDestroySurface(display, surface);
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public android.opengl.EGLSurface createWindowSurface(android.opengl.EGLDisplay display, android.opengl.EGLConfig config, Object nativeWindow) {
+            int[] surfaceAttribs = {
+                    EGL14.EGL_NONE
+            };
+            android.opengl.EGLSurface result = null;
+            try {
+                result = EGL14.eglCreateWindowSurface(display, config, nativeWindow, surfaceAttribs, 0);
+            } catch (IllegalArgumentException e) {
+                // This exception indicates that the surface flinger surface
+                // is not valid. This can happen if the surface flinger surface has
+                // been torn down, but the application has not yet been
+                // notified via SurfaceHolder.Callback.surfaceDestroyed.
+                // In theory the application should be notified first,
+                // but in practice sometimes it is not. See b/4588890
+                Log.e("DefaultWindow", "eglCreateWindowSurface", e);
+            }
+            return result;
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public void destroySurface(android.opengl.EGLDisplay display, android.opengl.EGLSurface surface) {
+            EGL14.eglDestroySurface(display, surface);
         }
     }
 
@@ -981,12 +1064,10 @@ public class GLThread extends Thread {
         private EGLContextFactory eglContextFactory;
         private EGLWindowSurfaceFactory eglWindowSurfaceFactory;
         private GLViewRenderer renderer;
-        private GLWrapper mGLWrapper = null;
         private int eglContextClientVersion = 2;
-        private int debugFlags = 0;
         private int renderMode = RENDERMODE_WHEN_DIRTY;
         private Object surface;
-        private EGLContext eglContext = EGL10.EGL_NO_CONTEXT;
+        private EGLContextWrapper eglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
 
         public Builder setSurface(Object surface) {
             this.surface = surface;
@@ -1027,8 +1108,7 @@ public class GLThread extends Thread {
             return this;
         }
 
-        public Builder setmGLWrapper(GLWrapper mGLWrapper) {
-            this.mGLWrapper = mGLWrapper;
+        public Builder setGLWrapper(GLWrapper mGLWrapper) {
             return this;
         }
 
@@ -1037,17 +1117,12 @@ public class GLThread extends Thread {
             return this;
         }
 
-        public Builder setDebugFlags(int debugFlags) {
-            this.debugFlags = debugFlags;
-            return this;
-        }
-
         public Builder setRenderMode(int renderMode) {
             this.renderMode = renderMode;
             return this;
         }
 
-        public Builder setSharedEglContext(@NonNull EGLContext sharedEglContext) {
+        public Builder setSharedEglContext(@NonNull EGLContextWrapper sharedEglContext) {
             this.eglContext = sharedEglContext;
             return this;
         }
@@ -1068,7 +1143,7 @@ public class GLThread extends Thread {
             if (eglWindowSurfaceFactory == null) {
                 eglWindowSurfaceFactory = new DefaultWindowSurfaceFactory();
             }
-            return new GLThread(configChooser, eglContextFactory, eglWindowSurfaceFactory, renderer, mGLWrapper, debugFlags, renderMode, surface, eglContext);
+            return new GLThread(configChooser, eglContextFactory, eglWindowSurfaceFactory, renderer, renderMode, surface, eglContext);
         }
     }
 

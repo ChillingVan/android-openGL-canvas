@@ -27,8 +27,7 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
-
-import javax.microedition.khronos.egl.EGLContext;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 
 /**
  * Created by Chilling on 2016/11/5.
@@ -52,7 +51,7 @@ public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setSharedEglContext(EGLContext sharedEglContext) {
+    public void setSharedEglContext(EGLContextWrapper sharedEglContext) {
         glThreadBuilder.setSharedEglContext(sharedEglContext);
         createGLThread();
     }

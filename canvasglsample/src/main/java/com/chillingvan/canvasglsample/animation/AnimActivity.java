@@ -111,7 +111,12 @@ public class AnimActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        animGLView.onPause();
         animGLTextureView.onPause();
+        animGLView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

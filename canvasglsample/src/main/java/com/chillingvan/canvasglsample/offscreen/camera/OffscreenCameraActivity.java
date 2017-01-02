@@ -12,13 +12,12 @@ import android.widget.ImageView;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasglsample.R;
 import com.chillingvan.canvasglsample.textureView.CameraUtils;
 
 import java.io.IOException;
-
-import javax.microedition.khronos.egl.EGLContext;
 
 public class OffscreenCameraActivity extends AppCompatActivity {
 
@@ -52,7 +51,7 @@ public class OffscreenCameraActivity extends AppCompatActivity {
 
         cameraPreviewOffScreen.setOnCreateGLContextListener(new GLThread.OnCreateGLContextListener() {
             @Override
-            public void onCreate(EGLContext eglContext) {
+            public void onCreate(EGLContextWrapper eglContext) {
             }
         });
         cameraPreviewOffScreen.setOnSurfaceTextureSet(new GLSurfaceTextureProducerView.OnSurfaceTextureSet() {

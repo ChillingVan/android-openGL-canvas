@@ -20,24 +20,20 @@
 
 package com.chillingvan.canvasgl.glview.texture.gles;
 
-import android.opengl.GLDebugHelper;
-import android.support.annotation.Nullable;
-import android.support.v4.util.LogWriter;
 import android.util.Log;
 
-import java.io.Writer;
+import com.chillingvan.canvasgl.Loggers;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
-import javax.microedition.khronos.opengles.GL;
 
 /**
  * Created by Chilling on 2016/11/2.
  */
-public class EglHelper {
+public class EglHelper implements IEglHelper {
 
 
     private GLThread.EGLConfigChooser eglConfigChooser;
@@ -48,24 +44,21 @@ public class EglHelper {
     private EGLSurface mEglSurface;
     private EGLConfig mEglConfig;
     private EGLContext mEglContext;
-    private GLThread.GLWrapper mGLWrapper;
-    private int mDebugFlags;
 
 
     public EglHelper(GLThread.EGLConfigChooser configChooser, GLThread.EGLContextFactory eglContextFactory
-            , GLThread.EGLWindowSurfaceFactory eglWindowSurfaceFactory, @Nullable GLThread.GLWrapper glWrapper, int debugFlags) {
+            , GLThread.EGLWindowSurfaceFactory eglWindowSurfaceFactory) {
         this.eglConfigChooser = configChooser;
         this.eglContextFactory = eglContextFactory;
         this.eglWindowSurfaceFactory = eglWindowSurfaceFactory;
-        mGLWrapper = glWrapper;
-        mDebugFlags = debugFlags;
     }
 
     /**
      * Initialize EGL for a given configuration spec.
      * @param eglContext
      */
-    public EGLContext start(EGLContext eglContext) {
+    @Override
+    public EGLContextWrapper start(EGLContextWrapper eglContext) {
         if (GLThread.LOG_EGL) {
             Log.w("EglHelper", "start() tid=" + Thread.currentThread().getId());
         }
@@ -96,7 +89,7 @@ public class EglHelper {
             * Create an EGL context. We want to do this as rarely as we can, because an
             * EGL context is a somewhat heavy object.
             */
-        mEglContext = eglContextFactory.createContext(mEgl, mEglDisplay, mEglConfig, eglContext);
+        mEglContext = eglContextFactory.createContext(mEgl, mEglDisplay, mEglConfig, eglContext.getEglContextOld());
         if (mEglContext == null || mEglContext == EGL10.EGL_NO_CONTEXT) {
             mEglContext = null;
             throwEglException("createContext");
@@ -107,11 +100,9 @@ public class EglHelper {
 
         mEglSurface = null;
 
-        return mEglContext;
-    }
-
-    public EGLConfig getEglConfig() {
-        return mEglConfig;
+        EGLContextWrapper eglContextWrapper = new EGLContextWrapper();
+        eglContextWrapper.setEglContextOld(mEglContext);
+        return eglContextWrapper;
     }
 
     /**
@@ -120,10 +111,9 @@ public class EglHelper {
      *
      * @return true if the surface was created successfully.
      */
+    @Override
     public boolean createSurface(Object surface) {
-        if (GLThread.LOG_EGL) {
-            Log.w("EglHelper", "createSurface()  tid=" + Thread.currentThread().getId());
-        }
+        Loggers.w("EglHelper", "createSurface()  tid=" + Thread.currentThread().getId());
         /*
          * Check preconditions.
          */
@@ -174,36 +164,11 @@ public class EglHelper {
     }
 
     /**
-     * Create a GL object for the current EGL context.
-     *
-     * @return
-     */
-    public GL createGL() {
-
-        GL gl = mEglContext.getGL();
-        if (mGLWrapper != null) {
-            gl = mGLWrapper.wrap(gl);
-        }
-
-        if ((mDebugFlags & (GLThread.DEBUG_CHECK_GL_ERROR | GLThread.DEBUG_LOG_GL_CALLS)) != 0) {
-            int configFlags = 0;
-            Writer log = null;
-            if ((mDebugFlags & GLThread.DEBUG_CHECK_GL_ERROR) != 0) {
-                configFlags |= GLDebugHelper.CONFIG_CHECK_GL_ERROR;
-            }
-            if ((mDebugFlags & GLThread.DEBUG_LOG_GL_CALLS) != 0) {
-                log = new LogWriter("GLThread");
-            }
-            gl = GLDebugHelper.wrap(gl, configFlags, log);
-        }
-        return gl;
-    }
-
-    /**
      * Display the current render surface.
      *
      * @return the EGL error code from eglSwapBuffers.
      */
+    @Override
     public int swap() {
         if (!mEgl.eglSwapBuffers(mEglDisplay, mEglSurface)) {
             return mEgl.eglGetError();
@@ -211,6 +176,7 @@ public class EglHelper {
         return EGL10.EGL_SUCCESS;
     }
 
+    @Override
     public void destroySurface() {
         if (GLThread.LOG_EGL) {
             Log.w("EglHelper", "destroySurface()  tid=" + Thread.currentThread().getId());
@@ -228,6 +194,7 @@ public class EglHelper {
         }
     }
 
+    @Override
     public void finish() {
         if (GLThread.LOG_EGL) {
             Log.w("EglHelper", "finish() tid=" + Thread.currentThread().getId());

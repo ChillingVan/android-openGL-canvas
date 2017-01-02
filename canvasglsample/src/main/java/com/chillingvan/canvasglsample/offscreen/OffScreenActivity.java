@@ -38,10 +38,9 @@ import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasglsample.R;
-
-import javax.microedition.khronos.egl.EGLContext;
 
 public class OffScreenActivity extends Activity {
 
@@ -66,7 +65,7 @@ public class OffScreenActivity extends Activity {
 
         offScreenCanvas.setOnCreateGLContextListener(new GLThread.OnCreateGLContextListener() {
             @Override
-            public void onCreate(final EGLContext eglContext) {
+            public void onCreate(final EGLContextWrapper eglContext) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
