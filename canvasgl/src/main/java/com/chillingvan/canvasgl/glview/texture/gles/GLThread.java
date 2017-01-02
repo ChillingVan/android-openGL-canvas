@@ -27,6 +27,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.chillingvan.canvasgl.Loggers;
 import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
 
 import java.util.ArrayList;
@@ -50,9 +51,6 @@ public class GLThread extends Thread {
     public final static boolean LOG_RENDERER_DRAW_FRAME = false;
     public final static boolean LOG_EGL = false;
     public final static boolean LOG_THREADS = false;
-
-    public final static int DEBUG_CHECK_GL_ERROR = 1;
-    public final static int DEBUG_LOG_GL_CALLS = 2;
 
     public final static int RENDERMODE_WHEN_DIRTY = 0;
     public final static int RENDERMODE_CONTINUOUSLY = 1;
@@ -440,6 +438,7 @@ public class GLThread extends Thread {
                 /*
                  * clean-up everything...
                  */
+            Loggers.w("GLThread", String.format("guardedRun: end running of gl thread"));
             synchronized (sGLThreadManager) {
                 stopEglSurfaceLocked();
                 stopEglContextLocked();

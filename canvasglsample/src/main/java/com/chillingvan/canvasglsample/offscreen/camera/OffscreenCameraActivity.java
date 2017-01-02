@@ -30,7 +30,6 @@ public class OffscreenCameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_offscreen);
         imageView = (ImageView) findViewById(R.id.off_screen_img_v);
-        initCameraTexture();
     }
 
     private void initCameraTexture() {
@@ -79,6 +78,7 @@ public class OffscreenCameraActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         openCamera();
+        initCameraTexture();
         cameraPreviewOffScreen.onResume();
     }
 
