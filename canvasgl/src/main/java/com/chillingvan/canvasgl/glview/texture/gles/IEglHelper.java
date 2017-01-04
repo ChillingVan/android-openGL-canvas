@@ -13,4 +13,6 @@ public interface IEglHelper {
     void destroySurface();
 
     void finish();
+
+    void setPresentationTime(long nsecs);
 }

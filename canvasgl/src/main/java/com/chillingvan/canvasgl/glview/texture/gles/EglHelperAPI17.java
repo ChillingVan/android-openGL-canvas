@@ -4,6 +4,7 @@ import android.opengl.EGL14;
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
+import android.opengl.EGLExt;
 import android.opengl.EGLSurface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -125,6 +126,7 @@ public class EglHelperAPI17 implements IEglHelper {
     @Override
     public int swap() {
         if (!EGL14.eglSwapBuffers(mEglDisplay, mEglSurface)) {
+            Loggers.w("EglHelperAPI17", String.format("swap: start get error"));
             return EGL14.eglGetError();
         }
         return EGL14.EGL_SUCCESS;
@@ -163,6 +165,18 @@ public class EglHelperAPI17 implements IEglHelper {
         }
     }
 
+
+    /**
+     * Sends the presentation time stamp to EGL.
+     *
+     * @param nsecs Timestamp, in nanoseconds.
+     */
+    @Override
+    public void setPresentationTime(long nsecs) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            EGLExt.eglPresentationTimeANDROID(mEglDisplay, mEglSurface, nsecs);
+        }
+    }
 
     public static void logEglErrorAsWarning(String tag, String function, int error) {
         Log.w(tag, formatEglError(function, error));

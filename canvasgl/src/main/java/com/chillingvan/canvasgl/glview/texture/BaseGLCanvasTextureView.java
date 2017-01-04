@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.CanvasGL;
 import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.Loggers;
 import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glview.GLView;
 
@@ -42,11 +43,13 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLVi
 
     @Override
     public void onSurfaceCreated() {
+        Loggers.d("BaseGLCanvasTextureView", "onSurfaceCreated: ");
         mCanvas = new CanvasGL();
     }
 
     @Override
     public void onSurfaceChanged(int width, int height) {
+        Loggers.d("BaseGLCanvasTextureView", "onSurfaceChanged: ");
         mCanvas.setSize(width, height);
 
     }

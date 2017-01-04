@@ -209,6 +209,10 @@ public class EglHelper implements IEglHelper {
         }
     }
 
+    @Override
+    public void setPresentationTime(long nsecs) {
+    }
+
     private void throwEglException(String function) {
         throwEglException(function, mEgl.eglGetError());
     }

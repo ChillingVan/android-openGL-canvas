@@ -25,9 +25,10 @@ import android.opengl.EGL14;
 import android.opengl.EGLExt;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
+import android.view.Choreographer;
 
-import com.chillingvan.canvasgl.Loggers;
 import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
 
 import java.util.ArrayList;
@@ -91,6 +92,10 @@ public class GLThread extends Thread {
     private boolean changeSurface = false;
     private EGLContextWrapper mEglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
     private long mLastRunTime;
+
+
+    private ChoreographerRenderWrapper mChoreographerRenderWrapper = new ChoreographerRenderWrapper(this);
+    private long frameTimeNanos;
 
     GLThread(EGLConfigChooser configChooser, EGLContextFactory eglContextFactory
             , EGLWindowSurfaceFactory eglWindowSurfaceFactory, GLViewRenderer renderer
@@ -398,33 +403,36 @@ public class GLThread extends Thread {
                     sizeChanged = false;
                 }
 
-                if (LOG_RENDERER_DRAW_FRAME) {
-                    Log.w("GLThread", "onDrawFrame tid=" + getId());
-                }
-                mRenderer.onDrawFrame();
+                if (mChoreographerRenderWrapper.canSwap()) {
+                    if (LOG_RENDERER_DRAW_FRAME) {
+                        Log.w("GLThread", "onDrawFrame tid=" + getId());
+                    }
+                    mRenderer.onDrawFrame();
+                    mEglHelper.setPresentationTime(frameTimeNanos);
+                    int swapError = mEglHelper.swap();
+                    mChoreographerRenderWrapper.disableSwap();
+                    switch (swapError) {
+                        case EGL10.EGL_SUCCESS:
+                            break;
+                        case EGL11.EGL_CONTEXT_LOST:
+                            if (LOG_SURFACE) {
+                                Log.i("GLThread", "egl context lost tid=" + getId());
+                            }
+                            lostEglContext = true;
+                            break;
+                        default:
+                            // Other errors typically mean that the current surface is bad,
+                            // probably because the SurfaceView surface has been destroyed,
+                            // but we haven't been notified yet.
+                            // Log the error to help developers understand why rendering stopped.
+                            EglHelper.logEglErrorAsWarning("GLThread", "eglSwapBuffers", swapError);
 
-                int swapError = mEglHelper.swap();
-                switch (swapError) {
-                    case EGL10.EGL_SUCCESS:
-                        break;
-                    case EGL11.EGL_CONTEXT_LOST:
-                        if (LOG_SURFACE) {
-                            Log.i("GLThread", "egl context lost tid=" + getId());
-                        }
-                        lostEglContext = true;
-                        break;
-                    default:
-                        // Other errors typically mean that the current surface is bad,
-                        // probably because the SurfaceView surface has been destroyed,
-                        // but we haven't been notified yet.
-                        // Log the error to help developers understand why rendering stopped.
-                        EglHelper.logEglErrorAsWarning("GLThread", "eglSwapBuffers", swapError);
-
-                        synchronized (sGLThreadManager) {
-                            mSurfaceIsBad = true;
-                            sGLThreadManager.notifyAll();
-                        }
-                        break;
+                            synchronized (sGLThreadManager) {
+                                mSurfaceIsBad = true;
+                                sGLThreadManager.notifyAll();
+                            }
+                            break;
+                    }
                 }
 
                 if (wantRenderNotification) {
@@ -438,12 +446,17 @@ public class GLThread extends Thread {
                 /*
                  * clean-up everything...
                  */
-            Loggers.w("GLThread", String.format("guardedRun: end running of gl thread"));
             synchronized (sGLThreadManager) {
                 stopEglSurfaceLocked();
                 stopEglContextLocked();
             }
         }
+    }
+
+    @Override
+    public synchronized void start() {
+        super.start();
+        mChoreographerRenderWrapper.start();
     }
 
     public boolean ableToDraw() {
@@ -453,7 +466,7 @@ public class GLThread extends Thread {
     private boolean readyToDraw() {
         return (!mPaused) && mHasSurface && (!mSurfaceIsBad)
                 && (mWidth > 0) && (mHeight > 0)
-                && (mRequestRender || (mRenderMode == RENDERMODE_CONTINUOUSLY));
+                && (mRequestRender );
     }
 
     public EGLContextWrapper getEglContext() {
@@ -479,12 +492,15 @@ public class GLThread extends Thread {
     }
 
     public int getRenderMode() {
-        synchronized (sGLThreadManager) {
-            return mRenderMode;
-        }
+        return mRenderMode;
     }
 
     public void requestRender() {
+        requestRender(System.nanoTime());
+    }
+
+    public void requestRender(long frameTimeNanos) {
+        this.frameTimeNanos = frameTimeNanos;
         synchronized (sGLThreadManager) {
             mRequestRender = true;
             sGLThreadManager.notifyAll();
@@ -572,6 +588,7 @@ public class GLThread extends Thread {
                     Thread.currentThread().interrupt();
                 }
             }
+            mChoreographerRenderWrapper.stop();
         }
     }
 
@@ -594,6 +611,7 @@ public class GLThread extends Thread {
                     Thread.currentThread().interrupt();
                 }
             }
+            mChoreographerRenderWrapper.start();
         }
     }
 
@@ -1063,7 +1081,7 @@ public class GLThread extends Thread {
         private EGLContextFactory eglContextFactory;
         private EGLWindowSurfaceFactory eglWindowSurfaceFactory;
         private GLViewRenderer renderer;
-        private int eglContextClientVersion = 2;
+        private int eglContextClientVersion = 3;
         private int renderMode = RENDERMODE_WHEN_DIRTY;
         private Object surface;
         private EGLContextWrapper eglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
@@ -1146,4 +1164,76 @@ public class GLThread extends Thread {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static class ChoreographerRender implements Choreographer.FrameCallback {
+
+        private GLThread glThread;
+        private boolean canSwap = true;
+
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        public ChoreographerRender(GLThread glThread) {
+            this.glThread = glThread;
+        }
+
+        @Override
+        public void doFrame(long frameTimeNanos) {
+            if (glThread.getRenderMode() == RENDERMODE_CONTINUOUSLY) {
+                canSwap = true;
+                glThread.requestRender(frameTimeNanos);
+                Choreographer.getInstance().postFrameCallback(this);
+            }
+        }
+
+        public void start() {
+            Choreographer.getInstance().postFrameCallback(this);
+        }
+
+        public void stop() {
+            Choreographer.getInstance().removeFrameCallback(this);
+        }
+
+        public void setCanSwap(boolean canSwap) {
+            this.canSwap = canSwap;
+        }
+
+        public boolean isCanSwap() {
+            return canSwap || glThread.getRenderMode() == RENDERMODE_WHEN_DIRTY;
+        }
+    }
+
+    public static class ChoreographerRenderWrapper {
+
+        private ChoreographerRender choreographerRender = null;
+
+        public ChoreographerRenderWrapper(GLThread glThread) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                choreographerRender = new ChoreographerRender(glThread);
+            }
+        }
+
+        public void start() {
+            if (choreographerRender != null) {
+                choreographerRender.start();
+            }
+        }
+
+        public void stop() {
+            if (choreographerRender != null) {
+                choreographerRender.stop();
+            }
+        }
+
+        public boolean canSwap() {
+            if (choreographerRender != null) {
+                return choreographerRender.isCanSwap();
+            }
+            return true;
+        }
+
+        public void disableSwap() {
+            if (choreographerRender != null) {
+                choreographerRender.setCanSwap(false);
+            }
+        }
+    }
 }

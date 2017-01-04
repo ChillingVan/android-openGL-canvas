@@ -128,6 +128,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
 
     @Override
     protected void onDetachedFromWindow() {
+        Loggers.d("BaseGLTextureView", "onDetachedFromWindow: ");
         if (mGLThread != null) {
             mGLThread.requestExitAndWait();
         }
