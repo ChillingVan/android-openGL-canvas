@@ -20,13 +20,14 @@
 
 package com.chillingvan.canvasgl;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
@@ -34,26 +35,25 @@ import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Chilling on 2016/11/7.
  */
 
-public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
+public abstract class OffScreenCanvas implements GLViewRenderer {
 
     protected final GLThread mGLThread;
     private int width;
     private int height;
     protected ICanvasGL mCanvas;
-    public GL10 mGL;
 
     private BasicTexture outsideSharedTexture;
     private SurfaceTexture outsideSharedSurfaceTexture;
@@ -68,24 +68,24 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
     private int backgroundColor = Color.TRANSPARENT;
 
     public OffScreenCanvas() {
-        this(0, 0, EGL10.EGL_NO_CONTEXT);
+        this(0, 0, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
     }
 
     public OffScreenCanvas(int width, int height) {
-        this(width, height, EGL10.EGL_NO_CONTEXT);
+        this(width, height, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
     }
 
 
     public OffScreenCanvas(Object surface) {
-        this(0, 0, EGL10.EGL_NO_CONTEXT, surface);
+        this(0, 0, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
     }
 
     public OffScreenCanvas(int width, int height, Object surface) {
-        this(width, height, EGL10.EGL_NO_CONTEXT, surface);
+        this(width, height, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
     }
 
 
-    public OffScreenCanvas(int width, int height, EGLContext sharedEglContext, Object surface) {
+    public OffScreenCanvas(int width, int height, EGLContextWrapper sharedEglContext, Object surface) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
@@ -95,7 +95,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         handler = new Handler();
     }
 
-    public OffScreenCanvas(int width, int height, EGLContext sharedEglContext) {
+    public OffScreenCanvas(int width, int height, EGLContextWrapper sharedEglContext) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
@@ -194,7 +194,6 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
             int[] attribList = new int[]{
                     EGL10.EGL_WIDTH, width,
                     EGL10.EGL_HEIGHT, height,
-                    EGL14.EGL_VG_ALPHA_FORMAT, EGL14.EGL_VG_ALPHA_FORMAT_PRE,
                     EGL10.EGL_NONE
             };
             return egl.eglCreatePbufferSurface(display, config, attribList);
@@ -204,18 +203,34 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         public void destroySurface(EGL10 egl, EGLDisplay display, EGLSurface surface) {
             egl.eglDestroySurface(display, surface);
         }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public android.opengl.EGLSurface createWindowSurface(android.opengl.EGLDisplay display, android.opengl.EGLConfig config, Object nativeWindow) {
+            int[] attribList = new int[]{
+                    EGL14.EGL_WIDTH, width,
+                    EGL14.EGL_HEIGHT, height,
+                    EGL14.EGL_NONE
+            };
+            return EGL14.eglCreatePbufferSurface(display, config, attribList, 0);
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        @Override
+        public void destroySurface(android.opengl.EGLDisplay display, android.opengl.EGLSurface surface) {
+            EGL14.eglDestroySurface(display, surface);
+        }
     }
 
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mGL = gl;
+    public void onSurfaceCreated() {
         Loggers.d("OffScreenCanvas", "onSurfaceCreated: ");
         mCanvas = new CanvasGL();
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(int width, int height) {
         Loggers.d("OffScreenCanvas", "onSurfaceChanged: ");
         mCanvas.setSize(width, height);
         if (producedRawTexture == null) {
@@ -240,7 +255,7 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
 
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame() {
         if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
             producedSurfaceTexture.updateTexImage();
         }
@@ -280,12 +295,9 @@ public abstract class OffScreenCanvas implements GLSurfaceView.Renderer {
         queueEvent(new Runnable() {
             @Override
             public void run() {
-                if (mGL == null) {
-                    return;
-                }
-                onDrawFrame(mGL);
-                onDrawFrame(mGL);
-                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, mGL, height);
+                onDrawFrame();
+                onDrawFrame();
+                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, height);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

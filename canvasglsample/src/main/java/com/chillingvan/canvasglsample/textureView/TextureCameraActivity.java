@@ -33,13 +33,12 @@ import com.chillingvan.canvasgl.Loggers;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasgl.textureFilter.PixelationFilter;
 import com.chillingvan.canvasglsample.R;
 
 import java.io.IOException;
-
-import javax.microedition.khronos.egl.EGLContext;
 
 public class TextureCameraActivity extends AppCompatActivity {
 
@@ -54,7 +53,6 @@ public class TextureCameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_texture_canvas);
 
         imageView = (ImageView) findViewById(R.id.image_v);
-        initCameraTexture();
     }
 
     private void initCameraTexture() {
@@ -87,7 +85,7 @@ public class TextureCameraActivity extends AppCompatActivity {
         previewConsumerTextureView.setTextureFilter(new PixelationFilter(15));
         cameraTextureView.setOnCreateGLContextListener(new GLThread.OnCreateGLContextListener() {
             @Override
-            public void onCreate(EGLContext eglContext) {
+            public void onCreate(EGLContextWrapper eglContext) {
                 previewConsumerTextureView.setSharedEglContext(eglContext);
             }
         });
@@ -117,9 +115,10 @@ public class TextureCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Loggers.d("TextureCameraActivity", String.format("onResume: "));
         super.onResume();
+        Loggers.d("TextureCameraActivity", String.format("onResume: "));
         openCamera();
+        initCameraTexture();
         cameraTextureView.onResume();
         previewConsumerTextureView.onResume();
     }
@@ -156,8 +155,8 @@ public class TextureCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Loggers.d("TextureCameraActivity", String.format("onPause: "));
         super.onPause();
+        Loggers.d("TextureCameraActivity", String.format("onPause: "));
         releaseCamera();
         cameraTextureView.onPause();
         previewConsumerTextureView.onPause();

@@ -30,10 +30,8 @@ import android.util.AttributeSet;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
+import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Chilling on 2016/11/3.
@@ -86,13 +84,13 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         super.onSurfaceTextureAvailable(surface, width, height);
         if (mGLThread == null) {
-            setSharedEglContext(EGL10.EGL_NO_CONTEXT);
+            setSharedEglContext(EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
         }
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        super.onSurfaceChanged(gl, width, height);
+    public void onSurfaceChanged(int width, int height) {
+        super.onSurfaceChanged(width, height);
         if (producedRawTexture == null) {
             producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
             if (!producedRawTexture.isLoaded()) {
@@ -113,11 +111,11 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     }
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame() {
         if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
             producedSurfaceTexture.updateTexImage();
         }
-        super.onDrawFrame(gl);
+        super.onDrawFrame();
     }
 
     public interface OnSurfaceTextureSet {
@@ -137,8 +135,4 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 }

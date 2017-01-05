@@ -132,7 +132,7 @@ public abstract class GLView extends GLSurfaceView implements GLSurfaceView.Rend
                 }
                 onDrawFrame(gl);
                 onDrawFrame(gl);
-                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right, rect.bottom, gl, getHeight());
+                final Bitmap bitmapFromGLSurface = OpenGLUtil.createBitmapFromGLSurface(rect.left, rect.top, rect.right, rect.bottom, getHeight());
 
                 post(new Runnable() {
                     @Override

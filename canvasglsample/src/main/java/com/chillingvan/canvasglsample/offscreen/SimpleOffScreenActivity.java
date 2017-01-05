@@ -38,12 +38,12 @@ public class SimpleOffScreenActivity extends AppCompatActivity {
             }
         };
 
+        offScreenCanvas.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        offScreenCanvas.start();
         offScreenCanvas.onResume();
         offScreenCanvas.getDrawingBitmap(new Rect(0, 0, 300, 300), new GLView.GetDrawingCacheCallback() {
             @Override
@@ -51,5 +51,11 @@ public class SimpleOffScreenActivity extends AppCompatActivity {
                 imageView.setImageBitmap(bitmap);
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        offScreenCanvas.onPause();
     }
 }

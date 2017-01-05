@@ -47,4 +47,16 @@ public class Loggers {
             Log.i(tag, msg);
         }
     }
+
+    public static void w(String tag, String msg) {
+        if (DEBUG) {
+            Log.w(tag, msg);
+        }
+    }
+
+    public static void e(String tag, String msg) {
+        if (DEBUG) {
+            Log.e(tag, msg);
+        }
+    }
 }
