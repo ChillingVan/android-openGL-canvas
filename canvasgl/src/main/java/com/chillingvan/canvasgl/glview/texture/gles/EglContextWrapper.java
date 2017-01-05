@@ -10,11 +10,11 @@ import javax.microedition.khronos.egl.EGLContext;
  * Created by Chilling on 2016/12/29.
  */
 
-public class EGLContextWrapper {
+public class EglContextWrapper {
 
     protected EGLContext eglContextOld;
     protected android.opengl.EGLContext eglContext;
-    public static EGLContextWrapper EGL_NO_CONTEXT_WRAPPER = new EGLNoContextWrapper();
+    public static EglContextWrapper EGL_NO_CONTEXT_WRAPPER = new EGLNoContextWrapper();
 
     public EGLContext getEglContextOld() {
         return eglContextOld;
@@ -33,7 +33,7 @@ public class EGLContextWrapper {
     }
 
 
-    public static class EGLNoContextWrapper extends EGLContextWrapper {
+    public static class EGLNoContextWrapper extends EglContextWrapper {
 
         public EGLNoContextWrapper() {
             eglContextOld = EGL10.EGL_NO_CONTEXT;

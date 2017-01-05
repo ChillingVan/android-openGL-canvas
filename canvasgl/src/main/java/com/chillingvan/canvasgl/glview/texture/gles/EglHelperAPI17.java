@@ -37,7 +37,7 @@ public class EglHelperAPI17 implements IEglHelper {
     }
 
     @Override
-    public EGLContextWrapper start(EGLContextWrapper eglContext) {
+    public EglContextWrapper start(EglContextWrapper eglContext) {
         Loggers.w("EglHelper", "start() tid=" + Thread.currentThread().getId());
         /*
          * Get an EGL instance
@@ -76,7 +76,7 @@ public class EglHelperAPI17 implements IEglHelper {
         mEglSurface = null;
 
 
-        EGLContextWrapper eglContextWrapper = new EGLContextWrapper();
+        EglContextWrapper eglContextWrapper = new EglContextWrapper();
         eglContextWrapper.setEglContext(mEglContext);
         return eglContextWrapper;
     }

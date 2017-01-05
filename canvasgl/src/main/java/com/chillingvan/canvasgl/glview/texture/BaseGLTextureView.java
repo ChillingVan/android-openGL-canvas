@@ -28,7 +28,7 @@ import android.view.TextureView;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.Loggers;
-import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
+import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import java.util.ArrayList;
@@ -161,7 +161,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
      * @return If the context is not created, then EGL10.EGL_NO_CONTEXT will be returned.
      */
     @Nullable
-    public EGLContextWrapper getCurrentEglContext() {
+    public EglContextWrapper getCurrentEglContext() {
         return mGLThread == null ? null : mGLThread.getEglContext();
     }
 
@@ -218,7 +218,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
         mGLThread = glThreadBuilder.createGLThread();
         mGLThread.setOnCreateGLContextListener(new GLThread.OnCreateGLContextListener() {
             @Override
-            public void onCreate(final EGLContextWrapper eglContext) {
+            public void onCreate(final EglContextWrapper eglContext) {
                 post(new Runnable() {
                     @Override
                     public void run() {

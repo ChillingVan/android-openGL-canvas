@@ -33,7 +33,7 @@ import com.chillingvan.canvasgl.Loggers;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
-import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
+import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasgl.textureFilter.PixelationFilter;
 import com.chillingvan.canvasglsample.R;
@@ -85,7 +85,7 @@ public class TextureCameraActivity extends AppCompatActivity {
         previewConsumerTextureView.setTextureFilter(new PixelationFilter(15));
         cameraTextureView.setOnCreateGLContextListener(new GLThread.OnCreateGLContextListener() {
             @Override
-            public void onCreate(EGLContextWrapper eglContext) {
+            public void onCreate(EglContextWrapper eglContext) {
                 previewConsumerTextureView.setSharedEglContext(eglContext);
             }
         });

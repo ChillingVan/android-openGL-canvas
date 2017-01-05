@@ -30,7 +30,7 @@ import android.util.AttributeSet;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
-import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
+import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 /**
@@ -84,7 +84,7 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         super.onSurfaceTextureAvailable(surface, width, height);
         if (mGLThread == null) {
-            setSharedEglContext(EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
+            setSharedEglContext(EglContextWrapper.EGL_NO_CONTEXT_WRAPPER);
         }
     }
 

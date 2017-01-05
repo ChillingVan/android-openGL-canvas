@@ -36,7 +36,7 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.glview.texture.GLViewRenderer;
-import com.chillingvan.canvasgl.glview.texture.gles.EGLContextWrapper;
+import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -68,24 +68,24 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
     private int backgroundColor = Color.TRANSPARENT;
 
     public OffScreenCanvas() {
-        this(0, 0, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
+        this(0, 0, EglContextWrapper.EGL_NO_CONTEXT_WRAPPER);
     }
 
     public OffScreenCanvas(int width, int height) {
-        this(width, height, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER);
+        this(width, height, EglContextWrapper.EGL_NO_CONTEXT_WRAPPER);
     }
 
 
     public OffScreenCanvas(Object surface) {
-        this(0, 0, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
+        this(0, 0, EglContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
     }
 
     public OffScreenCanvas(int width, int height, Object surface) {
-        this(width, height, EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
+        this(width, height, EglContextWrapper.EGL_NO_CONTEXT_WRAPPER, surface);
     }
 
 
-    public OffScreenCanvas(int width, int height, EGLContextWrapper sharedEglContext, Object surface) {
+    public OffScreenCanvas(int width, int height, EglContextWrapper sharedEglContext, Object surface) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())
@@ -95,7 +95,7 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
         handler = new Handler();
     }
 
-    public OffScreenCanvas(int width, int height, EGLContextWrapper sharedEglContext) {
+    public OffScreenCanvas(int width, int height, EglContextWrapper sharedEglContext) {
         this.width = width;
         this.height = height;
         mGLThread = new GLThread.Builder().setRenderMode(getRenderMode())

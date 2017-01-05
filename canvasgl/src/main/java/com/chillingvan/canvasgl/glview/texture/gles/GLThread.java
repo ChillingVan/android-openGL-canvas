@@ -90,7 +90,7 @@ public class GLThread extends Thread {
     private ArrayList<Runnable> mEventQueue = new ArrayList<>();
     private boolean mSizeChanged = true;
     private boolean changeSurface = false;
-    private EGLContextWrapper mEglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
+    private EglContextWrapper mEglContext = EglContextWrapper.EGL_NO_CONTEXT_WRAPPER;
 
 
     private ChoreographerRenderWrapper mChoreographerRenderWrapper = new ChoreographerRenderWrapper(this);
@@ -98,7 +98,7 @@ public class GLThread extends Thread {
 
     GLThread(EGLConfigChooser configChooser, EGLContextFactory eglContextFactory
             , EGLWindowSurfaceFactory eglWindowSurfaceFactory, GLViewRenderer renderer
-            , int renderMode, Object surface, EGLContextWrapper sharedEglContext) {
+            , int renderMode, Object surface, EglContextWrapper sharedEglContext) {
         super();
         mWidth = 0;
         mHeight = 0;
@@ -463,7 +463,7 @@ public class GLThread extends Thread {
                 && (mRequestRender );
     }
 
-    public EGLContextWrapper getEglContext() {
+    public EglContextWrapper getEglContext() {
         return mEglContext;
     }
 
@@ -472,7 +472,7 @@ public class GLThread extends Thread {
     }
 
     public interface OnCreateGLContextListener {
-        void onCreate(EGLContextWrapper eglContext);
+        void onCreate(EglContextWrapper eglContext);
     }
 
     public void setRenderMode(int renderMode) {
@@ -1078,7 +1078,7 @@ public class GLThread extends Thread {
         private int eglContextClientVersion = 2;
         private int renderMode = RENDERMODE_WHEN_DIRTY;
         private Object surface;
-        private EGLContextWrapper eglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
+        private EglContextWrapper eglContext = EglContextWrapper.EGL_NO_CONTEXT_WRAPPER;
 
         public Builder setSurface(Object surface) {
             this.surface = surface;
@@ -1133,7 +1133,7 @@ public class GLThread extends Thread {
             return this;
         }
 
-        public Builder setSharedEglContext(@NonNull EGLContextWrapper sharedEglContext) {
+        public Builder setSharedEglContext(@NonNull EglContextWrapper sharedEglContext) {
             this.eglContext = sharedEglContext;
             return this;
         }

@@ -58,7 +58,7 @@ public class EglHelper implements IEglHelper {
      * @param eglContext
      */
     @Override
-    public EGLContextWrapper start(EGLContextWrapper eglContext) {
+    public EglContextWrapper start(EglContextWrapper eglContext) {
         if (GLThread.LOG_EGL) {
             Log.w("EglHelper", "start() tid=" + Thread.currentThread().getId());
         }
@@ -100,7 +100,7 @@ public class EglHelper implements IEglHelper {
 
         mEglSurface = null;
 
-        EGLContextWrapper eglContextWrapper = new EGLContextWrapper();
+        EglContextWrapper eglContextWrapper = new EglContextWrapper();
         eglContextWrapper.setEglContextOld(mEglContext);
         return eglContextWrapper;
     }

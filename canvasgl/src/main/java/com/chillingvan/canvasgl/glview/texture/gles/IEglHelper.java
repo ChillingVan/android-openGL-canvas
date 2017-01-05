@@ -4,7 +4,7 @@ package com.chillingvan.canvasgl.glview.texture.gles;
  * Created by Chilling on 2016/12/29.
  */
 public interface IEglHelper {
-    EGLContextWrapper start(EGLContextWrapper eglContext);
+    EglContextWrapper start(EglContextWrapper eglContext);
 
     boolean createSurface(Object surface);
 
