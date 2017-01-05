@@ -53,7 +53,6 @@ public class TextureCameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_texture_canvas);
 
         imageView = (ImageView) findViewById(R.id.image_v);
-        initCameraTexture();
     }
 
     private void initCameraTexture() {
@@ -116,9 +115,10 @@ public class TextureCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Loggers.d("TextureCameraActivity", String.format("onResume: "));
         super.onResume();
+        Loggers.d("TextureCameraActivity", String.format("onResume: "));
         openCamera();
+        initCameraTexture();
         cameraTextureView.onResume();
         previewConsumerTextureView.onResume();
     }
@@ -155,8 +155,8 @@ public class TextureCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Loggers.d("TextureCameraActivity", String.format("onPause: "));
         super.onPause();
+        Loggers.d("TextureCameraActivity", String.format("onPause: "));
         releaseCamera();
         cameraTextureView.onPause();
         previewConsumerTextureView.onPause();

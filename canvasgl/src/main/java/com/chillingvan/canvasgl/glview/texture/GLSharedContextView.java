@@ -71,4 +71,11 @@ public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
     protected final void onGLDraw(ICanvasGL canvas) {
         onGLDraw(canvas, outsideSharedSurfaceTexture, outsideSharedTexture);
     }
+
+    @Override
+    protected void surfaceDestroyed() {
+        super.surfaceDestroyed();
+        outsideSharedSurfaceTexture = null;
+        outsideSharedTexture = null;
+    }
 }

@@ -135,8 +135,4 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 }

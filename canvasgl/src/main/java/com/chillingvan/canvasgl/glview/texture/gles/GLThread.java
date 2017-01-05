@@ -91,7 +91,6 @@ public class GLThread extends Thread {
     private boolean mSizeChanged = true;
     private boolean changeSurface = false;
     private EGLContextWrapper mEglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;
-    private long mLastRunTime;
 
 
     private ChoreographerRenderWrapper mChoreographerRenderWrapper = new ChoreographerRenderWrapper(this);
@@ -187,11 +186,6 @@ public class GLThread extends Thread {
             Runnable event = null;
 
             while (true) {
-                long now = System.currentTimeMillis();
-                if (now - mLastRunTime < 1) {
-                    sleep(1 - (now - mLastRunTime));
-                }
-                mLastRunTime = System.currentTimeMillis();
                 synchronized (sGLThreadManager) {
                     while (true) {
                         if (mShouldExit) {
@@ -496,7 +490,7 @@ public class GLThread extends Thread {
     }
 
     public void requestRender() {
-        requestRender(System.nanoTime());
+        requestRender(0);
     }
 
     public void requestRender(long frameTimeNanos) {
@@ -1081,7 +1075,7 @@ public class GLThread extends Thread {
         private EGLContextFactory eglContextFactory;
         private EGLWindowSurfaceFactory eglWindowSurfaceFactory;
         private GLViewRenderer renderer;
-        private int eglContextClientVersion = 3;
+        private int eglContextClientVersion = 2;
         private int renderMode = RENDERMODE_WHEN_DIRTY;
         private Object surface;
         private EGLContextWrapper eglContext = EGLContextWrapper.EGL_NO_CONTEXT_WRAPPER;

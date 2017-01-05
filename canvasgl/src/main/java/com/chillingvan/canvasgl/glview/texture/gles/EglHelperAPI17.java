@@ -173,7 +173,7 @@ public class EglHelperAPI17 implements IEglHelper {
      */
     @Override
     public void setPresentationTime(long nsecs) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && nsecs != 0) {
             EGLExt.eglPresentationTimeANDROID(mEglDisplay, mEglSurface, nsecs);
         }
     }

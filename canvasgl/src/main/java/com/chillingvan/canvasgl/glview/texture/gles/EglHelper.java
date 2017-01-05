@@ -234,9 +234,4 @@ public class EglHelper implements IEglHelper {
         return function + " failed: " + EGLLogWrapper.getErrorString(error);
     }
 
-
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-//    public void setPresentationTime(EGLSurface eglSurface, long nsecs) {
-//        EGLExt.eglPresentationTimeANDROID(mEglDisplay, eglSurface, nsecs);
-//    }
 }

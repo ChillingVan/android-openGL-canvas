@@ -42,12 +42,12 @@ import java.util.List;
 abstract class BaseGLTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
     protected GLThread mGLThread;
-    protected GLThread.Builder glThreadBuilder = new GLThread.Builder();
+    protected GLThread.Builder glThreadBuilder;
     private List<Runnable> cacheEvents = new ArrayList<>();
     private SurfaceTextureListener surfaceTextureListener;
     private GLThread.OnCreateGLContextListener onCreateGLContextListener;
 
-    private boolean shouldBeCreated = false;
+    private boolean hasCreateGLThreadCalledOnce = false;
     private boolean surfaceAvailable = false;
     private GLViewRenderer renderer;
 
@@ -114,6 +114,10 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     protected void surfaceDestroyed() {
         // Surface will be destroyed when we return
         mGLThread.surfaceDestroyed();
+        mGLThread.requestExitAndWait();
+        hasCreateGLThreadCalledOnce = false;
+        surfaceAvailable = false;
+        mGLThread = null;
     }
 
     protected void surfaceChanged(int w, int h) {
@@ -187,11 +191,12 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         Loggers.d("BaseGLTextureView", "onSurfaceTextureAvailable: ");
         surfaceAvailable = true;
+        glThreadBuilder = new GLThread.Builder();
         if (mGLThread == null) {
             glThreadBuilder.setRenderMode(getRenderMode())
                     .setSurface(surface)
                     .setRenderer(renderer);
-            if (shouldBeCreated) {
+            if (hasCreateGLThreadCalledOnce) {
                 createGLThread();
             }
 
@@ -205,7 +210,8 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     }
 
     protected void createGLThread() {
-        shouldBeCreated = true;
+        Loggers.d("BaseGLTextureView", "createGLThread: ");
+        hasCreateGLThreadCalledOnce = true;
         if (!surfaceAvailable) {
             return;
         }
@@ -254,7 +260,6 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
         if (surfaceTextureListener != null) {
             surfaceTextureListener.onSurfaceTextureDestroyed(surface);
         }
-        surfaceAvailable = false;
         return true;
     }
 

@@ -194,7 +194,6 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
             int[] attribList = new int[]{
                     EGL10.EGL_WIDTH, width,
                     EGL10.EGL_HEIGHT, height,
-                    EGL14.EGL_VG_ALPHA_FORMAT, EGL14.EGL_VG_ALPHA_FORMAT_PRE,
                     EGL10.EGL_NONE
             };
             return egl.eglCreatePbufferSurface(display, config, attribList);
@@ -211,7 +210,6 @@ public abstract class OffScreenCanvas implements GLViewRenderer {
             int[] attribList = new int[]{
                     EGL14.EGL_WIDTH, width,
                     EGL14.EGL_HEIGHT, height,
-                    EGL14.EGL_VG_ALPHA_FORMAT, EGL14.EGL_VG_ALPHA_FORMAT_PRE,
                     EGL14.EGL_NONE
             };
             return EGL14.eglCreatePbufferSurface(display, config, attribList, 0);
