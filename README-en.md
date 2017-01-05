@@ -40,7 +40,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.0.0'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.0.1'
 }
 ```
 
