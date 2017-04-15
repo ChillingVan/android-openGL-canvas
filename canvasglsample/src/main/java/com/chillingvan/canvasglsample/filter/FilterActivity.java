@@ -31,6 +31,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
+import com.chillingvan.canvasgl.textureFilter.ColorMatrixFilter;
 import com.chillingvan.canvasgl.textureFilter.ContrastFilter;
 import com.chillingvan.canvasgl.textureFilter.DarkenBlendFilter;
 import com.chillingvan.canvasgl.textureFilter.DirectionalSobelEdgeDetectionFilter;
@@ -40,6 +41,7 @@ import com.chillingvan.canvasgl.textureFilter.HueFilter;
 import com.chillingvan.canvasgl.textureFilter.LightenBlendFilter;
 import com.chillingvan.canvasgl.textureFilter.OneValueFilter;
 import com.chillingvan.canvasgl.textureFilter.PixelationFilter;
+import com.chillingvan.canvasgl.textureFilter.RGBFilter;
 import com.chillingvan.canvasgl.textureFilter.SaturationFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 import com.chillingvan.canvasglsample.R;
@@ -51,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.co.cyberagent.android.gpuimage.GPUImageColorMatrixFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageContrastFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageDarkenBlendFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageDirectionalSobelEdgeDetectionFilter;
@@ -60,6 +63,7 @@ import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageLightenBlendFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImagePixelationFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageRGBFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageSaturationFilter;
 
 public class FilterActivity extends AppCompatActivity {
@@ -77,6 +81,8 @@ public class FilterActivity extends AppCompatActivity {
         FILTER_RANGE_MAP.put(PixelationFilter.class, new Range(1, 100));
         FILTER_RANGE_MAP.put(HueFilter.class, new Range(0, 360));
         FILTER_RANGE_MAP.put(GammaFilter.class, new Range(0, 3));
+        FILTER_RANGE_MAP.put(RGBFilter.class, new Range(0, 1));
+        FILTER_RANGE_MAP.put(ColorMatrixFilter.class, new Range(0, 1));
         FILTER_RANGE_MAP.put(DirectionalSobelEdgeDetectionFilter.class, new Range(0, 5));
     }
 
@@ -194,6 +200,19 @@ public class FilterActivity extends AppCompatActivity {
         gpuImageDirectionalSobelEdgeDetectionFilter.setLineSize(4.0f);
         renderEntityList.add(new CaseEntity(directionalSobelEdgeDetectionFilter, gpuImageDirectionalSobelEdgeDetectionFilter, firstBitmap));
 
+        RGBFilter rgbFilter = new RGBFilter(1.0f, 0.3f, 0.5f);
+        GPUImageRGBFilter gpuImageRGBFilter = new GPUImageRGBFilter(1.0f, 0.3f, 0.5f);
+        renderEntityList.add(new CaseEntity(rgbFilter, gpuImageRGBFilter, firstBitmap));
+
+        float[] matrix4 = {
+                1.0f, 0.0f, 0.0f, 0.3f,
+                0.0f, 1.0f, 0.0f, 0.4f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+        };
+        ColorMatrixFilter colorMatrixFilter = new ColorMatrixFilter(0.3f, matrix4);
+        GPUImageColorMatrixFilter gpuImageColorMatrixFilter = new GPUImageColorMatrixFilter(0.3f, matrix4);
+        renderEntityList.add(new CaseEntity(colorMatrixFilter, gpuImageColorMatrixFilter, firstBitmap));
 
         return renderEntityList;
     }

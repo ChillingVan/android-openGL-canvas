@@ -35,6 +35,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class OpenGLUtil {
 
+    public static void setUniformMatrix4f(final int location, final float[] matrix) {
+        GLES20.glUniformMatrix4fv(location, 1, false, matrix, 0);
+    }
 
     public static void setFloat(final int location, final float floatValue) {
         GLES20.glUniform1f(location, floatValue);
