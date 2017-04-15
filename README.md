@@ -1,4 +1,4 @@
-# OpenGL canvas
+# OpenGL Canvas
 
 [English README](https://github.com/ChillingVan/android-openGL-canvas/blob/master/README-en.md) 
 
@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.0.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.0.2'
 }
 ```
 
