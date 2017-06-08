@@ -35,7 +35,7 @@ public class DrawCircleFilter extends BasicDrawShapeFilter {
             + "  float dy = " + VARYING_DRAW_REGION_COORD + ".y - 0.5;\n"
             + "  float powVal = dx*dx + dy*dy; \n"
             + "  float subRadius = 0.5 - " + UNIFORM_LINE_WIDTH + "; \n"
-            + "  if(powVal > subRadius * subRadius && powVal < 0.5 * 0.5) {\n"
+            + "  if(powVal >= subRadius * subRadius && powVal <= 0.5 * 0.5) {\n"
             + "    gl_FragColor = " + COLOR_UNIFORM + ";\n"
             + "  } else {\n"
             + "    gl_FragColor = vec4(0, 0, 0, 0);\n"
