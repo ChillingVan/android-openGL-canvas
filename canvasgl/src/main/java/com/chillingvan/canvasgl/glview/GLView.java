@@ -117,7 +117,7 @@ public abstract class GLView extends GLSurfaceView implements GLSurfaceView.Rend
         }
     }
 
-    interface OnSizeChangeCallback {
+    public interface OnSizeChangeCallback {
         void onSizeChange(int w, int h, int oldw, int oldh);
     }
 
