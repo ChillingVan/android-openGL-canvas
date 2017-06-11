@@ -9,7 +9,7 @@
 感谢这些源代码提供者！
 
 项目应用
-[AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)
+* [AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)
 
 
 ## 功能

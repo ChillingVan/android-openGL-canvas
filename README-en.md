@@ -8,7 +8,7 @@ Idea from:
 Thanks to them!
 
 Used by:
-[AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)
+* [AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)
 
 ## Features
 * The canvasGL provides similar API as android canvas. And there are GLViews that can be extended to custom your own view to draw things with OpenGL.
@@ -130,5 +130,7 @@ See the wiki page for more use case.[here](https://github.com/ChillingVan/androi
 ### Donate
 Thanks for your support !!!
 ![alipay](http://upload-images.jianshu.io/upload_images/3587192-1cc20071ce4a042a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+alipay
 ![wechat pay](http://upload-images.jianshu.io/upload_images/3587192-3289f8237d98b2c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+wechat pay
 
