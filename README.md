@@ -8,6 +8,10 @@
 * [grafika](https://github.com/google/grafika)
 感谢这些源代码提供者！
 
+项目应用
+[AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)
+
+
 ## 功能
 * 提供一个类似Android Canvas类的使用OpenGL来实现绘制的canvasGL。可以像传统自定义View那样直接继承 GLViews, 再使用这个canvas绘制需要的东西。
 * 提供类似 GPUImage 里的Filter的API，可以在使用canvasGL画东西时实现图像处理。
