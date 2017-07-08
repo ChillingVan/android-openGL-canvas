@@ -1,11 +1,12 @@
 # OpenGL Canvas
 
-[English README](https://github.com/ChillingVan/android-openGL-canvas/blob/master/README-en.md) 
+# [English README](https://github.com/ChillingVan/android-openGL-canvas/blob/master/README-en.md) 
 
 此项目灵感来源: 
 * Android package com.android.gallery3d.glrenderer 下的源代码
 * [GPUImage](https://github.com/CyberAgent/android-gpuimage)
 * [grafika](https://github.com/google/grafika)
+
 感谢这些源代码提供者！
 
 项目应用

@@ -39,6 +39,7 @@ import com.chillingvan.canvasgl.glcanvas.GLCanvas;
 import com.chillingvan.canvasgl.glcanvas.GLES20Canvas;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
+import com.chillingvan.canvasgl.glcanvas.UploadedTexture;
 import com.chillingvan.canvasgl.shapeFilter.BasicDrawShapeFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawCircleFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
@@ -188,6 +189,26 @@ public class CanvasGL implements ICanvasGL {
     protected BasicTexture getTexture(Bitmap bitmap, @Nullable TextureFilter textureFilter) {
         throwIfCannotDraw(bitmap);
 
+        BasicTexture resultTexture = getTextureFromMap(bitmap);
+
+        if (textureFilter instanceof FilterGroup) {
+            FilterGroup filterGroup = (FilterGroup) textureFilter;
+            resultTexture = filterGroup.draw(resultTexture, glCanvas);
+        }
+
+
+        return resultTexture;
+    }
+
+    @Override
+    public void invalidateTextureContent(Bitmap bitmap) {
+        BasicTexture resultTexture = getTextureFromMap(bitmap);
+        if (resultTexture instanceof UploadedTexture) {
+            ((UploadedTexture) resultTexture).invalidateContent();
+        }
+    }
+
+    private BasicTexture getTextureFromMap(Bitmap bitmap) {
         BasicTexture resultTexture;
         if (bitmapTextureMap.containsKey(bitmap)) {
             resultTexture = bitmapTextureMap.get(bitmap);
@@ -195,12 +216,6 @@ public class CanvasGL implements ICanvasGL {
             resultTexture = new BitmapTexture(bitmap);
             bitmapTextureMap.put(bitmap, resultTexture);
         }
-
-        if (textureFilter instanceof FilterGroup) {
-            FilterGroup filterGroup = (FilterGroup) textureFilter;
-            resultTexture = filterGroup.draw(resultTexture, glCanvas);
-        }
-
         return resultTexture;
     }
 
