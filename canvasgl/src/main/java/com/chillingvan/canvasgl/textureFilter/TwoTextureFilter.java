@@ -105,4 +105,8 @@ public abstract class TwoTextureFilter extends BasicTextureFilter {
         GLES20Canvas.checkError();
     }
 
+    @Override
+    public String getOesFragmentProgram() {
+        return "#extension GL_OES_EGL_image_external : require\n" + getFragmentShader().replaceFirst(SAMPLER_2D, SAMPLER_EXTERNAL_OES);
+    }
 }
