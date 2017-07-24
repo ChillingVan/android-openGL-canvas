@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 public class DarkenBlendFilter extends TwoTextureFilter {
 
     public static final String DARKEN_BLEND_FRAGMENT_SHADER =
+            "precision mediump float; \n" +
             "varying vec2 " + VARYING_TEXTURE_COORD + ";\n" +
             " varying vec2 " + VARYING_TEXTURE_COORD2 + ";\n" +
             "\n" +
