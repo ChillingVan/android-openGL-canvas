@@ -39,6 +39,7 @@ public class GammaFilter extends BasicTextureFilter implements OneValueFilter {
 
     public static final String UNIFORM_GAMMA = "gamma";
     public static final String GAMMA_FRAGMENT_SHADER = "" +
+            "precision mediump float; \n" +
             "varying vec2 " + VARYING_TEXTURE_COORD + ";\n" +
             " \n" +
             " uniform sampler2D " + TEXTURE_SAMPLER_UNIFORM + ";\n" +

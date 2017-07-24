@@ -17,6 +17,7 @@ public class RGBFilter extends BasicTextureFilter implements OneValueFilter {
     public static final String UNIFORM_GREEN = "green";
     public static final String UNIFORM_BLUE = "blue";
     public static final String RGB_FRAGMENT_SHADER = "" +
+            "precision mediump float; \n"+
             "  varying highp vec2 " + VARYING_TEXTURE_COORD + ";\n" +
             "  \n" +
             "  uniform sampler2D " + TEXTURE_SAMPLER_UNIFORM + ";\n" +
