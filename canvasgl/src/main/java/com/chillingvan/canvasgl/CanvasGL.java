@@ -27,7 +27,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.os.Build;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -51,9 +50,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Created by Matthew on 2016/9/27.
+ * All the depth of textures are the same. So the texture drawn after will cover the texture drawn before.
  */
-
 public class CanvasGL implements ICanvasGL {
 
     private Map<Bitmap, BasicTexture> bitmapTextureMap = new WeakHashMap<>();
@@ -123,25 +121,29 @@ public class CanvasGL implements ICanvasGL {
     @Override
     public void drawSurfaceTexture(BasicTexture texture, SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
         if (surfaceTexture == null) {
-            glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter);
+            glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter, null);
         } else {
             surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
-            glCanvas.drawTexture(texture, surfaceTextureMatrix, left, top, right - left, bottom - top, basicTextureFilter);
+            glCanvas.drawTexture(texture, surfaceTextureMatrix, left, top, right - left, bottom - top, basicTextureFilter, null);
         }
     }
 
 
     @Override
-    public void drawBitmap(Bitmap bitmap, BitmapMatrix matrix) {
+    public void drawBitmap(Bitmap bitmap, @NonNull BitmapMatrix matrix) {
         drawBitmap(bitmap, matrix, basicTextureFilter);
     }
 
     @Override
-    public void drawBitmap(Bitmap bitmap, BitmapMatrix matrix, TextureFilter textureFilter) {
+    public void drawBitmap(Bitmap bitmap, final BitmapMatrix matrix, TextureFilter textureFilter) {
         BasicTexture basicTexture = getTexture(bitmap, textureFilter);
         save();
-        glCanvas.setMatrix(matrix.obtainResultMatrix());
-        glCanvas.drawTexture(basicTexture, 0, 0, bitmap.getWidth(), bitmap.getHeight(), textureFilter);
+        glCanvas.drawTexture(basicTexture, 0, 0, bitmap.getWidth(), bitmap.getHeight(), textureFilter, new GLCanvas.ICustomMVPMatrix() {
+            @Override
+            public float[] getMVPMatrix(int viewportW, int viewportH, float x, float y, float drawW, float drawH) {
+                return matrix.obtainResultMatrix(viewportW, viewportH, x, y, drawW, drawH);
+            }
+        });
         restore();
     }
 
@@ -158,7 +160,7 @@ public class CanvasGL implements ICanvasGL {
     @Override
     public void drawBitmap(Bitmap bitmap, int left, int top, TextureFilter textureFilter) {
         BasicTexture basicTexture = getTexture(bitmap, textureFilter);
-        glCanvas.drawTexture(basicTexture, left, top, bitmap.getWidth(), bitmap.getHeight(), textureFilter);
+        glCanvas.drawTexture(basicTexture, left, top, bitmap.getWidth(), bitmap.getHeight(), textureFilter, null);
     }
 
     @Override
@@ -172,7 +174,7 @@ public class CanvasGL implements ICanvasGL {
             throw new NullPointerException();
         }
         BasicTexture basicTexture = getTexture(bitmap, textureFilter);
-        glCanvas.drawTexture(basicTexture, src, dst, textureFilter);
+        glCanvas.drawTexture(basicTexture, src, dst, textureFilter, null);
     }
 
     @Override
@@ -183,7 +185,7 @@ public class CanvasGL implements ICanvasGL {
     @Override
     public void drawBitmap(Bitmap bitmap, int left, int top, int width, int height, TextureFilter textureFilter) {
         BasicTexture basicTexture = getTexture(bitmap, textureFilter);
-        glCanvas.drawTexture(basicTexture, left, top, width, height, textureFilter);
+        glCanvas.drawTexture(basicTexture, left, top, width, height, textureFilter, null);
     }
 
     protected BasicTexture getTexture(Bitmap bitmap, @Nullable TextureFilter textureFilter) {
@@ -361,111 +363,4 @@ public class CanvasGL implements ICanvasGL {
         }
     }
 
-    public static class BitmapMatrix {
-        public static final int TRANSLATE_X = 3;
-        public static final int TRANSLATE_Y = 7;
-        public static final int SCALE_X = 0;
-        public static final int SCALE_Y = 5;
-        public static final int MATRIX_SIZE = 16;
-        public static final int SKEW_X = 4;
-        public static final int SKEW_Y = 1;
-
-        private float[] tempMultipyMatrix4 = new float[MATRIX_SIZE];
-        private float[] concatResultMatrix4 = new float[MATRIX_SIZE];
-
-        public BitmapMatrix() {
-            reset();
-        }
-
-        public void reset() {
-            Matrix.setIdentityM(tempMultipyMatrix4, 0);
-            Matrix.setIdentityM(concatResultMatrix4, 0);
-            Matrix.scaleM(concatResultMatrix4, 0, 1, -1, 1);
-        }
-
-        public void postTranslate(float dx, float dy) {
-
-            Matrix.setIdentityM(tempMultipyMatrix4, 0);
-            tempMultipyMatrix4[TRANSLATE_X] = dx;
-            // 前面加负号是因为OPENGL里面的y坐标轴和Android的相反
-            tempMultipyMatrix4[TRANSLATE_Y] = -dy;
-            concatResultMatrix4 = multiplyMatrix(tempMultipyMatrix4, concatResultMatrix4);
-        }
-
-        public void postScale(float sx, float sy, float px, float py) {
-            Matrix.setIdentityM(tempMultipyMatrix4, 0);
-            tempMultipyMatrix4[SCALE_X] = sx;
-            tempMultipyMatrix4[SCALE_Y] = sy;
-            tempMultipyMatrix4[TRANSLATE_X] = px - sx * px;
-
-            // 前面加负号是因为OPENGL里面的y坐标轴和Android的相反
-            tempMultipyMatrix4[TRANSLATE_Y] = -(py - sy * py);
-            concatResultMatrix4 = multiplyMatrix(tempMultipyMatrix4, concatResultMatrix4);
-        }
-
-        public void postScale(float sx, float sy) {
-            postScale(sx, sy, 0, 0);
-        }
-
-        public void postRotate(float degrees, float px, float py) {
-
-            Matrix.setIdentityM(tempMultipyMatrix4, 0);
-            float sin = (float) Math.sin(Math.toRadians(degrees));
-            float cos = (float) Math.cos(Math.toRadians(degrees));
-            tempMultipyMatrix4[SCALE_X] = cos;
-            tempMultipyMatrix4[SKEW_X] = -sin;
-            tempMultipyMatrix4[SKEW_Y] = sin;
-            tempMultipyMatrix4[SCALE_Y] = cos;
-
-            tempMultipyMatrix4[TRANSLATE_X] = py * sin + px * (1 - cos);
-            // 前面加负号是因为OPENGL里面的y坐标轴和Android的相反
-            tempMultipyMatrix4[TRANSLATE_Y] = -(py * (1 - cos) - px * sin);
-            concatResultMatrix4 = multiplyMatrix(tempMultipyMatrix4, concatResultMatrix4);
-
-        }
-
-        public void postRotate(float degrees) {
-            postRotate(degrees, 0, 0);
-        }
-
-        private float[] multiplyMatrix(float[] lhs, float[] rhs) {
-            float[] resultMatrix4 = new float[MATRIX_SIZE];
-            for (int i = 0; i < 4; i++) {
-                float x = 0;
-                float y = 0;
-                float z = 0;
-                float w = 0;
-
-                for (int j = 0; j < 4; j++) {
-                    float e = matrixGet(lhs, i, j);
-                    x += matrixGet(rhs, j, 0) * e;
-                    y += matrixGet(rhs, j, 1) * e;
-                    z += matrixGet(rhs, j, 2) * e;
-                    w += matrixGet(rhs, j, 3) * e;
-                }
-
-                matrixSet(resultMatrix4, i, 0, x);
-                matrixSet(resultMatrix4, i, 1, y);
-                matrixSet(resultMatrix4, i, 2, z);
-                matrixSet(resultMatrix4, i, 3, w);
-            }
-            return resultMatrix4;
-        }
-
-        private static void matrixSet(float[] m, int x, int y, float val) {
-            m[4 * x + y] = val;
-        }
-
-        private static float matrixGet(float[] m, int x, int y) {
-            return m[4 * x + y];
-        }
-
-
-        public float[] obtainResultMatrix() {
-            float[] resultMatrix4 = new float[MATRIX_SIZE];
-            Matrix.transposeM(resultMatrix4, 0, concatResultMatrix4, 0);
-            return resultMatrix4;
-        }
-
-    }
 }

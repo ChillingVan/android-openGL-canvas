@@ -62,13 +62,17 @@ public class CompareGLView extends GLView {
 
 
         CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
-        matrix.postScale(2.1f, 2.1f);
-        matrix.postRotate(90);
-        matrix.postTranslate(90, 120);
-        matrix.postScale(0.4f, 0.4f, 140, 150);
-        matrix.postRotate(10, 128 , 128);
-        matrix.postTranslate(90, -120);
+        matrix.scale(1.3f, 1.6f);
+        matrix.rotateX(34);
+        matrix.rotateY(64);
+        matrix.rotateZ(30);
+        matrix.translate(390, 0);
         canvas.drawBitmap(baboon, matrix);
+
+        matrix.reset();
+        matrix.translate(28, 19);
+        matrix.rotateZ(30);
+        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lenna), matrix);
 
 
         GLPaint paint = new GLPaint();

@@ -75,7 +75,7 @@ public class FilterGroup extends BasicTextureFilter {
             RawTexture rawTexture = rawTextureList.get(i);
             TextureFilter textureFilter = mMergedFilters.get(i);
             glCanvas.beginRenderTarget(rawTexture);
-            glCanvas.drawTexture(drawTexture, 0, 0, drawTexture.getWidth(), drawTexture.getHeight(), textureFilter);
+            glCanvas.drawTexture(drawTexture, 0, 0, drawTexture.getWidth(), drawTexture.getHeight(), textureFilter, null);
             glCanvas.endRenderTarget();
             drawTexture = rawTexture;
         }

@@ -34,7 +34,7 @@ import com.chillingvan.canvasgl.glcanvas.TextureMatrixTransformer;
 
 import java.util.Arrays;
 
-import static com.chillingvan.canvasgl.CanvasGL.BitmapMatrix.MATRIX_SIZE;
+import static com.chillingvan.canvasgl.ICanvasGL.BitmapMatrix.MATRIX_SIZE;
 
 /**
  * Created by Chilling on 2016/10/17.

@@ -96,7 +96,7 @@ public class GLES20Canvas implements GLCanvas {
             + "  vTextureCoord = " + TEXTURE_COORD_ATTRIBUTE + ";\n"
             + "}\n";
 
-    private static final int INITIAL_RESTORE_STATE_SIZE = 8;
+    public static final int INITIAL_RESTORE_STATE_SIZE = 8;
     private static final int MATRIX_SIZE = 16;
 
     private Map<DrawShapeFilter, Integer> mDrawShapeFilterMapProgramId = new HashMap<>();
@@ -322,7 +322,6 @@ public class GLES20Canvas implements GLCanvas {
     public void setSize(int width, int height) {
         mWidth = width;
         mHeight = height;
-        GLES20.glViewport(0, 0, mWidth, mHeight);
         checkError();
         Matrix.setIdentityM(mMatrices, mCurrentMatrixIndex);
         Matrix.orthoM(mProjectionMatrix, 0, 0, width, 0, height, -1, 1);
@@ -370,18 +369,6 @@ public class GLES20Canvas implements GLCanvas {
         Matrix.translateM(mMatrices, mCurrentMatrixIndex, x, y, z);
     }
 
-
-    @Override
-    public void setMatrix(float[] mt) {
-        int index = mCurrentMatrixIndex;
-        for (int i = 0; i < mt.length - 4; i++) {
-            mMatrices[index + i] = mt[i];
-        }
-        mMatrices[index + 12] += mt[12];
-        mMatrices[index + 13] += mt[13];
-        mMatrices[index + 14] += mt[14];
-        mMatrices[index + 15] = mt[15];
-    }
 
     // This is a faster version of translate(x, y, z) because
     // (1) we knows z = 0, (2) we inline the Matrix.translateM call,
@@ -497,7 +484,7 @@ public class GLES20Canvas implements GLCanvas {
         if (onPreDrawShapeListener != null) {
             onPreDrawShapeListener.onPreDraw(mDrawProgram, mDrawShapeFilter);
         }
-        draw(mDrawParameters, type, count, x, y, width, height);
+        draw(mDrawParameters, type, count, x, y, width, height, null);
     }
 
     private void prepareDraw(int offset, int color, float lineWidth) {
@@ -550,8 +537,8 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     private void draw(ShaderParameter[] params, int type, int count, float x, float y, float width,
-                      float height) {
-        setMatrix(params, x, y, width, height);
+                      float height, ICustomMVPMatrix customMVPMatrix) {
+        setMatrix(params, x, y, width, height, customMVPMatrix);
         int positionHandle = params[INDEX_POSITION].handle;
         GLES20.glEnableVertexAttribArray(positionHandle);
         checkError();
@@ -561,7 +548,13 @@ public class GLES20Canvas implements GLCanvas {
         checkError();
     }
 
-    private void setMatrix(ShaderParameter[] params, float x, float y, float width, float height) {
+    private void setMatrix(ShaderParameter[] params, float x, float y, float width, float height, ICustomMVPMatrix customMVPMatrix) {
+        if (customMVPMatrix != null) {
+            GLES20.glUniformMatrix4fv(params[INDEX_MATRIX].handle, 1, false, customMVPMatrix.getMVPMatrix(mScreenWidth, mScreenHeight, x, y, width, height), 0);
+            checkError();
+            return;
+        }
+        GLES20.glViewport(0, 0, mScreenWidth, mScreenHeight);
         Matrix.translateM(mTempMatrix, 0, mMatrices, mCurrentMatrixIndex, x, y, 0f);
         Matrix.scaleM(mTempMatrix, 0, width, height, 1f);
 //        printMatrix("translate matrix:", mTempMatrix, 0);
@@ -579,7 +572,7 @@ public class GLES20Canvas implements GLCanvas {
     }
 
     @Override
-    public void drawTexture(BasicTexture texture, int x, int y, int width, int height, TextureFilter textureFilter) {
+    public void drawTexture(BasicTexture texture, int x, int y, int width, int height, TextureFilter textureFilter, ICustomMVPMatrix customMVPMatrix) {
         if (width <= 0 || height <= 0) {
             return;
         }
@@ -588,11 +581,11 @@ public class GLES20Canvas implements GLCanvas {
         mTempTargetRect.set(x, y, x + width, y + height);
         TextureMatrixTransformer.convertCoordinate(mTempSourceRect, texture);
         changeTargetIfNeeded(mTempSourceRect, mTempTargetRect, texture);
-        drawTextureRect(texture, mTempSourceRect, mTempTargetRect);
+        drawTextureRect(texture, mTempSourceRect, mTempTargetRect, customMVPMatrix);
     }
 
     @Override
-    public void drawTexture(BasicTexture texture, RectF source, RectF target, TextureFilter textureFilter) {
+    public void drawTexture(BasicTexture texture, RectF source, RectF target, TextureFilter textureFilter, ICustomMVPMatrix customMVPMatrix) {
         if (target.width() <= 0 || target.height() <= 0) {
             return;
         }
@@ -602,23 +595,23 @@ public class GLES20Canvas implements GLCanvas {
 
         TextureMatrixTransformer.convertCoordinate(mTempSourceRect, texture);
         changeTargetIfNeeded(mTempSourceRect, mTempTargetRect, texture);
-        drawTextureRect(texture, mTempSourceRect, mTempTargetRect);
+        drawTextureRect(texture, mTempSourceRect, mTempTargetRect, customMVPMatrix);
     }
 
     @Override
     public void drawTexture(BasicTexture texture, float[] textureTransform, int x, int y, int w,
-                            int h, TextureFilter textureFilter) {
+                            int h, TextureFilter textureFilter, ICustomMVPMatrix customMVPMatrix) {
         if (w <= 0 || h <= 0) {
             return;
         }
         setupTextureFilter(texture.getTarget(), textureFilter);
         mTempTargetRect.set(x, y, x + w, y + h);
-        drawTextureRect(texture, textureTransform, mTempTargetRect);
+        drawTextureRect(texture, textureTransform, mTempTargetRect, customMVPMatrix);
     }
 
-    private void drawTextureRect(BasicTexture texture, RectF source, RectF target) {
+    private void drawTextureRect(BasicTexture texture, RectF source, RectF target, ICustomMVPMatrix customMVPMatrix) {
         TextureMatrixTransformer.setTextureMatrix(source, mTempTextureMatrix);
-        drawTextureRect(texture, mTempTextureMatrix, target);
+        drawTextureRect(texture, mTempTextureMatrix, target, customMVPMatrix);
     }
 
     private static void changeTargetIfNeeded(RectF source, RectF target, BasicTexture texture) {
@@ -632,7 +625,7 @@ public class GLES20Canvas implements GLCanvas {
         }
     }
 
-    private void drawTextureRect(BasicTexture texture, float[] textureMatrix, RectF target) {
+    private void drawTextureRect(BasicTexture texture, float[] textureMatrix, RectF target, ICustomMVPMatrix customMVPMatrix) {
         ShaderParameter[] params = prepareTexture(texture);
         setPosition(params, OFFSET_FILL_RECT);
 //        printMatrix("texture matrix", textureMatrix, 0);
@@ -648,7 +641,7 @@ public class GLES20Canvas implements GLCanvas {
             translate(0, -target.centerY());
         }
         draw(params, GLES20.GL_TRIANGLE_STRIP, COUNT_FILL_VERTEX, target.left, target.top,
-                target.width(), target.height());
+                target.width(), target.height(), customMVPMatrix);
         if (texture.isFlippedVertically()) {
             restore();
         }
@@ -713,7 +706,7 @@ public class GLES20Canvas implements GLCanvas {
         GLES20.glEnableVertexAttribArray(texCoordHandle);
         checkError();
 
-        setMatrix(mMeshParameters, x, y, 1, 1);
+        setMatrix(mMeshParameters, x, y, 1, 1, null);
         GLES20.glDrawElements(mode, indexCount, GLES20.GL_UNSIGNED_BYTE, 0);
         checkError();
 
@@ -745,7 +738,7 @@ public class GLES20Canvas implements GLCanvas {
 
         float textureAlpha = (1f - cappedRatio) * currentAlpha;
         setAlpha(textureAlpha);
-        drawTexture(texture, source, target, new BasicTextureFilter());
+        drawTexture(texture, source, target, new BasicTextureFilter(), null);
 
         float colorAlpha = cappedRatio * currentAlpha;
         setAlpha(colorAlpha);
@@ -987,20 +980,24 @@ public class GLES20Canvas implements GLCanvas {
 
     @SuppressWarnings("unused")
     public static void printMatrix(String message, float[] m, int offset) {
+        if (!Loggers.DEBUG) {
+            return;
+        }
         StringBuilder b = new StringBuilder(message);
         for (int i = 0; i < MATRIX_SIZE; i++) {
             b.append(' ');
             if (i % 4 == 0) {
                 b.append('\n');
             }
-            b.append(m[offset + i]);
+            b.append(String.format("%.6ff", m[offset + i]));
         }
         Loggers.v(TAG, b.toString());
     }
 
     @Override
     public void recoverFromLightCycle() {
-        GLES20.glViewport(0, 0, mWidth, mHeight);
+        // FIXME: 2017/8/20 
+//        GLES20.glViewport(0, 0, mWidth, mHeight);
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         checkError();

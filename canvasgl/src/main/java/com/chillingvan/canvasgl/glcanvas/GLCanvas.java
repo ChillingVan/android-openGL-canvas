@@ -23,6 +23,7 @@ package com.chillingvan.canvasgl.glcanvas;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.Nullable;
 
 import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
@@ -58,17 +59,15 @@ public interface GLCanvas {
     public abstract void multiplyAlpha(float alpha);
 
     // Change the current transform matrix.
-    public abstract void translate(float x, float y, float z);
+    void translate(float x, float y, float z);
 
-    void setMatrix(float[] mt);
+    void translate(float x, float y);
 
-    public abstract void translate(float x, float y);
+    void scale(float sx, float sy, float sz);
 
-    public abstract void scale(float sx, float sy, float sz);
+    void rotate(float angle, float x, float y, float z);
 
-    public abstract void rotate(float angle, float x, float y, float z);
-
-    public abstract void multiplyMatrix(float[] mMatrix, int offset);
+    void multiplyMatrix(float[] mMatrix, int offset);
 
     // Pushes the configuration state (matrix, and alpha) onto
     // a private stack.
@@ -102,17 +101,17 @@ public interface GLCanvas {
 
     // Draws a secondBitmap to the specified rectangle.
     public abstract void drawTexture(
-            BasicTexture texture, int x, int y, int width, int height, TextureFilter textureFilter);
+            BasicTexture texture, int x, int y, int width, int height, TextureFilter textureFilter, @Nullable ICustomMVPMatrix customMVPMatrix);
 
     public abstract void drawMesh(BasicTexture tex, int x, int y, int xyBuffer,
                                   int uvBuffer, int indexBuffer, int indexCount, int mode);
 
     // Draws the source rectangle part of the secondBitmap to the target rectangle.
-    public abstract void drawTexture(BasicTexture texture, RectF source, RectF target, TextureFilter textureFilter);
+    public abstract void drawTexture(BasicTexture texture, RectF source, RectF target, TextureFilter textureFilter, @Nullable ICustomMVPMatrix customMVPMatrix);
 
     // Draw a secondBitmap with a specified secondBitmap transform.
     public abstract void drawTexture(BasicTexture texture, float[] mTextureTransform,
-                                     int x, int y, int w, int h, TextureFilter textureFilter);
+                                     int x, int y, int w, int h, TextureFilter textureFilter,@Nullable ICustomMVPMatrix customMVPMatrix);
 
     // Draw two textures to the specified rectangle. The actual secondBitmap used is
     // from * (1 - ratio) + to * ratio
@@ -228,11 +227,15 @@ public interface GLCanvas {
 
     void setOnPreDrawShapeListener(OnPreDrawShapeListener l);
 
-    public interface OnPreDrawTextureListener {
+    interface OnPreDrawTextureListener {
         void onPreDraw(int textureProgram, BasicTexture texture, TextureFilter textureFilter);
     }
 
-    public interface OnPreDrawShapeListener {
+    interface OnPreDrawShapeListener {
         void onPreDraw(int program, DrawShapeFilter drawShapeFilter);
+    }
+
+    interface ICustomMVPMatrix {
+        float[] getMVPMatrix(int viewportW, int viewportH, float x, float y, float drawW, float drawH);
     }
 }

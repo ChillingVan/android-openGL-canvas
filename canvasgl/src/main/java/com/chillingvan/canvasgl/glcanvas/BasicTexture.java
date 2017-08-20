@@ -139,12 +139,12 @@ public abstract class BasicTexture implements Texture {
 
     @Override
     public void draw(GLCanvas canvas, int x, int y) {
-        canvas.drawTexture(this, x, y, getWidth(), getHeight(), new BasicTextureFilter());
+        canvas.drawTexture(this, x, y, getWidth(), getHeight(), new BasicTextureFilter(), null);
     }
 
     @Override
     public void draw(GLCanvas canvas, int x, int y, int w, int h) {
-        canvas.drawTexture(this, x, y, w, h, new BasicTextureFilter());
+        canvas.drawTexture(this, x, y, w, h, new BasicTextureFilter(), null);
     }
 
     // onBind is called before GLCanvas binds this secondBitmap.
