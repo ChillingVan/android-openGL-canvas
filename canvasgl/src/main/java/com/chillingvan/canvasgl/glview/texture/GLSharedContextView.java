@@ -30,9 +30,8 @@ import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 
 /**
- * Created by Chilling on 2016/11/5.
+ * This class is used to accept eglContext and texture from outside. Then it can use them to draw.
  */
-
 public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
 
 

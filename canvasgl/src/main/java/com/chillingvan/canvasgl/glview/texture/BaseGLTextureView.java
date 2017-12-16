@@ -38,6 +38,8 @@ import java.util.List;
  * Created by Chilling on 2016/10/31.
  * Can be used in ScrollView or ListView.
  * Can make it not opaque by setOpaque(false).
+ *
+ * The surface of canvasGL is provided by TextureView.
  */
 abstract class BaseGLTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 

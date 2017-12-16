@@ -81,8 +81,17 @@
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>
-        <activity android:name=".offscreen.camera.OffscreenCameraActivity"
-                  android:label="OffscreenCameraActivity"
+        <activity
+            android:name=".offscreen.camera.OffscreenCameraActivity"
+            android:label="OffscreenCameraActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".video.MediaPlayerActivity"
+                  android:label="MediaPlayerActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

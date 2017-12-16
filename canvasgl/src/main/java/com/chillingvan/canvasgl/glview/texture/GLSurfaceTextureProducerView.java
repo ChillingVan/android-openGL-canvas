@@ -34,9 +34,9 @@ import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 
 /**
- * Created by Chilling on 2016/11/3.
+ * This will generate a texture which is in the eglContext of the CanvasGL. And the texture can be used outside.
+ * For example, the generated texture can be used in camera preview texture or {@link GLSharedContextView}.
  */
-
 public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     private SurfaceTexture producedSurfaceTexture;
     private OnSurfaceTextureSet onSurfaceTextureSet;

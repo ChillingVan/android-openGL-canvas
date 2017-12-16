@@ -23,13 +23,13 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.ChillingVan'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.2"
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 102020
-        versionName "1.2.2.0"
+        targetSdkVersion 27
+        versionCode 102021
+        versionName "1.2.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -49,9 +49,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:support-annotations:27.0.2'
 }
 
 
