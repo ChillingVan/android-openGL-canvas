@@ -105,7 +105,13 @@ public class MyGLView extends GLView {
 
 * If you do not want to use GLView, you can use OffScreenCanvas to draw things and fetch it by getDrawingBitmap.
 
-See the wiki page for more use case.[here](https://github.com/ChillingVan/android-openGL-canvas/wiki)
+* MediaPlayer
+
+You can use MediaPlayer to decode video and draw it on the TextureView. 
+If you use GLSurfaceTextureProducerView, then you can process the video frames and provide the texture to MediaCodec to create a new Video. 
+Use this sample and the stream publisher sample of [AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo). You can implement this.
+
+* See the wiki page for more use case.[here](https://github.com/ChillingVan/android-openGL-canvas/wiki)
 
 ## Notice
 * The onGLDraw method in GLView runs in its own thread but not the main thread. 

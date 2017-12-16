@@ -109,7 +109,14 @@ public class MyGLView extends GLView {
 * 如果不想使用View，可以使用 OffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
 
 
-[更多用例请查看wiki](https://github.com/ChillingVan/android-openGL-canvas/wiki)
+* MediaPlayer
+
+可以用 MediaPlayer 去解码视频，并绘制到 TextureView 上。
+如果用本项目里的 GLSurfaceTextureProducerView ，那么还可以做视频处理。
+结合[AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)的stream publisher，就能生成新视频。
+
+
+* [更多用例请查看wiki](https://github.com/ChillingVan/android-openGL-canvas/wiki)
 
 ## 注意事项
 * 每一个View的onGLDraw都运行在自己的线程而非主线程。
