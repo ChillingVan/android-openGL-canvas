@@ -43,6 +43,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * drawRect, drawLine, drawCircle --> prepareDraw --> {@link GLES20Canvas#draw}
+ * drawTexture --> setupTextureFilter --> drawTextureRect --> prepareTexture
+ * --> setPosition  --> draw --> setMatrix
+ */
 public class GLES20Canvas implements GLCanvas {
     // ************** Constants **********************
     private static final String TAG = GLES20Canvas.class.getSimpleName();

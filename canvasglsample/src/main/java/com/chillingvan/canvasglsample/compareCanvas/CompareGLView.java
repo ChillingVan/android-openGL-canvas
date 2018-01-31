@@ -85,7 +85,7 @@ public class CompareGLView extends GLView {
         paint2.setColor(Color.parseColor("#8800FF00"));
         paint2.setLineWidth(4);
         paint2.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(360, 40, 380, 80, paint2);
+        canvas.drawRect(560, 40, 760, 180, paint2);
 
         canvas.drawLine(360, 80, 360, 120, paint);
 
