@@ -8,7 +8,6 @@ import android.opengl.EGLExt;
 import android.opengl.EGLSurface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import com.chillingvan.canvasgl.util.FileLogger;
 
@@ -102,8 +101,9 @@ public class EglHelperAPI17 implements IEglHelper {
         if (mEglSurface == null || mEglSurface == EGL14.EGL_NO_SURFACE) {
             int error = EGL14.eglGetError();
             if (error == EGL14.EGL_BAD_NATIVE_WINDOW) {
-                Log.e("EglHelper", "createWindowSurface returned EGL_BAD_NATIVE_WINDOW.");
+                FileLogger.e(TAG, "createWindowSurface returned EGL_BAD_NATIVE_WINDOW.");
             }
+            FileLogger.e(TAG, "EGL_NO_SURFACE");
             return false;
         }
 
@@ -116,7 +116,7 @@ public class EglHelperAPI17 implements IEglHelper {
              * Could not make the context current, probably because the underlying
              * SurfaceView surface has been destroyed.
              */
-            logEglErrorAsWarning("EGLHelper", "eglMakeCurrent", EGL14.eglGetError());
+            logEglErrorAsWarning(TAG, "eglMakeCurrent", EGL14.eglGetError());
             return false;
         }
 
@@ -176,7 +176,7 @@ public class EglHelperAPI17 implements IEglHelper {
     }
 
     public static void logEglErrorAsWarning(String tag, String function, int error) {
-        Log.w(tag, formatEglError(function, error));
+        FileLogger.w(tag, formatEglError(function, error));
     }
 
     private void throwEglException(String function) {

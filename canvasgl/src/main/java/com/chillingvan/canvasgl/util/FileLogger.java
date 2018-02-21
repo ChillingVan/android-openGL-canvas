@@ -103,7 +103,7 @@ public final class FileLogger {
             });
         }
     }
-    
+
     /**
      * log for debug
      *
@@ -354,13 +354,27 @@ public final class FileLogger {
     }
 
     private static void writeToFileIfNeeded(final String tag, final String msg, LogLevel logLevel) {
+        final StringBuilder strBuilder = new StringBuilder();
+        StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+        int methodStackCnt = 2;
+        strBuilder
+                .append(" ")
+                .append(" tid=").append(Thread.currentThread().getId())
+                .append(" ")
+                .append(stackTrace[methodStackCnt].getFileName())
+                .append("[").append(stackTrace[methodStackCnt].getLineNumber())
+                .append("] ").append("; ")
+                .append(stackTrace[methodStackCnt].getMethodName())
+                .append(": ")
+        ;
+
         if (logLevel.getValue() < sLogLevel.getValue() || sLogFileManager == null) {
             return;
         }
         sLogExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                appendLog(tag, msg);
+                appendLog(tag, strBuilder.toString() + msg);
             }
         });
     }
@@ -384,7 +398,7 @@ public final class FileLogger {
     }
 
     private static String formatLog(String tag, String msg) {
-        return String.format(Locale.CHINA, "%s pid=%d tid=%d %s: %s\n", LOG_DATE_TIME_FORMAT.format(new Date()), android.os.Process.myPid(), Thread.currentThread().getId(), tag, msg);
+        return String.format(Locale.CHINA, "%s pid=%d %s; %s\n", LOG_DATE_TIME_FORMAT.format(new Date()), android.os.Process.myPid(), tag, msg);
     }
 
     public static class LogFileManager {
@@ -441,7 +455,7 @@ public final class FileLogger {
 
         private class FileComparator implements Comparator<File> {
             public int compare(File file1, File file2) {
-                if(file1.lastModified() < file2.lastModified()) {
+                if (file1.lastModified() < file2.lastModified()) {
                     return -1;
                 } else {
                     return 1;

@@ -245,7 +245,7 @@ public class GLThread extends Thread {
                         }
 
                         if (doRenderNotification) {
-//                            FileLogger.i(TAG, "sending render notification tid=" + getId());
+                            Log.i(TAG, "sending render notification tid=" + getId());
                             mWantRenderNotification = false;
                             doRenderNotification = false;
                             mRenderComplete = true;
@@ -366,15 +366,16 @@ public class GLThread extends Thread {
                     createEglContext = false;
                 }
 
+
                 if (sizeChanged) {
-                    FileLogger.w("GLThread", "onSurfaceChanged(" + w + ", " + h + ")");
+                    FileLogger.w(TAG, "onSurfaceChanged(" + w + ", " + h + ")");
                     mRenderer.onSurfaceChanged(w, h);
                     sizeChanged = false;
                 }
 
                 if (mChoreographerRenderWrapper.canSwap()) {
                     if (LOG_RENDERER_DRAW_FRAME) {
-                        Log.w("GLThread", "onDrawFrame tid=" + getId());
+                        Log.w(TAG, "onDrawFrame tid=" + getId());
                     }
                     mRenderer.onDrawFrame();
                     mEglHelper.setPresentationTime(frameTimeNanos);
