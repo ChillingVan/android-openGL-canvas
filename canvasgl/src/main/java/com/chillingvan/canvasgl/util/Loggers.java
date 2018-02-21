@@ -18,7 +18,7 @@
  *
  */
 
-package com.chillingvan.canvasgl;
+package com.chillingvan.canvasgl.util;
 
 import android.util.Log;
 

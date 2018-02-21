@@ -28,7 +28,7 @@ import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.chillingvan.canvasgl.Loggers;
+import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasgl.shapeFilter.BasicDrawShapeFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;

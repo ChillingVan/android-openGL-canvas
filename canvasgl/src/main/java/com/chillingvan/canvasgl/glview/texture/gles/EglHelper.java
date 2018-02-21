@@ -22,7 +22,8 @@ package com.chillingvan.canvasgl.glview.texture.gles;
 
 import android.util.Log;
 
-import com.chillingvan.canvasgl.Loggers;
+import com.chillingvan.canvasgl.util.FileLogger;
+import com.chillingvan.canvasgl.util.Loggers;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -35,6 +36,7 @@ import javax.microedition.khronos.egl.EGLSurface;
  */
 public class EglHelper implements IEglHelper {
 
+    private static final String TAG = "EglHelper";
 
     private GLThread.EGLConfigChooser eglConfigChooser;
     private GLThread.EGLContextFactory eglContextFactory;
@@ -59,9 +61,7 @@ public class EglHelper implements IEglHelper {
      */
     @Override
     public EglContextWrapper start(EglContextWrapper eglContext) {
-        if (GLThread.LOG_EGL) {
-            Log.w("EglHelper", "start() tid=" + Thread.currentThread().getId());
-        }
+        FileLogger.w("EglHelper", "start() tid=" + Thread.currentThread().getId());
         /*
          * Get an EGL instance
          */
@@ -94,9 +94,7 @@ public class EglHelper implements IEglHelper {
             mEglContext = null;
             throwEglException("createContext");
         }
-        if (GLThread.LOG_EGL) {
-            Log.w("EglHelper", "createContext " + mEglContext + " tid=" + Thread.currentThread().getId());
-        }
+        FileLogger.w("EglHelper", "createContext " + mEglContext + " tid=" + Thread.currentThread().getId());
 
         mEglSurface = null;
 
@@ -178,9 +176,7 @@ public class EglHelper implements IEglHelper {
 
     @Override
     public void destroySurface() {
-        if (GLThread.LOG_EGL) {
-            Log.w("EglHelper", "destroySurface()  tid=" + Thread.currentThread().getId());
-        }
+        FileLogger.w(TAG, "destroySurface()  tid=" + Thread.currentThread().getId());
         destroySurfaceImp();
     }
 
@@ -196,9 +192,7 @@ public class EglHelper implements IEglHelper {
 
     @Override
     public void finish() {
-        if (GLThread.LOG_EGL) {
-            Log.w("EglHelper", "finish() tid=" + Thread.currentThread().getId());
-        }
+        FileLogger.w(TAG, "finish() tid=" + Thread.currentThread().getId());
         if (mEglContext != null) {
             eglContextFactory.destroyContext(mEgl, mEglDisplay, mEglContext);
             mEglContext = null;
@@ -219,10 +213,8 @@ public class EglHelper implements IEglHelper {
 
     public static void throwEglException(String function, int error) {
         String message = formatEglError(function, error);
-        if (GLThread.LOG_THREADS) {
-            Log.e("EglHelper", "throwEglException tid=" + Thread.currentThread().getId() + " "
-                    + message);
-        }
+        FileLogger.e(TAG, "throwEglException tid=" + Thread.currentThread().getId() + " "
+                + message);
         throw new RuntimeException(message);
     }
 

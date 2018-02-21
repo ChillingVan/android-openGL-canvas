@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.CanvasGL;
 import com.chillingvan.canvasgl.ICanvasGL;
-import com.chillingvan.canvasgl.Loggers;
+import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glview.GLView;
 

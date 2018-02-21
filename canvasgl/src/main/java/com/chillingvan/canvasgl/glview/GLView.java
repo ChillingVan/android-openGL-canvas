@@ -36,7 +36,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by Matthew on 2016/10/5.
  */
 
 public abstract class GLView extends GLSurfaceView implements GLSurfaceView.Renderer {
