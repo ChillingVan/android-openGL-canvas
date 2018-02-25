@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.1'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.2'
 }
 ```
 
@@ -117,6 +117,10 @@ Use this sample and the stream publisher sample of [AndroidInstantVideo](https:/
 * The onGLDraw method in GLView runs in its own thread but not the main thread. 
 * I haven't implemented all the filters in GPUImage. I will add more later. If you need, you can take my code as example to implement your filter. It is simple.
 * Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
+
+## Latest Update
+* Fix issue that when close screen, the TextureCamera will stuck.
+* Add FileLogger
 
 ## License
     Copyright 2016 ChillingVan.

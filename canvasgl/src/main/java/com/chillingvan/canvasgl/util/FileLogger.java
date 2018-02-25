@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,14 +47,12 @@ public final class FileLogger {
         }
     }
 
-    private static final int CACHE_QUEUE_SIZE = 1; //缓存最多1条log信息后输出到文件
     private static final SimpleDateFormat LOG_DATE_TIME_FORMAT = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     private static ExecutorService sLogExecutor = Executors.newSingleThreadExecutor();
 
     private static boolean sLogEnable = false;
     private static LogLevel sLogLevel = LogLevel.DEBUG;
-    private static Queue<String> sMsgQueue = new ArrayBlockingQueue<>(CACHE_QUEUE_SIZE);
     private static LogFileManager sLogFileManager;
 
     private static Map<String, Integer> limitLogMap = new HashMap<>();
@@ -91,22 +86,6 @@ public final class FileLogger {
             throw new InvalidParameterException();
         }
         sLogFileManager = new LogFileManager(dirPath);
-    }
-
-    /**
-     * 程序退出时调用该方法
-     *
-     * @param
-     */
-    public static void close() {
-        if (sLogFileManager != null) {
-            sLogExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    flushLogToFile();
-                }
-            });
-        }
     }
 
     /**
@@ -405,20 +384,11 @@ public final class FileLogger {
 
     private static void appendLog(String tag, String msg) {
         String logMsg = formatLog(tag, msg);
-        sMsgQueue.add(logMsg);
-        // 到达缓存上限，写到文件中
-        if (sMsgQueue.size() >= CACHE_QUEUE_SIZE) {
-            flushLogToFile();
-        }
+        flushLogToFile(logMsg);
     }
 
-    private static void flushLogToFile() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String message : sMsgQueue) {
-            stringBuilder.append(message);
-        }
-        sLogFileManager.writeLogToFile(stringBuilder.toString());
-        sMsgQueue.clear();
+    private static void flushLogToFile(String logMsg) {
+        sLogFileManager.writeLogToFile(logMsg);
     }
 
     private static String formatLog(String tag, String msg) {
@@ -454,16 +424,10 @@ public final class FileLogger {
                 return createNewLogFileIfNeed();
             }
             List<File> sortedFiles = sortFiles(files);
-            List<File> logFiles = new ArrayList<>(LOG_FILES_MAX_NUM);
-            for (File sortedFile : sortedFiles) {
-                if (sortedFile.getName().startsWith(PREFIX)) {
-                    logFiles.add(sortedFile);
-                }
-            }
 
             if (files.length > LOG_FILES_MAX_NUM) {
                 // 删掉最老的文件
-                FileUtil.delete(logFiles.get(0));
+                FileUtil.delete(sortedFiles.get(0));
             }
             return createNewLogFileIfNeed();
         }
