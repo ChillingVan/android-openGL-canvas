@@ -1,5 +1,6 @@
 package com.chillingvan.canvasgl.glview.texture.gles;
 
+import android.nfc.Tag;
 import android.opengl.EGL14;
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
@@ -68,8 +69,9 @@ public class EglHelperAPI17 implements IEglHelper {
             */
         mEglContext = eglContextFactory.createContextAPI17(mEglDisplay, mEglConfig, eglContext.getEglContext());
         if (mEglContext == null || mEglContext == EGL14.EGL_NO_CONTEXT) {
+            FileLogger.d(TAG, "mEglContext:" + mEglContext);
             mEglContext = null;
-            throwEglException("createContext");
+            throwEglException("; createContext");
         }
         FileLogger.w(TAG, "createContext " + mEglContext + " tid=" + Thread.currentThread().getId());
 

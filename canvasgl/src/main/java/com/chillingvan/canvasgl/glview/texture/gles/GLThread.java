@@ -128,6 +128,7 @@ public class GLThread extends Thread {
             guardedRun();
         } catch (InterruptedException e) {
             // fall thru and exit normally
+            FileLogger.e(TAG, "", e);
         } finally {
             sGLThreadManager.threadExiting(this);
         }
@@ -139,10 +140,10 @@ public class GLThread extends Thread {
     }
 
 
-    /*
-         * This private method should only be called inside a
-         * synchronized(sGLThreadManager) block.
-         */
+    /**
+     * This private method should only be called inside a
+     * synchronized(sGLThreadManager) block.
+     */
     private void stopEglSurfaceLocked() {
         if (mHaveEglSurface) {
             mHaveEglSurface = false;
@@ -150,7 +151,7 @@ public class GLThread extends Thread {
         }
     }
 
-    /*
+    /**
      * This private method should only be called inside a
      * synchronized(sGLThreadManager) block.
      */
@@ -183,6 +184,7 @@ public class GLThread extends Thread {
 
             while (true) {
                 synchronized (sGLThreadManager) {
+                    // Create egl context here
                     while (true) {
                         if (mShouldExit) {
                             return;
@@ -245,7 +247,7 @@ public class GLThread extends Thread {
                         }
 
                         if (doRenderNotification) {
-                            Log.i(TAG, "sending render notification tid=" + getId());
+//                            Log.i(TAG, "sending render notification tid=" + getId());
                             mWantRenderNotification = false;
                             doRenderNotification = false;
                             mRenderComplete = true;
@@ -520,6 +522,10 @@ public class GLThread extends Thread {
         }
     }
 
+    /**
+     * mHasSurface = false --> mWaitingForSurface = true
+     * -->
+     */
     public void surfaceDestroyed() {
         synchronized (sGLThreadManager) {
             FileLogger.i(TAG, "surfaceDestroyed tid=" + getId());
@@ -535,6 +541,11 @@ public class GLThread extends Thread {
         }
     }
 
+    /**
+     * mRequestPaused --> mPaused, pausing
+     * --> pausing && mHaveEglSurface, stopEglSurfaceLocked()
+     * --> pausing && mHaveEglContext, preserve context or not.
+     */
     public void onPause() {
         synchronized (sGLThreadManager) {
             FileLogger.i(TAG, "onPause tid=" + getId());
@@ -1114,6 +1125,7 @@ public class GLThread extends Thread {
     public static class ChoreographerRender implements Choreographer.FrameCallback {
 
         private GLThread glThread;
+        // Only used when render mode is RENDERMODE_CONTINUOUSLY
         private boolean canSwap = true;
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
