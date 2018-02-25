@@ -56,7 +56,7 @@ public class MainActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FileLogger.init(getExternalFilesDir(null).getAbsolutePath());
-        FileLogger.d("MainActivity", "init");
+        FileLogger.d("MainActivity", "init -----------------");
         CrashHandler.init(getApplicationContext());
         Loggers.DEBUG = true;
         getPermission();

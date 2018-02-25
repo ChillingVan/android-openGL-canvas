@@ -6,12 +6,15 @@ import java.io.File;
 import java.io.FileFilter;
 import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -56,6 +59,8 @@ public final class FileLogger {
     private static LogLevel sLogLevel = LogLevel.DEBUG;
     private static Queue<String> sMsgQueue = new ArrayBlockingQueue<>(CACHE_QUEUE_SIZE);
     private static LogFileManager sLogFileManager;
+
+    private static Map<String, Integer> limitLogMap = new HashMap<>();
 
     /**
      * 设置Log开关
@@ -102,6 +107,25 @@ public final class FileLogger {
                 }
             });
         }
+    }
+
+    /**
+     * @param id the id for this log. Must be unique
+     * @param cntTimesAfterLogOnce example: 1000 log once, then after 1000 call of this will log again
+     */
+    public static void limitLog(String id, String tag, String message, int cntTimesAfterLogOnce) {
+        if (!limitLogMap.containsKey(id)) {
+            limitLogMap.put(id, 0);
+        } else {
+            Integer currentCnt = limitLogMap.get(id);
+            if (currentCnt < cntTimesAfterLogOnce) {
+                limitLogMap.put(id, currentCnt+1);
+                return;
+            } else {
+                limitLogMap.put(id, 0);
+            }
+        }
+        d(tag, message);
     }
 
     /**
@@ -405,7 +429,8 @@ public final class FileLogger {
         private static final int LOG_FILES_MAX_NUM = 5; //文件最多有5个
         private static final int LOG_FILE_MAX_SIZE = 1000 * 1000 * 20; //文件最大20MB
 
-        private static final SimpleDateFormat LOG_FILE_DATE_FORMAT = new SimpleDateFormat("MM-dd-HH-mm");
+        private static final SimpleDateFormat LOG_FILE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+        public static final String PREFIX = "Log";
 
         private File mCurrentLogFile;
         private String mLogFileDir;
@@ -426,25 +451,25 @@ public final class FileLogger {
             File[] files = dir.listFiles(fileFilter);
             if (files == null || files.length == 0) {
                 // 创建新文件
-                return createNewLogFile();
+                return createNewLogFileIfNeed();
             }
             List<File> sortedFiles = sortFiles(files);
+            List<File> logFiles = new ArrayList<>(LOG_FILES_MAX_NUM);
+            for (File sortedFile : sortedFiles) {
+                if (sortedFile.getName().startsWith(PREFIX)) {
+                    logFiles.add(sortedFile);
+                }
+            }
+
             if (files.length > LOG_FILES_MAX_NUM) {
                 // 删掉最老的文件
-                FileUtil.delete(sortedFiles.get(0));
+                FileUtil.delete(logFiles.get(0));
             }
-            // 取最新的文件，看写没写满
-            File lastLogFile = sortedFiles.get(sortedFiles.size() - 1);
-            if (lastLogFile.length() < LOG_FILE_MAX_SIZE) {
-                return lastLogFile;
-            } else {
-                // 创建新文件
-                return createNewLogFile();
-            }
+            return createNewLogFileIfNeed();
         }
 
-        private File createNewLogFile() {
-            return FileUtil.createFile(mLogFileDir + "/Log" + LOG_FILE_DATE_FORMAT.format(new Date()) + ".txt");
+        private File createNewLogFileIfNeed() {
+            return FileUtil.createFile(mLogFileDir + File.separator + PREFIX + LOG_FILE_DATE_FORMAT.format(new Date()) + ".txt");
         }
 
         private List<File> sortFiles(File[] files) {

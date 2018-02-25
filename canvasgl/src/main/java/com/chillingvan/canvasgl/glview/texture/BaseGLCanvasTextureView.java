@@ -20,6 +20,7 @@ import com.chillingvan.canvasgl.glview.GLView;
 abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLViewRenderer {
 
 
+    private static final String TAG = "BaseGLCanvasTextureView";
     protected ICanvasGL mCanvas;
     private int backgroundColor = Color.TRANSPARENT;
 
@@ -49,7 +50,7 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLVi
 
     @Override
     public void onSurfaceChanged(int width, int height) {
-        Loggers.d("BaseGLCanvasTextureView", "onSurfaceChanged: ");
+        Loggers.d(TAG, "onSurfaceChanged: ");
         mCanvas.setSize(width, height);
 
     }

@@ -316,7 +316,7 @@ public class GLThread extends Thread {
 
                         // By design, this is the only place in a GLThread thread where we wait().
                         if (LOG_THREADS) {
-                            Log.i(TAG, "waiting tid=" + getId()
+                            FileLogger.limitLog("", TAG, "waiting tid=" + getId()
                                     + " mHaveEglContext: " + mHaveEglContext
                                     + " mHaveEglSurface: " + mHaveEglSurface
                                     + " mFinishedCreatingEglSurface: " + mFinishedCreatingEglSurface
@@ -327,7 +327,7 @@ public class GLThread extends Thread {
                                     + " mWidth: " + mWidth
                                     + " mHeight: " + mHeight
                                     + " mRequestRender: " + mRequestRender
-                                    + " mRenderMode: " + mRenderMode);
+                                    + " mRenderMode: " + mRenderMode, 600);
                         }
                         sGLThreadManager.wait();
                     }
@@ -584,6 +584,7 @@ public class GLThread extends Thread {
 
     public void onWindowResize(int w, int h) {
         synchronized (sGLThreadManager) {
+            FileLogger.d(TAG, "width:" + w + " height:" + h);
             mWidth = w;
             mHeight = h;
             mSizeChanged = true;
