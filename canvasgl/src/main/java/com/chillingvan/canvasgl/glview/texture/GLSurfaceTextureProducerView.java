@@ -94,23 +94,19 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
         Loggers.d(TAG, "onSizeChanged: ");
-        if (producedRawTexture == null) {
-            producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
-            if (!producedRawTexture.isLoaded()) {
-                producedRawTexture.prepare(mCanvas.getGlCanvas());
-            }
-            producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    if (onSurfaceTextureSet != null) {
-                        onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
-                    }
-                }
-            });
-        } else {
-            producedRawTexture.setSize(width, height);
+        producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
+        if (!producedRawTexture.isLoaded()) {
+            producedRawTexture.prepare(mCanvas.getGlCanvas());
         }
+        producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (onSurfaceTextureSet != null) {
+                    onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
+                }
+            }
+        });
     }
 
     @Override
@@ -126,8 +122,18 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        recycleProduceTexture();
+    }
+
+    @Override
     protected void surfaceDestroyed() {
         super.surfaceDestroyed();
+        recycleProduceTexture();
+    }
+
+    private void recycleProduceTexture() {
         if (producedRawTexture != null) {
             producedRawTexture.recycle();
             producedRawTexture = null;

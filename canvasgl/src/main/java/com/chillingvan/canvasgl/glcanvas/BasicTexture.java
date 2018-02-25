@@ -52,6 +52,7 @@ public abstract class BasicTexture implements Texture {
     protected int mTextureHeight;
 
     private boolean mHasBorder;
+    private boolean isRecycled;
 
     protected GLCanvas mCanvasRef = null;
     private static WeakHashMap<BasicTexture, Object> sAllTextures
@@ -161,7 +162,16 @@ public abstract class BasicTexture implements Texture {
     // recycle() is called when the secondBitmap will never be used again,
     // so it can free all resources.
     public void recycle() {
+        isRecycled = true;
         freeResource();
+    }
+
+    public boolean isRecycled() {
+        return isRecycled;
+    }
+
+    protected void setRecycled(boolean recycled) {
+        isRecycled = recycled;
     }
 
     // yield() is called when the secondBitmap will not be used temporarily,
@@ -213,4 +223,5 @@ public abstract class BasicTexture implements Texture {
             }
         }
     }
+
 }
