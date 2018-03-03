@@ -43,9 +43,9 @@ import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL;
 
 /**
- * Created by Chilling on 2016/10/30.
+ * Create GL Context --> Create Surface
+ * And then draw with OpenGL and finally eglSwap to update the screen.
  */
-
 public class GLThread extends Thread {
     private static final String TAG = "GLThread";
     public final static boolean LOG_RENDERER_DRAW_FRAME = false;
@@ -65,7 +65,6 @@ public class GLThread extends Thread {
     private Object mSurface;
 
     private OnCreateGLContextListener onCreateGLContextListener;
-    private boolean mPreserveEGLContextOnPause = true;
 
 
     // Once the thread is started, all accesses to the following member
@@ -132,11 +131,6 @@ public class GLThread extends Thread {
         } finally {
             sGLThreadManager.threadExiting(this);
         }
-    }
-
-
-    public void setPreserveEGLContextOnPause(boolean mPreserveEGLContextOnPause) {
-        this.mPreserveEGLContextOnPause = mPreserveEGLContextOnPause;
     }
 
 
@@ -217,16 +211,6 @@ public class GLThread extends Thread {
                             FileLogger.i(TAG, "releasing EGL surface because paused tid=" + getId());
                             stopEglSurfaceLocked();
                         }
-
-                        // When pausing, optionally release the EGL Context:
-                        if (pausing && mHaveEglContext) {
-                            boolean preserveEglContextOnPause = mPreserveEGLContextOnPause;
-                            if (!preserveEglContextOnPause) {
-                                stopEglContextLocked();
-                                FileLogger.i(TAG, "releasing EGL context because paused tid=" + getId());
-                            }
-                        }
-
 
                         // Have we lost the SurfaceView surface?
                         if ((!mHasSurface) && (!mWaitingForSurface)) {
@@ -362,6 +346,7 @@ public class GLThread extends Thread {
                     createGlInterface = false;
                 }
 
+                // Make sure context and surface are created
                 if (createEglContext) {
                     FileLogger.w("GLThread", "onSurfaceCreated");
                     mRenderer.onSurfaceCreated();

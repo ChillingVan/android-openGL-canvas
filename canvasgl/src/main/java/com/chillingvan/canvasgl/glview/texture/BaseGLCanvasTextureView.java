@@ -14,9 +14,11 @@ import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glview.GLView;
 
 /**
- * Created by Chilling on 2016/11/11.
+ *
+ * From init to run: onSizeChange --> onSurfaceTextureAvailable --> createGLThread --> createSurface --> onSurfaceCreated --> onSurfaceChanged
+ * From pause to run: onResume --> createSurface --> onSurfaceChanged
+ * From stop to run: onResume --> onSurfaceTextureAvailable --> createGLThread --> createSurface  --> onSurfaceCreated --> onSurfaceChanged
  */
-
 abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLViewRenderer {
 
 

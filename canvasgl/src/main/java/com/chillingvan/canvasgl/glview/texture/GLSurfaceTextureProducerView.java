@@ -37,6 +37,8 @@ import com.chillingvan.canvasgl.util.Loggers;
 /**
  * This will generate a texture which is in the eglContext of the CanvasGL. And the texture can be used outside.
  * For example, the generated texture can be used in camera preview texture or {@link GLSharedContextView}.
+ *
+ * From pause to run: onResume --> createSurface --> onSurfaceChanged
  */
 public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     private static final String TAG = "GLSurfaceTextureProduce";
@@ -93,7 +95,7 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     @Override
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
-        Loggers.d(TAG, "onSizeChanged: ");
+        Loggers.d(TAG, "onSurfaceChanged: ");
         producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
         if (!producedRawTexture.isLoaded()) {
             producedRawTexture.prepare(mCanvas.getGlCanvas());

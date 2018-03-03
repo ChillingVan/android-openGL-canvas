@@ -40,6 +40,13 @@ import java.util.List;
  * Can make it not opaque by setOpaque(false).
  *
  * The surface of canvasGL is provided by TextureView.
+ *
+ * onSurfaceTextureSizeChanged onResume onPause onSurfaceTextureDestroyed onSurfaceTextureUpdated
+ * From init to run: onSizeChanged --> onSurfaceTextureAvailable --> createGLThread --> createSurface
+ * From run to pause: onPause --> destroySurface
+ * From pause to run: onResume --> createSurface
+ * From run to stop: onPause --> destroySurface --> onSurfaceTextureDestroyed --> EGLHelper.finish --> GLThread.exit
+ * From stop to run: onResume --> onSurfaceTextureAvailable --> createGLThread --> createSurface
  */
 abstract class BaseGLTextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
@@ -239,6 +246,9 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
         cacheEvents.clear();
     }
 
+    /**
+     * surface inited or updated.
+     */
     private void freshSurface(int width, int height) {
         surfaceCreated();
         surfaceChanged(width, height);
@@ -255,6 +265,9 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
         }
     }
 
+    /**
+     * This will be called when windows detached. Activity onPause will cause window detached.
+     */
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
         Loggers.d("BaseGLTextureView", "onSurfaceTextureDestroyed: ");
