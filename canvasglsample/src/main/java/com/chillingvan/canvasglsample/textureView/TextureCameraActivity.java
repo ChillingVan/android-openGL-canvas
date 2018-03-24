@@ -27,6 +27,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.chillingvan.canvasgl.util.Loggers;
@@ -160,5 +161,31 @@ public class TextureCameraActivity extends AppCompatActivity {
         releaseCamera();
         cameraTextureView.onPause();
         previewConsumerTextureView.onPause();
+    }
+
+    public void onClickChangeSize(View view) {
+        if (cameraTextureView.getScaleY() < 1) {
+            cameraTextureView.setScaleY(1.5f);
+            previewConsumerTextureView.setScaleY(1.5f);
+        } else {
+            cameraTextureView.setScaleY(0.7f);
+            previewConsumerTextureView.setScaleY(0.7f);
+        }
+    }
+
+    public void onClickChangeLayoutSize(View view) {
+        ViewGroup.LayoutParams layoutParams = cameraTextureView.getLayoutParams();
+        ViewGroup.LayoutParams consumerLayoutParams = previewConsumerTextureView.getLayoutParams();
+        if (layoutParams.height < 500) {
+            layoutParams.height += 50;
+            cameraTextureView.setLayoutParams(layoutParams);
+            consumerLayoutParams.height += 50;
+            previewConsumerTextureView.setLayoutParams(consumerLayoutParams);
+        } else {
+            layoutParams.height -= 50;
+            cameraTextureView.setLayoutParams(layoutParams);
+            consumerLayoutParams.height -= 50;
+            previewConsumerTextureView.setLayoutParams(consumerLayoutParams);
+        }
     }
 }

@@ -96,19 +96,23 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
         Loggers.d(TAG, "onSurfaceChanged: ");
-        producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
-        if (!producedRawTexture.isLoaded()) {
-            producedRawTexture.prepare(mCanvas.getGlCanvas());
-        }
-        producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
-        post(new Runnable() {
-            @Override
-            public void run() {
-                if (onSurfaceTextureSet != null) {
-                    onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
-                }
+        if (producedRawTexture == null) {
+            producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
+            if (!producedRawTexture.isLoaded()) {
+                producedRawTexture.prepare(mCanvas.getGlCanvas());
             }
-        });
+            producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    if (onSurfaceTextureSet != null) {
+                        onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
+                    }
+                }
+            });
+        } else {
+            producedRawTexture.setSize(width, height);
+        }
     }
 
     @Override
@@ -136,14 +140,14 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     }
 
     private void recycleProduceTexture() {
-        if (producedRawTexture != null) {
+        if (producedRawTexture != null && !producedRawTexture.isRecycled()) {
             producedRawTexture.recycle();
-            producedRawTexture = null;
         }
-        if (producedSurfaceTexture != null) {
+        producedRawTexture = null;
+        if (producedSurfaceTexture != null && !producedSurfaceTexture.isReleased()) {
             producedSurfaceTexture.release();
-            producedSurfaceTexture = null;
         }
+        producedSurfaceTexture = null;
     }
 
 }

@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.2'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.3'
 }
 ```
 
@@ -119,8 +119,7 @@ Use this sample and the stream publisher sample of [AndroidInstantVideo](https:/
 * Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
 
 ## Latest Update
-* Fix issue that when close screen, the TextureCamera will stuck.
-* Add FileLogger
+* Fix issue that recreate for producedTexture of GLProducedTextureView.
 
 ## License
     Copyright 2016 ChillingVan.

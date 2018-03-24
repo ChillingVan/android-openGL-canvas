@@ -266,7 +266,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     }
 
     /**
-     * This will be called when windows detached. Activity onPause will cause window detached.
+     * This will be called when windows detached. Activity onStop will cause window detached.
      */
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {

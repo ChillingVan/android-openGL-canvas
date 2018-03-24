@@ -68,6 +68,21 @@
 
         </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:text="Change Scale"
+            android:onClick="onClickChangeSize"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:text="Change Layout"
+            android:onClick="onClickChangeLayoutSize"
+            />
 
 
     </LinearLayout>

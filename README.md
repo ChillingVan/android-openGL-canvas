@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.2'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.3'
 }
 ```
 
@@ -129,8 +129,7 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
-* 修复熄屏再亮屏，TextureCamera 卡住的问题
-* 添加FileLogger，支持文件log。
+* 修复在GLProducedTextureView尺寸改变时重复创建producedTexture
 
 ## License
     Copyright 2016 ChillingVan.
