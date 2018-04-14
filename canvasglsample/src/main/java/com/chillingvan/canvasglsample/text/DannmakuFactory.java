@@ -27,7 +27,7 @@ public class DannmakuFactory extends ObjectFactory<Dannmaku> {
     @Override
     protected Dannmaku produce(Dannmaku dannmaku) {
         float vx = -(40 + random.nextInt(40)) * VY_MULTIPLIER;
-        float y = random.nextInt(height);
+        float y = 20 + random.nextInt(height/2);
         if (dannmaku == null) {
             dannmaku = new Dannmaku(new PointF(width, y), vx);
         } else {

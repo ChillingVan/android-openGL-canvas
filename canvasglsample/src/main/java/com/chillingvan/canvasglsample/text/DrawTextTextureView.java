@@ -47,7 +47,7 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
         dannmakuFactory  = new DannmakuFactory(width, height);
-        dannmakuFactory.book(10);
+        dannmakuFactory.book(1000);
         drawTextHelper.init(width, height);
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);

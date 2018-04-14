@@ -20,7 +20,8 @@ public class DrawTextHelper {
     private Canvas canvas;
 
     private ExecutorService executors = Executors.newSingleThreadExecutor();
-    private volatile boolean isWaiting;
+    // If textDrawee is not drawing, then it is available.
+    private volatile boolean isAvailable = true;
     private Lock lock = new ReentrantLock();
 
     public void init(int width, int height) {
@@ -33,25 +34,33 @@ public class DrawTextHelper {
         }
     }
 
+    /**
+     * This must be in the same thread as {@link #getOutputBitmap()}
+     */
     public void draw(final TextDrawee textDrawee) {
-        swap();
         if (canvas == null) {
             throw new IllegalStateException("DrawTextHelper has not init.");
         }
+        if (!isAvailable) {
+            return;
+        }
+        swap();
         executors.execute(new Runnable() {
             @Override
             public void run() {
                 lock.lock();
-                isWaiting = false;
+                isAvailable = false;
                 textDrawee.draw(canvas);
-                isWaiting = true;
+                isAvailable = true;
                 lock.unlock();
             }
         });
     }
 
+    /**
+     * Swap bitmapBoard and bitmapBoardCached.
+     */
     private void swap() {
-        if (!isWaiting) return;
         lock.lock();
         Bitmap temp = bitmapBoardCached;
         bitmapBoardCached = bitmapBoard;
@@ -61,7 +70,7 @@ public class DrawTextHelper {
     }
 
     public interface TextDrawee {
-        void draw(Canvas canvas);
+        void draw(Canvas androidCanvas);
     }
 
     public Bitmap getOutputBitmap() {
