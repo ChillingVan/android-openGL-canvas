@@ -75,6 +75,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
         init();
     }
 
+    // TODO: 2018/3/25 This may be duplicated. onSurfaceTextureSizeChanged is doing same thing.
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         Loggers.d("BaseGLTextureView", "onSizeChanged: ");

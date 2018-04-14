@@ -64,4 +64,16 @@ public class MovableObj {
         int DIRECTION_VERTICAL = 1;
         void onCollision(int direction);
     }
+
+    @Override
+    public String toString() {
+        return "MovableObj{" +
+                "point=" + point +
+                ", vx=" + vx +
+                ", vy=" + vy +
+                ", collisionRadius=" + collisionRadius +
+                ", vRotate=" + vRotate +
+                ", rotateDegree=" + rotateDegree +
+                '}';
+    }
 }

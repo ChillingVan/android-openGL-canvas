@@ -1,4 +1,4 @@
-package com.chillingvan.canvasglsample.video;
+package com.chillingvan.canvasglsample.text;
 
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
@@ -10,31 +10,32 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasglsample.R;
+import com.chillingvan.canvasglsample.video.MediaPlayerHelper;
 
-public class MediaPlayerActivity extends AppCompatActivity {
+public class DrawTextActivity extends AppCompatActivity {
 
     private MediaPlayerHelper mediaPlayer = new MediaPlayerHelper();
     private Surface mediaSurface;
-    private MediaPlayerTextureView mediaPlayerTextureView;
+    private DrawTextTextureView drawTextTextureView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_media_player);
+        setContentView(R.layout.activity_draw_text);
         initTextureView();
     }
 
     private void initTextureView() {
-        mediaPlayerTextureView = findViewById(R.id.media_player_texture_view);
+        drawTextTextureView = findViewById(R.id.media_player_texture_view);
 
-        mediaPlayerTextureView.setOnSurfaceTextureSet(new GLSurfaceTextureProducerView.OnSurfaceTextureSet() {
+        drawTextTextureView.setOnSurfaceTextureSet(new GLSurfaceTextureProducerView.OnSurfaceTextureSet() {
             @Override
             public void onSet(SurfaceTexture surfaceTexture, RawTexture surfaceTextureRelatedTexture) {
                 surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
                     @Override
                     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
                         Loggers.i("MediaPlayerActivity", "onFrameAvailable: ");
-                        mediaPlayerTextureView.requestRenderAndWait();
+                        drawTextTextureView.requestRenderAndWait();
                     }
                 });
 
@@ -47,7 +48,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mediaPlayerTextureView.onResume();
+        drawTextTextureView.onResume();
     }
 
     @Override
@@ -56,7 +57,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
-        mediaPlayerTextureView.onPause();
+        drawTextTextureView.onPause();
     }
 
     @Override
@@ -78,5 +79,6 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     private void playMedia() {
         mediaPlayer.playMedia(this, mediaSurface);
+        drawTextTextureView.start();
     }
 }

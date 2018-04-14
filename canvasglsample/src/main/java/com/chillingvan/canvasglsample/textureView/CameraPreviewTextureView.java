@@ -52,6 +52,10 @@ public class CameraPreviewTextureView extends GLSurfaceTextureProducerView {
         super(context, attrs, defStyleAttr);
     }
 
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+        super.onSurfaceChanged(width, height);
+    }
 
     public void setTextureFilter(TextureFilter textureFilter) {
         this.textureFilter = textureFilter;
