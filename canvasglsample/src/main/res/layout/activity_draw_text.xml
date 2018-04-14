@@ -12,6 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"/>
 
+    <TextView
+        android:id="@+id/frame_rate_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/media_player_texture_view"
+        tools:text="rate"/>
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"

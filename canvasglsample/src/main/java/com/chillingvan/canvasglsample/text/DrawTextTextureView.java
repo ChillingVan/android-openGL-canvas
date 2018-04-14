@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
@@ -27,6 +28,8 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
     private ObjectFactory<Dannmaku> dannmakuFactory;
     private Paint textPaint;
     private boolean isStart;
+    private long frameDrawCnt;
+    private long startTime;
 
     public DrawTextTextureView(Context context) {
         super(context);
@@ -44,7 +47,7 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
         dannmakuFactory  = new DannmakuFactory(width, height);
-        dannmakuFactory.book(100);
+        dannmakuFactory.book(10);
         drawTextHelper.init(width, height);
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
@@ -53,6 +56,14 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
 
     public void start() {
         isStart = true;
+        startTime = SystemClock.elapsedRealtime();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isStart = false;
+        frameDrawCnt = 0;
     }
 
     @Override
@@ -78,6 +89,7 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
                             dannmakuFactory.book(bookingCnt);
                         }
                     }
+                    frameDrawCnt++;
 
                 }
             });
@@ -85,6 +97,11 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
             canvas.invalidateTextureContent(outputBitmap);
             canvas.drawBitmap(outputBitmap, 0, 0);
         }
+    }
+
+    public long getFrameRate() {
+        long timeSpan = (SystemClock.elapsedRealtime() - startTime) / 1000;
+        return timeSpan == 0 ? 0 : frameDrawCnt/ timeSpan;
     }
 
     private static boolean shouldRecycle(Dannmaku dannmaku) {
