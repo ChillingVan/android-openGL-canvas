@@ -31,7 +31,7 @@ public class DannmakuFactory extends ObjectFactory<Dannmaku> {
         if (dannmaku == null) {
             dannmaku = new Dannmaku(new PointF(width, y), vx);
         } else {
-            dannmaku.reset(new PointF(width, y), vx);
+            dannmaku.reset(width, y, vx);
         }
         dannmaku.setText(WORDS[random.nextInt(WORDS.length)]);
         dannmaku.setColor(Color.WHITE);
