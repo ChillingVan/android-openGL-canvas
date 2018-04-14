@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.3'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.3.0.0'
 }
 ```
 
@@ -115,6 +115,12 @@ public class MyGLView extends GLView {
 如果用本项目里的 GLSurfaceTextureProducerView ，那么还可以做视频处理。
 结合[AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo)的stream publisher，就能生成新视频。
 
+* AndroidCanvasHelper
+
+这个GLCanvas不能绘制文本。只能先把文本转成Bitmap来绘制 
+可以使用AndroidCanvasHelper来画任意东西再转化为Bitmap给GLCanvas 
+这有同步和异步模式，视情况用对应的模式，详细请看例子。
+
 
 * [更多用例请查看wiki](https://github.com/ChillingVan/android-openGL-canvas/wiki)
 
@@ -129,7 +135,7 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
-* 修复在GLProducedTextureView尺寸改变时重复创建producedTexture
+* 增加AndroidCanvasHelper及其绘制文本的例子
 
 ## License
     Copyright 2016 ChillingVan.

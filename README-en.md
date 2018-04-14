@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.2.2.3'
+    compile 'com.github.ChillingVan:android-openGL-canvas:v1.3.0.0'
 }
 ```
 
@@ -111,6 +111,12 @@ You can use MediaPlayer to decode video and draw it on the TextureView.
 If you use GLSurfaceTextureProducerView, then you can process the video frames and provide the texture to MediaCodec to create a new Video. 
 Use this sample and the stream publisher sample of [AndroidInstantVideo](https://github.com/ChillingVan/AndroidInstantVideo). You can implement this.
 
+* AndroidCanvasHelper
+
+This GLCanvas cannot draw text. 
+You can use AndroidCanvasHelper to draw what you want and turn it to bitmap for GLCanvas. 
+It has sync and async modes.
+
 * See the wiki page for more use case.[here](https://github.com/ChillingVan/android-openGL-canvas/wiki)
 
 ## Notice
@@ -119,7 +125,7 @@ Use this sample and the stream publisher sample of [AndroidInstantVideo](https:/
 * Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
 
 ## Latest Update
-* Fix issue that recreate for producedTexture of GLProducedTextureView.
+* Add AndroidCanvasHelper and its example for drawing text.
 
 ## License
     Copyright 2016 ChillingVan.
