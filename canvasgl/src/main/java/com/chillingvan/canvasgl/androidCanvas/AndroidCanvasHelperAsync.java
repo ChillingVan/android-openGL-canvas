@@ -1,4 +1,4 @@
-package com.chillingvan.canvasgl;
+package com.chillingvan.canvasgl.androidCanvas;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,8 +10,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Chilling on 2018/4/14.
+ *
+ * Draw text in another thread.
+ * 这个类会另起一个线程，但会创建双份Bitmap，比较耗内存。
  */
-public class DrawTextHelper {
+class AndroidCanvasHelperAsync implements IAndroidCanvasHelper {
 
     private int width;
     private int height;
@@ -24,6 +27,7 @@ public class DrawTextHelper {
     private volatile boolean isAvailable = true;
     private Lock lock = new ReentrantLock();
 
+    @Override
     public void init(int width, int height) {
         if (this.width != width || this.height != height) {
             this.width = width;
@@ -37,7 +41,8 @@ public class DrawTextHelper {
     /**
      * This must be in the same thread as {@link #getOutputBitmap()}
      */
-    public void draw(final TextDrawee textDrawee) {
+    @Override
+    public void draw(final CanvasPainter canvasPainter) {
         if (canvas == null) {
             throw new IllegalStateException("DrawTextHelper has not init.");
         }
@@ -50,7 +55,7 @@ public class DrawTextHelper {
             public void run() {
                 lock.lock();
                 isAvailable = false;
-                textDrawee.draw(canvas);
+                canvasPainter.draw(canvas);
                 isAvailable = true;
                 lock.unlock();
             }
@@ -69,10 +74,7 @@ public class DrawTextHelper {
         lock.unlock();
     }
 
-    public interface TextDrawee {
-        void draw(Canvas androidCanvas);
-    }
-
+    @Override
     public Bitmap getOutputBitmap() {
         return bitmapBoardCached;
     }

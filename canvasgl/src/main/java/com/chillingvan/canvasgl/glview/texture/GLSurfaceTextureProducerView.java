@@ -71,7 +71,7 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     }
 
     @Override
-    protected final int getRenderMode() {
+    protected int getRenderMode() {
         return GLThread.RENDERMODE_WHEN_DIRTY;
     }
 

@@ -34,12 +34,7 @@ public class DrawTextActivity extends AppCompatActivity {
         drawTextTextureView.setOnSurfaceTextureSet(new GLSurfaceTextureProducerView.OnSurfaceTextureSet() {
             @Override
             public void onSet(SurfaceTexture surfaceTexture, RawTexture surfaceTextureRelatedTexture) {
-                surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
-                    @Override
-                    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-                        drawTextTextureView.requestRenderAndWait();
-                    }
-                });
+                // No need to request draw because it is continues GL View.
 
                 mediaSurface = new Surface(surfaceTexture);
             }

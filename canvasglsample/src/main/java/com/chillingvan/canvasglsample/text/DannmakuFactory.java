@@ -19,6 +19,10 @@ public class DannmakuFactory extends ObjectFactory<Dannmaku> {
             "23333", "66666666", "哈哈哈哈哈哈哈哈哈", "Awesome", "凄い"
     };
 
+    private static final int[] COLORS = new int[]{
+            Color.WHITE, Color.GREEN, Color.LTGRAY
+    };
+
     public DannmakuFactory(int width, int height) {
         this.width = width;
         this.height = height;
@@ -26,15 +30,15 @@ public class DannmakuFactory extends ObjectFactory<Dannmaku> {
 
     @Override
     protected Dannmaku produce(Dannmaku dannmaku) {
-        float vx = -(40 + random.nextInt(40)) * VY_MULTIPLIER;
-        float y = 20 + random.nextInt(height/2);
+        float vx = -(20 + random.nextInt(30)) * VY_MULTIPLIER;
+        float y = 30 + random.nextInt(height/2);
         if (dannmaku == null) {
             dannmaku = new Dannmaku(new PointF(width, y), vx);
         } else {
             dannmaku.reset(width, y, vx);
         }
         dannmaku.setText(WORDS[random.nextInt(WORDS.length)]);
-        dannmaku.setColor(Color.WHITE);
+        dannmaku.setColor(COLORS[random.nextInt(COLORS.length)]);
         return dannmaku;
     }
 }

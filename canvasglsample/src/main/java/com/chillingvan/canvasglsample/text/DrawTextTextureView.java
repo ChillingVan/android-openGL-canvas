@@ -11,10 +11,11 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
-import com.chillingvan.canvasgl.DrawTextHelper;
 import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
+import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasglsample.util.ScreenUtil;
 import com.chillingvan.canvasglsample.video.MediaPlayerTextureView;
 
@@ -24,7 +25,7 @@ import java.util.List;
  * Created by Chilling on 2018/4/14.
  */
 public class DrawTextTextureView extends MediaPlayerTextureView {
-    private DrawTextHelper drawTextHelper = new DrawTextHelper();
+    private IAndroidCanvasHelper drawTextHelper = IAndroidCanvasHelper.Factory.createAndroidCanvasHelper(IAndroidCanvasHelper.MODE.MODE_ASYNC);
     private ObjectFactory<Dannmaku> dannmakuFactory;
     private Paint textPaint;
     private boolean isStart;
@@ -47,7 +48,7 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
         dannmakuFactory  = new DannmakuFactory(width, height);
-        dannmakuFactory.book(1000);
+        dannmakuFactory.book(100);
         drawTextHelper.init(width, height);
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
@@ -70,7 +71,7 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
     protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture sharedSurfaceTexture, @Nullable BasicTexture sharedTexture) {
         super.onGLDraw(canvas, producedSurfaceTexture, producedRawTexture, sharedSurfaceTexture, sharedTexture);
         if (isStart) {
-            drawTextHelper.draw(new DrawTextHelper.TextDrawee() {
+            drawTextHelper.draw(new IAndroidCanvasHelper.CanvasPainter() {
                 @Override
                 public void draw(Canvas canvas) {
                     canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -109,5 +110,11 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
             return true;
         }
         return false;
+    }
+
+    // Anim for dannmaku should be 50 frames.
+    @Override
+    protected int getRenderMode() {
+        return GLThread.RENDERMODE_CONTINUOUSLY;
     }
 }
