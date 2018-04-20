@@ -119,10 +119,14 @@ It has sync and async modes.
 
 * See the wiki page for more use case.[here](https://github.com/ChillingVan/android-openGL-canvas/wiki)
 
-## Notice
+## Note & FAQ
 * The onGLDraw method in GLView runs in its own thread but not the main thread. 
 * I haven't implemented all the filters in GPUImage. I will add more later. If you need, you can take my code as example to implement your filter. It is simple.
 * Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
+* Why the bitmap drawn is not updated even the bitmap is changed?
+
+  You can use canvasGL.invalidateContent(bitmap) to rebind the bitmap to texture. 
+  This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update
 * Add AndroidCanvasHelper and its example for drawing text.
@@ -141,11 +145,3 @@ It has sync and async modes.
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-### Donate
-Thanks for your support !!!
-![alipay](http://upload-images.jianshu.io/upload_images/3587192-1cc20071ce4a042a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-alipay
-![wechat pay](http://upload-images.jianshu.io/upload_images/3587192-3289f8237d98b2c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-wechat pay
-
