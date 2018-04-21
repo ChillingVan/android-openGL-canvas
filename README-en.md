@@ -125,7 +125,7 @@ It has sync and async modes.
 * Remember to call onResume and onPause in the Activity lifecycle when using GLContinuousView and GLContinuousTextureView.
 * Why the bitmap drawn is not updated even the bitmap is changed?
 
-  You can use canvasGL.invalidateContent(bitmap) to rebind the bitmap to texture. 
+  You can use canvasGL.invalidateTextureContent(bitmap) to rebind the bitmap to texture. 
   This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update

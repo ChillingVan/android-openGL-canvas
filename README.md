@@ -129,7 +129,7 @@ public class MyGLView extends GLView {
 * 目前的Filter没有GPUImage里那么多，后续会陆续增加，如果有需要，参照我的代码自己实现即可，难度不高。
 * 为什么Bitmap修改后，再次绘制时并没更新？
 
-  因为没有调用canvasGL的invalidateContent(bitmap)。改变了的Bitmap需要重新绑定texture。因为绑定需要耗时，所以库里面才不做成每次都重新绑定。
+  因为没有调用canvasGL的invalidateTextureContent(bitmap)。改变了的Bitmap需要重新绑定texture。因为绑定需要耗时，所以库里面才不做成每次都重新绑定。
 
 ## 相关博客文章
 * [OpenGL绘制一张图片的流程](http://www.jianshu.com/p/40521c92ef85)
