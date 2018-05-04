@@ -40,6 +40,7 @@ import jp.co.cyberagent.android.gpuimage.GPUImageHazeFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageHighlightShadowFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageLevelsFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageLookupFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageMonochromeFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageOpacityFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImagePixelationFilter;
@@ -121,9 +122,9 @@ public class FilterAdjuster {
                 adjuster = new BilateralAdjuster().filter(filter);
             } else if (filter instanceof GPUImageTransformFilter) {
                 adjuster = new RotateAdjuster().filter(filter);
-            }
-            else {
-
+            } else if (filter instanceof GPUImageLookupFilter) {
+                adjuster = new LookupAdjuster().filter(filter);
+            } else {
                 adjuster = null;
             }
         }
@@ -391,6 +392,14 @@ public class FilterAdjuster {
                 float[] transform = new float[16];
                 Matrix.setRotateM(transform, 0, 360 * percentage / 100, 0, 0, 1.0f);
                 getFilter().setTransform3D(transform);
+            }
+        }
+
+        private class LookupAdjuster extends Adjuster<GPUImageLookupFilter> {
+
+            @Override
+            public void adjust(int percentage) {
+                getFilter().setIntensity(range(percentage, 0.0f, 1.0f));
             }
         }
 

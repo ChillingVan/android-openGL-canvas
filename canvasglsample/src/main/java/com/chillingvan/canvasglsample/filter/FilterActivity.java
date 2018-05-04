@@ -39,6 +39,7 @@ import com.chillingvan.canvasgl.textureFilter.FilterGroup;
 import com.chillingvan.canvasgl.textureFilter.GammaFilter;
 import com.chillingvan.canvasgl.textureFilter.HueFilter;
 import com.chillingvan.canvasgl.textureFilter.LightenBlendFilter;
+import com.chillingvan.canvasgl.textureFilter.LookupFilter;
 import com.chillingvan.canvasgl.textureFilter.OneValueFilter;
 import com.chillingvan.canvasgl.textureFilter.PixelationFilter;
 import com.chillingvan.canvasgl.textureFilter.RGBFilter;
@@ -62,6 +63,7 @@ import jp.co.cyberagent.android.gpuimage.GPUImageFilterGroup;
 import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageLightenBlendFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageLookupFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImagePixelationFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageRGBFilter;
 import jp.co.cyberagent.android.gpuimage.GPUImageSaturationFilter;
@@ -73,18 +75,19 @@ public class FilterActivity extends AppCompatActivity {
     private ListView listView;
     private CommonBaseAdapter<CaseEntity> adapter;
     private List<CaseEntity> renderEntityList = new ArrayList<>();
-    private final static Map<Class, Range> FILTER_RANGE_MAP = new HashMap<>();
-
-    static {
-        FILTER_RANGE_MAP.put(ContrastFilter.class, new Range(0, 4));
-        FILTER_RANGE_MAP.put(SaturationFilter.class, new Range(0, 2));
-        FILTER_RANGE_MAP.put(PixelationFilter.class, new Range(1, 100));
-        FILTER_RANGE_MAP.put(HueFilter.class, new Range(0, 360));
-        FILTER_RANGE_MAP.put(GammaFilter.class, new Range(0, 3));
-        FILTER_RANGE_MAP.put(RGBFilter.class, new Range(0, 1));
-        FILTER_RANGE_MAP.put(ColorMatrixFilter.class, new Range(0, 1));
-        FILTER_RANGE_MAP.put(DirectionalSobelEdgeDetectionFilter.class, new Range(0, 5));
-    }
+    private final static Map<Class, Range> FILTER_RANGE_MAP = new HashMap<Class, Range>() {
+        {
+            put(ContrastFilter.class, new Range(0, 4));
+            put(SaturationFilter.class, new Range(0, 2));
+            put(PixelationFilter.class, new Range(1, 100));
+            put(HueFilter.class, new Range(0, 360));
+            put(GammaFilter.class, new Range(0, 3));
+            put(RGBFilter.class, new Range(0, 1));
+            put(ColorMatrixFilter.class, new Range(0, 1));
+            put(DirectionalSobelEdgeDetectionFilter.class, new Range(0, 5));
+            put(LookupFilter.class, new Range(0, 1));
+        }
+    };
 
     private List<FilterAdjuster> filterAdjusters = new ArrayList<>();
     private Bitmap secondBitmap;
@@ -155,6 +158,14 @@ public class FilterActivity extends AppCompatActivity {
         BasicTextureFilter basicTextureFilter = new BasicTextureFilter();
         renderEntityList.add(new CaseEntity(basicTextureFilter, new GPUImageFilter(), firstBitmap));
 
+        Bitmap lookupAmatorka = BitmapFactory.decodeResource(getResources(), R.drawable.lookup_amatorka);
+        LookupFilter lookupFilter = new LookupFilter(lookupAmatorka);
+        lookupFilter.setValue(0.5f);
+        GPUImageLookupFilter gpuImageLookupFilter = new GPUImageLookupFilter();
+        gpuImageLookupFilter.setBitmap(lookupAmatorka);
+        gpuImageLookupFilter.setIntensity(0.5f);
+        renderEntityList.add(new CaseEntity(lookupFilter, gpuImageLookupFilter, firstBitmap));
+
         ContrastFilter contrastFilter = new ContrastFilter(3.0f);
         GPUImageContrastFilter gpuImageContrastFilter = new GPUImageContrastFilter(3.0f);
         renderEntityList.add(new CaseEntity(contrastFilter, gpuImageContrastFilter, firstBitmap));
@@ -190,6 +201,7 @@ public class FilterActivity extends AppCompatActivity {
         GPUImageDarkenBlendFilter gpuImageDarkenBlendFilter = new GPUImageDarkenBlendFilter();
         gpuImageDarkenBlendFilter.setBitmap(secondBitmap);
         renderEntityList.add(new CaseEntity(darkenBlendFilter, gpuImageDarkenBlendFilter, firstBitmap));
+
 
         GammaFilter gammaFilter = new GammaFilter(2.0f);
         GPUImageGammaFilter gpuImageGammaFilter = new GPUImageGammaFilter(2.0f);
