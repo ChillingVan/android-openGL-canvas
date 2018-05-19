@@ -52,6 +52,10 @@ public class RawTexture extends BasicTexture {
         return mIsFlipped;
     }
 
+    /**
+     *
+     * @param isFlipped whether vertically flip this texture
+     */
     public void setIsFlippedVertically(boolean isFlipped) {
         mIsFlipped = isFlipped;
     }

@@ -27,17 +27,20 @@ import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
-import com.chillingvan.canvasgl.glcanvas.BasicTexture;
-import com.chillingvan.canvasgl.glview.texture.GLSharedContextView;
+import com.chillingvan.canvasgl.glcanvas.RawTexture;
+import com.chillingvan.canvasgl.glview.texture.GLMultiTexConsumerView;
+import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 import com.chillingvan.canvasglsample.R;
+
+import java.util.List;
 
 /**
  * Created by Chilling on 2016/11/5.
  */
 
-public class PreviewConsumerTextureView extends GLSharedContextView {
+public class PreviewConsumerTextureView extends GLMultiTexConsumerView {
 
     private TextureFilter textureFilter = new BasicTextureFilter();
     private Bitmap robot;
@@ -54,6 +57,17 @@ public class PreviewConsumerTextureView extends GLSharedContextView {
         super(context, attrs, defStyleAttr);
     }
 
+    @Override
+    protected void onGLDraw(ICanvasGL canvas, List<GLTexture> consumedTextures) {
+        if (!consumedTextures.isEmpty()) {
+            GLTexture consumedTexture = consumedTextures.get(0);
+            SurfaceTexture sharedSurfaceTexture = consumedTexture.getSurfaceTexture();
+            RawTexture sharedTexture = consumedTexture.getRawTexture();
+            canvas.drawSurfaceTexture(sharedTexture, sharedSurfaceTexture, 0, 0, sharedTexture.getWidth(), sharedTexture.getHeight(), textureFilter);
+            canvas.drawBitmap(robot, 0, 0 , 60, 60);
+        }
+    }
+
     public void setTextureFilter(TextureFilter textureFilter) {
         this.textureFilter = textureFilter;
     }
@@ -64,12 +78,4 @@ public class PreviewConsumerTextureView extends GLSharedContextView {
         robot = BitmapFactory.decodeResource(getResources(), R.drawable.ic_robot);
     }
 
-    @Override
-    protected void onGLDraw(ICanvasGL canvas, SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture) {
-        if (sharedTexture == null) {
-            return;
-        }
-        canvas.drawSurfaceTexture(sharedTexture, sharedSurfaceTexture, 0, 0, sharedTexture.getWidth(), sharedTexture.getHeight(), textureFilter);
-        canvas.drawBitmap(robot, 0, 0 , 60, 60);
-    }
 }

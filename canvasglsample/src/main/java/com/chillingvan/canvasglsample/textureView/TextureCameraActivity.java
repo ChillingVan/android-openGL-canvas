@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
@@ -94,7 +95,7 @@ public class TextureCameraActivity extends AppCompatActivity {
             @Override
             public void onSet(SurfaceTexture surfaceTexture, RawTexture surfaceTextureRelatedTexture) {
                 Loggers.d("TextureCameraActivity", String.format("onSet: "));
-                previewConsumerTextureView.setSharedTexture(surfaceTextureRelatedTexture, surfaceTexture);
+                previewConsumerTextureView.addGLTexture(new GLTexture(surfaceTextureRelatedTexture, surfaceTexture));
                 surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
                     @Override
                     public void onFrameAvailable(SurfaceTexture surfaceTexture) {

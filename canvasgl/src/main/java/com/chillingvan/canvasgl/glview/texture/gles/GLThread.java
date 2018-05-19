@@ -43,6 +43,7 @@ import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL;
 
 /**
+ * This is the thread where the gl draw runs in.
  * Create GL Context --> Create Surface
  * And then draw with OpenGL and finally eglSwap to update the screen.
  */

@@ -99,8 +99,26 @@
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>
-        <activity android:name=".text.DrawTextActivity"
-                  android:label="DrawTextActivity"
+        <activity
+            android:name=".text.DrawTextActivity"
+            android:label="DrawTextActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".video.MergeVideoActivity"
+            android:label="MergeVideoActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".multi.MultiTextureActivity"
+                  android:label="MultiTextureActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

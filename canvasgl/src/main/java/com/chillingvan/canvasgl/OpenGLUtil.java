@@ -30,9 +30,8 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by Matthew on 2016/10/15.
+ * Some tools for OpenGL
  */
-
 public class OpenGLUtil {
 
     public static void setUniformMatrix4f(final int location, final float[] matrix) {

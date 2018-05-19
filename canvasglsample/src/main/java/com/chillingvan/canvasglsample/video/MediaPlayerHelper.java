@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.chillingvan.canvasgl.util.Loggers;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * Created by Chilling on 2018/4/14.
@@ -17,7 +18,17 @@ import java.io.IOException;
 public class MediaPlayerHelper {
 
     public static final String TEST_VIDEO_MP4 = "test_video.mp4";
+    public static final String TEST_VIDEO_MP4_2 = "test_video_2.mp4";
     private MediaPlayer mediaPlayer;
+    private String videoName;
+
+    public MediaPlayerHelper() {
+        this(new Random().nextBoolean() ? TEST_VIDEO_MP4 : TEST_VIDEO_MP4_2);
+    }
+
+    public MediaPlayerHelper(String videoName) {
+        this.videoName = videoName;
+    }
 
     public boolean isPlaying() {
         if (mediaPlayer != null) {
@@ -36,7 +47,7 @@ public class MediaPlayerHelper {
     public void playMedia(final Context context, Surface mediaSurface) {
         mediaPlayer = new MediaPlayer();
         try {
-            AssetFileDescriptor afd = context.getAssets().openFd(TEST_VIDEO_MP4);
+            AssetFileDescriptor afd = context.getAssets().openFd(videoName);
             mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             afd.close();
         } catch (IOException e) {

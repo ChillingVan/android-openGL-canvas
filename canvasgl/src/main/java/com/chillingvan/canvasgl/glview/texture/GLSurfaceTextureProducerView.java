@@ -22,8 +22,6 @@ package com.chillingvan.canvasgl.glview.texture;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.opengl.GLES11Ext;
-import android.opengl.GLES20;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
@@ -31,21 +29,20 @@ import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
-import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
-import com.chillingvan.canvasgl.util.Loggers;
+
+import java.util.List;
 
 /**
+ * <p>
  * This will generate a texture which is in the eglContext of the CanvasGL. And the texture can be used outside.
- * For example, the generated texture can be used in camera preview texture or {@link GLSharedContextView}.
- *
+ * The {@link #setSharedEglContext(EglContextWrapper)} will be called automatically when {@link #onSurfaceTextureAvailable(SurfaceTexture, int, int)}
+ * For example, the generated texture can be used in camera preview texture or {@link GLMultiTexConsumerView}.
+ * </p>
  * From pause to run: onResume --> createSurface --> onSurfaceChanged
  */
-public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
-    private static final String TAG = "GLSurfaceTextureProduce";
-    private SurfaceTexture producedSurfaceTexture;
-    private OnSurfaceTextureSet onSurfaceTextureSet;
-    private RawTexture producedRawTexture;
-    private int producedTextureTarget = GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
+public abstract class GLSurfaceTextureProducerView extends GLMultiTexProducerView {
+
+    private GLSurfaceTextureProducerView.OnSurfaceTextureSet onSurfaceTextureSet;
 
     public GLSurfaceTextureProducerView(Context context) {
         super(context);
@@ -60,28 +57,8 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     }
 
     @Override
-    protected final void onGLDraw(ICanvasGL canvas, @Nullable SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture) {
-        onGLDraw(canvas, producedSurfaceTexture, producedRawTexture, sharedSurfaceTexture, sharedTexture);
-    }
-
-    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture sharedSurfaceTexture, @Nullable BasicTexture sharedTexture);
-
-    public void setOnSurfaceTextureSet(OnSurfaceTextureSet onSurfaceTextureSet) {
-        this.onSurfaceTextureSet = onSurfaceTextureSet;
-    }
-
-    @Override
-    protected int getRenderMode() {
-        return GLThread.RENDERMODE_WHEN_DIRTY;
-    }
-
-
-    /**
-     * If it is used, it must be called before start() called.
-     * @param producedTextureTarget GLES20.GL_TEXTURE_2D or GLES11Ext.GL_TEXTURE_EXTERNAL_OES
-     */
-    public void setProducedTextureTarget(int producedTextureTarget) {
-        this.producedTextureTarget = producedTextureTarget;
+    protected final int getInitialTexCount() {
+        return 1;
     }
 
     @Override
@@ -92,35 +69,15 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
         }
     }
 
-    @Override
-    public void onSurfaceChanged(int width, int height) {
-        super.onSurfaceChanged(width, height);
-        Loggers.d(TAG, "onSurfaceChanged: ");
-        if (producedRawTexture == null) {
-            producedRawTexture = new RawTexture(width, height, false, producedTextureTarget);
-            if (!producedRawTexture.isLoaded()) {
-                producedRawTexture.prepare(mCanvas.getGlCanvas());
+    public void setOnSurfaceTextureSet(final GLSurfaceTextureProducerView.OnSurfaceTextureSet onSurfaceTextureSet) {
+        this.onSurfaceTextureSet = onSurfaceTextureSet;
+        setSurfaceTextureCreatedListener(new SurfaceTextureCreatedListener() {
+            @Override
+            public void onCreated(List<GLTexture> glTextureList) {
+                GLTexture glTexture = glTextureList.get(0);
+                onSurfaceTextureSet.onSet(glTexture.getSurfaceTexture(), glTexture.getRawTexture());
             }
-            producedSurfaceTexture = new SurfaceTexture(producedRawTexture.getId());
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    if (onSurfaceTextureSet != null) {
-                        onSurfaceTextureSet.onSet(producedSurfaceTexture, producedRawTexture);
-                    }
-                }
-            });
-        } else {
-            producedRawTexture.setSize(width, height);
-        }
-    }
-
-    @Override
-    public void onDrawFrame() {
-        if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
-            producedSurfaceTexture.updateTexImage();
-        }
-        super.onDrawFrame();
+        });
     }
 
     public interface OnSurfaceTextureSet {
@@ -128,26 +85,16 @@ public abstract class GLSurfaceTextureProducerView extends GLSharedContextView {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        recycleProduceTexture();
+    protected final void onGLDraw(ICanvasGL canvas, List<GLTexture> glTextures, List<GLTexture> consumedTextures) {
+        GLTexture glTexture = glTextures.get(0);
+        if (!consumedTextures.isEmpty()) {
+            GLTexture consumeTexture = consumedTextures.get(0);
+            onGLDraw(canvas, glTexture.getSurfaceTexture(), (RawTexture) glTexture.getRawTexture(), consumeTexture.getSurfaceTexture(), consumeTexture.getRawTexture());
+        } else {
+            onGLDraw(canvas, glTexture.getSurfaceTexture(), (RawTexture) glTexture.getRawTexture(), null, null);
+        }
     }
 
-    @Override
-    protected void surfaceDestroyed() {
-        super.surfaceDestroyed();
-        recycleProduceTexture();
-    }
-
-    private void recycleProduceTexture() {
-        if (producedRawTexture != null && !producedRawTexture.isRecycled()) {
-            producedRawTexture.recycle();
-        }
-        producedRawTexture = null;
-        if (producedSurfaceTexture != null && !producedSurfaceTexture.isReleased()) {
-            producedSurfaceTexture.release();
-        }
-        producedSurfaceTexture = null;
-    }
+    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture outsideSurfaceTexture, @Nullable BasicTexture outsideTexture);
 
 }

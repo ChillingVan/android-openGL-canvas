@@ -27,12 +27,15 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
-import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
+import com.chillingvan.canvasgl.glcanvas.RawTexture;
+
+import java.util.List;
 
 /**
  * This class is used to accept eglContext and texture from outside. Then it can use them to draw.
+ * @deprecated Use {@link GLMultiTexConsumerView} instead.
  */
-public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
+public abstract class GLSharedContextView extends GLMultiTexConsumerView {
 
 
     protected BasicTexture outsideSharedTexture;
@@ -50,14 +53,12 @@ public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setSharedEglContext(EglContextWrapper sharedEglContext) {
-        glThreadBuilder.setSharedEglContext(sharedEglContext);
-        createGLThread();
-    }
-
-    public void setSharedTexture(BasicTexture outsideTexture, SurfaceTexture outsideSurfaceTexture) {
+    public void setSharedTexture(RawTexture outsideTexture, SurfaceTexture outsideSurfaceTexture) {
         this.outsideSharedTexture = outsideTexture;
         this.outsideSharedSurfaceTexture = outsideSurfaceTexture;
+        if (consumedTextures.isEmpty()) {
+            consumedTextures.add(new GLTexture(outsideTexture, outsideSurfaceTexture));
+        }
     }
 
     /**
@@ -67,13 +68,14 @@ public abstract class GLSharedContextView extends BaseGLCanvasTextureView {
     protected abstract void onGLDraw(ICanvasGL canvas, @Nullable SurfaceTexture sharedSurfaceTexture, BasicTexture sharedTexture);
 
     @Override
-    protected final void onGLDraw(ICanvasGL canvas) {
+    protected final void onGLDraw(ICanvasGL canvas, List<GLTexture> consumedTextures) {
         if (outsideSharedTexture != null && outsideSharedTexture.isRecycled()) {
             outsideSharedTexture = null;
             outsideSharedSurfaceTexture = null;
         }
         onGLDraw(canvas, outsideSharedSurfaceTexture, outsideSharedTexture);
     }
+
 
     @Override
     protected void surfaceDestroyed() {
