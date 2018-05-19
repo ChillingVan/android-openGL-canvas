@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.3.0.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.0.0'
 }
 ```
 
@@ -72,7 +72,7 @@ public class MyGLView extends GLView {
 
 ![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example-v1.png)
 
-* The Usage of GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView is similar.
+* The Usage of GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLMultiTexProducerView and GLMultiTexConsumerView is similar.
 
 
 * Using canvas to draw
@@ -103,7 +103,7 @@ public class MyGLView extends GLView {
 ![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example-v1.jpg)
 
 
-* If you do not want to use GLView, you can use OffScreenCanvas to draw things and fetch it by getDrawingBitmap.
+* If you do not want to use GLView, you can use MultiTexOffScreenCanvas to draw things and fetch it by getDrawingBitmap.
 
 * MediaPlayer
 
@@ -129,6 +129,7 @@ It has sync and async modes.
   This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update
+* Add MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView to support producing multiple textures and consume multiple textures
 * Add AndroidCanvasHelper and its example for drawing text.
 
 ## License

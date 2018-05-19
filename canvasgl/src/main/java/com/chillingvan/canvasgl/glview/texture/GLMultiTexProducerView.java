@@ -39,6 +39,8 @@ import java.util.List;
 /**
  * Used to generate multiple textures or consume textures from others.
  * This will not create {@link GLThread} automatically. You need to call {@link #setSharedEglContext(EglContextWrapper)} to trigger it.
+ * Support providing multiple textures to Camera or Media. <br>
+ * This can also consume textures from other GL zone( Should be in same GL context) <br>
  */
 public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
     private static final String TAG = "GLMultiTexProducerView";

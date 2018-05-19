@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    compile 'com.github.ChillingVan:android-openGL-canvas:v1.3.0.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.0.0'
 }
 ```
 
@@ -77,7 +77,7 @@ public class MyGLView extends GLView {
 
 ![canvas](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/canvas-example-v1.png)
 
-* 其中, GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLSurfaceTextureProducerView and GLSharedContextView 用法相似.
+* 其中, GLContinuouslyView, GLTextureView, GLContinuousTextureView, GLMultiTexProducerView and GLMultiTexConsumerView 用法相似.
 
 
 * 使用CanvasGL实现绘制
@@ -106,7 +106,7 @@ public class MyGLView extends GLView {
 * 可以与Camera结合，注意运行样例代码的时候尽量使用真机而不是模拟器。
 ![camera](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/camera-example-v1.jpg)
 
-* 如果不想使用View，可以使用 OffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
+* 如果不想使用View，可以使用 MultiTexOffScreenCanvas 实现脱离屏幕的绘制，然后使用getDrawingBitmap方法获取绘制的内容。
 
 
 * MediaPlayer
@@ -138,6 +138,7 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
+* 增加 MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView，支持提供多张纹理的和消化多张纹理
 * 增加AndroidCanvasHelper及其绘制文本的例子
 
 ## License

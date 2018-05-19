@@ -26,7 +26,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 /**
- * Created by Chilling on 2018/5/19.
+ * OffScreenCanvas that support providing multiple textures to Camera or Media.
+ * This can also consume textures from other GL zone( Should be in same GL context)
  */
 public abstract class MultiTexOffScreenCanvas implements GLViewRenderer {
     private List<GLTexture> producedTextureList = new ArrayList<>();
