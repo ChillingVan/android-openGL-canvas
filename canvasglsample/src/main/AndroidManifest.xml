@@ -117,8 +117,17 @@
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>
-        <activity android:name=".multi.MultiTextureActivity"
-                  android:label="MultiTextureActivity"
+        <activity
+            android:name=".multi.MultiTextureActivity"
+            android:label="MultiTextureActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".offscreen.MultiTexOffScreenActivity"
+                  android:label="MultiTexOffScreenActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

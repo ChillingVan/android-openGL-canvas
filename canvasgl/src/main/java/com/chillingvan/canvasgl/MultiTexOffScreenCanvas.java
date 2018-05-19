@@ -33,8 +33,8 @@ public abstract class MultiTexOffScreenCanvas implements GLViewRenderer {
     protected List<GLTexture> consumedTextures = new ArrayList<>();
 
     protected final GLThread mGLThread;
-    private int width;
-    private int height;
+    protected int width;
+    protected int height;
     protected ICanvasGL mCanvas;
 
 
