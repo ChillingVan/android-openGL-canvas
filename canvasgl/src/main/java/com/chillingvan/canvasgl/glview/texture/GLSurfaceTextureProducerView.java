@@ -42,8 +42,6 @@ import java.util.List;
  */
 public abstract class GLSurfaceTextureProducerView extends GLMultiTexProducerView {
 
-    private GLSurfaceTextureProducerView.OnSurfaceTextureSet onSurfaceTextureSet;
-
     public GLSurfaceTextureProducerView(Context context) {
         super(context);
     }
@@ -70,7 +68,6 @@ public abstract class GLSurfaceTextureProducerView extends GLMultiTexProducerVie
     }
 
     public void setOnSurfaceTextureSet(final GLSurfaceTextureProducerView.OnSurfaceTextureSet onSurfaceTextureSet) {
-        this.onSurfaceTextureSet = onSurfaceTextureSet;
         setSurfaceTextureCreatedListener(new SurfaceTextureCreatedListener() {
             @Override
             public void onCreated(List<GLTexture> glTextureList) {
@@ -85,13 +82,13 @@ public abstract class GLSurfaceTextureProducerView extends GLMultiTexProducerVie
     }
 
     @Override
-    protected final void onGLDraw(ICanvasGL canvas, List<GLTexture> glTextures, List<GLTexture> consumedTextures) {
-        GLTexture glTexture = glTextures.get(0);
+    protected final void onGLDraw(ICanvasGL canvas, List<GLTexture> producedTextures, List<GLTexture> consumedTextures) {
+        GLTexture glTexture = producedTextures.get(0);
         if (!consumedTextures.isEmpty()) {
             GLTexture consumeTexture = consumedTextures.get(0);
-            onGLDraw(canvas, glTexture.getSurfaceTexture(), (RawTexture) glTexture.getRawTexture(), consumeTexture.getSurfaceTexture(), consumeTexture.getRawTexture());
+            onGLDraw(canvas, glTexture.getSurfaceTexture(), glTexture.getRawTexture(), consumeTexture.getSurfaceTexture(), consumeTexture.getRawTexture());
         } else {
-            onGLDraw(canvas, glTexture.getSurfaceTexture(), (RawTexture) glTexture.getRawTexture(), null, null);
+            onGLDraw(canvas, glTexture.getSurfaceTexture(), glTexture.getRawTexture(), null, null);
         }
     }
 

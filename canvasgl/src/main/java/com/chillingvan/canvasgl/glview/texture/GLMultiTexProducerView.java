@@ -26,6 +26,7 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
@@ -40,9 +41,9 @@ import java.util.List;
  * This will not create {@link GLThread} automatically. You need to call {@link #setSharedEglContext(EglContextWrapper)} to trigger it.
  */
 public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
-    private static final String TAG = "GLSurfaceTextureProduce";
+    private static final String TAG = "GLMultiTexProducerView";
     private int producedTextureTarget = GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
-    private List<GLTexture> glTextureList = new ArrayList<>();
+    private List<GLTexture> producedTextureList = new ArrayList<>();
     private SurfaceTextureCreatedListener surfaceTextureCreatedListener;
 
     public GLMultiTexProducerView(Context context) {
@@ -59,7 +60,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
 
     @Override
     protected final void onGLDraw(ICanvasGL canvas, List<GLTexture> consumedTextures) {
-        onGLDraw(canvas, glTextureList, consumedTextures);
+        onGLDraw(canvas, producedTextureList, consumedTextures);
     }
 
 
@@ -90,24 +91,34 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
         super.onSurfaceTextureAvailable(surface, width, height);
     }
 
+
+    /**
+     * Create a new produced texture and upload it to the canvas.
+     */
+    public GLTexture addProducedGLTexture(int width, int height, boolean opaque, int target) {
+        GLTexture glTexture = GLTexture.createRaw(width, height, opaque, target, mCanvas);
+        producedTextureList.add(glTexture);
+        return glTexture;
+    }
+
     @Override
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
         Loggers.d(TAG, "onSurfaceChanged: ");
-        if (glTextureList.isEmpty()) {
+        if (producedTextureList.isEmpty()) {
             for (int i = 0; i < getInitialTexCount(); i++) {
-                glTextureList.add(GLTexture.createRaw(width, height, false, producedTextureTarget, mCanvas));
+                producedTextureList.add(GLTexture.createRaw(width, height, false, producedTextureTarget, mCanvas));
             }
             post(new Runnable() {
                 @Override
                 public void run() {
                     if (surfaceTextureCreatedListener != null) {
-                        surfaceTextureCreatedListener.onCreated(glTextureList);
+                        surfaceTextureCreatedListener.onCreated(producedTextureList);
                     }
                 }
             });
         } else {
-            for (GLTexture glTexture : glTextureList) {
+            for (GLTexture glTexture : producedTextureList) {
                 glTexture.getRawTexture().setSize(width, height);
             }
         }
@@ -116,7 +127,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
     @Override
     public void onDrawFrame() {
         if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
-            for (GLTexture glTexture : glTextureList) {
+            for (GLTexture glTexture : producedTextureList) {
                 glTexture.getSurfaceTexture().updateTexImage();
             }
         }
@@ -127,6 +138,9 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
     public void onPause() {
         super.onPause();
         recycleProduceTexture();
+        if (mGLThread == null) {
+            Log.w(TAG, "!!!!!! You may not call setShareEglContext !!!");
+        }
     }
 
     @Override
@@ -136,7 +150,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
     }
 
     private void recycleProduceTexture() {
-        for (GLTexture glTexture : glTextureList) {
+        for (GLTexture glTexture : producedTextureList) {
             if (!glTexture.getRawTexture().isRecycled()) {
                 glTexture.getRawTexture().recycle();
             }
@@ -148,7 +162,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
                 glTexture.getSurfaceTexture().release();
             }
         }
-        glTextureList.clear();
+        producedTextureList.clear();
     }
 
     public void setSurfaceTextureCreatedListener(SurfaceTextureCreatedListener surfaceTextureCreatedListener) {
@@ -159,7 +173,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
      * Listen when the produced textures created.
      */
     public interface SurfaceTextureCreatedListener {
-        void onCreated(List<GLTexture> glTextureList);
+        void onCreated(List<GLTexture> producedTextureList);
     }
 
     /**

@@ -62,7 +62,7 @@ public abstract class GLMultiTexConsumerView extends BaseGLCanvasTextureView {
      *
      * @param glTexture texture from outSide.
      */
-    public void addGLTexture(GLTexture glTexture) {
+    public void addConsumeGLTexture(GLTexture glTexture) {
         consumedTextures.add(glTexture);
     }
 

@@ -24,6 +24,7 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.chillingvan.canvasgl.ICanvasGL;
@@ -38,9 +39,9 @@ import java.util.List;
  * Created by Chilling on 2016/10/31.
  * Can be used in ScrollView or ListView.
  * Can make it not opaque by setOpaque(false).
- *
+ * <p>
  * The surface of canvasGL is provided by TextureView.
- *
+ * <p>
  * onSurfaceTextureSizeChanged onResume onPause onSurfaceTextureDestroyed onSurfaceTextureUpdated
  * From init to run: onSizeChanged --> onSurfaceTextureAvailable --> createGLThread --> createSurface
  * From run to pause: onPause --> destroySurface
@@ -49,6 +50,7 @@ import java.util.List;
  * From stop to run: onResume --> onSurfaceTextureAvailable --> createGLThread --> createSurface
  */
 abstract class BaseGLTextureView extends TextureView implements TextureView.SurfaceTextureListener {
+    private static final String TAG = "BaseGLTextureView";
 
     protected GLThread mGLThread;
     protected GLThread.Builder glThreadBuilder;
@@ -108,12 +110,19 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     public void requestRender() {
         if (mGLThread != null) {
             mGLThread.requestRender();
+        } else {
+            Log.w(TAG, "GLThread is not created when requestRender");
         }
     }
 
+    /**
+     * Wait until render command is sent to OpenGL
+     */
     public void requestRenderAndWait() {
         if (mGLThread != null) {
             mGLThread.requestRenderAndWait();
+        } else {
+            Log.w(TAG, "GLThread is not created when requestRender");
         }
     }
 
@@ -167,7 +176,6 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     }
 
     /**
-     *
      * @return If the context is not created, then EGL10.EGL_NO_CONTEXT will be returned.
      */
     @Nullable
@@ -194,7 +202,6 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     public void setRenderer(GLViewRenderer renderer) {
         this.renderer = renderer;
     }
-
 
 
     @Override

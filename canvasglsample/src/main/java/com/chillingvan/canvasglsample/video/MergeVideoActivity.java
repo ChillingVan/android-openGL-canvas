@@ -54,7 +54,7 @@ public class MergeVideoActivity extends AppCompatActivity {
                         mediaPlayerTextureView1.requestRenderAndWait();
                     }
                 });
-                mergeVideoTextureView.addGLTexture(new GLTexture(surfaceTextureRelatedTexture, surfaceTexture));
+                mergeVideoTextureView.addConsumeGLTexture(new GLTexture(surfaceTextureRelatedTexture, surfaceTexture));
                 mediaSurfaces.add(new Surface(surfaceTexture));
                 mediaPlayers.add(new MediaPlayerHelper(TEST_VIDEO_MP4));
             }
@@ -71,7 +71,7 @@ public class MergeVideoActivity extends AppCompatActivity {
                         mediaPlayerTextureView2.requestRenderAndWait();
                     }
                 });
-                mergeVideoTextureView.addGLTexture(new GLTexture(rawTexture, surfaceTexture));
+                mergeVideoTextureView.addConsumeGLTexture(new GLTexture(rawTexture, surfaceTexture));
                 mediaSurfaces.add(new Surface(surfaceTexture));
                 mediaPlayers.add(new MediaPlayerHelper(TEST_VIDEO_MP4_2));
             }

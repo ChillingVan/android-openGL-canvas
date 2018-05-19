@@ -95,7 +95,7 @@ public class TextureCameraActivity extends AppCompatActivity {
             @Override
             public void onSet(SurfaceTexture surfaceTexture, RawTexture surfaceTextureRelatedTexture) {
                 Loggers.d("TextureCameraActivity", String.format("onSet: "));
-                previewConsumerTextureView.addGLTexture(new GLTexture(surfaceTextureRelatedTexture, surfaceTexture));
+                previewConsumerTextureView.addConsumeGLTexture(new GLTexture(surfaceTextureRelatedTexture, surfaceTexture));
                 surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
                     @Override
                     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
