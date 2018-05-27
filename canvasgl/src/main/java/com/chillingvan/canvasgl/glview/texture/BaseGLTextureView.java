@@ -132,8 +132,10 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
 
     protected void surfaceDestroyed() {
         // Surface will be destroyed when we return
-        mGLThread.surfaceDestroyed();
-        mGLThread.requestExitAndWait();
+        if (mGLThread != null) {
+            mGLThread.surfaceDestroyed();
+            mGLThread.requestExitAndWait();
+        }
         hasCreateGLThreadCalledOnce = false;
         surfaceAvailable = false;
         mGLThread = null;
