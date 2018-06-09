@@ -135,6 +135,7 @@ public class MyGLView extends GLView {
 * [OpenGL绘制一张图片的流程](http://www.jianshu.com/p/40521c92ef85)
 * [如何封装 opengl 流程](http://www.jianshu.com/p/c45d11627c70)
 * [代替GLSurfaceView的GLTextureView](http://www.jianshu.com/p/5a127d43b39a)
+* [为什么你的canvas那么慢？浅析Android的canvas性能](https://www.jianshu.com/p/5a0c61c286e6)
 
 
 ## 最近更新
