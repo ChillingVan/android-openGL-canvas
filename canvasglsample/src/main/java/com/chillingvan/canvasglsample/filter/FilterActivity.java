@@ -33,6 +33,7 @@ import android.widget.SeekBar;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasgl.textureFilter.ColorMatrixFilter;
 import com.chillingvan.canvasgl.textureFilter.ContrastFilter;
+import com.chillingvan.canvasgl.textureFilter.CropFilter;
 import com.chillingvan.canvasgl.textureFilter.DarkenBlendFilter;
 import com.chillingvan.canvasgl.textureFilter.DirectionalSobelEdgeDetectionFilter;
 import com.chillingvan.canvasgl.textureFilter.FilterGroup;
@@ -157,6 +158,12 @@ public class FilterActivity extends AppCompatActivity {
 
         BasicTextureFilter basicTextureFilter = new BasicTextureFilter();
         renderEntityList.add(new CaseEntity(basicTextureFilter, new GPUImageFilter(), firstBitmap));
+
+
+        int width = firstBitmap.getWidth();
+        int height = firstBitmap.getHeight();
+        CropFilter cropFilter = new CropFilter(CropFilter.calc(width/2, width), 0, 1, CropFilter.calc(height/2, height));
+        renderEntityList.add(new CaseEntity(cropFilter, new GPUImageFilter(), firstBitmap));
 
         Bitmap lookupAmatorka = BitmapFactory.decodeResource(getResources(), R.drawable.lookup_amatorka);
         LookupFilter lookupFilter = new LookupFilter(lookupAmatorka);
