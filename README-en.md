@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.0.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.0'
 }
 ```
 
@@ -129,6 +129,7 @@ It has sync and async modes.
   This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update
+* Support cut bitmap with CropFilter
 * Add MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView to support producing multiple textures and consume multiple textures
 * Add AndroidCanvasHelper and its example for drawing text.
 

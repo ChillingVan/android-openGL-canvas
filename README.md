@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.0.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.0'
 }
 ```
 
@@ -139,6 +139,7 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
+* 支持裁切图片的CropFilter
 * 增加 MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView，支持提供多张纹理的和消化多张纹理
 * 增加AndroidCanvasHelper及其绘制文本的例子
 
@@ -152,7 +153,8 @@ public class MyGLView extends GLView {
        http://www.apache.org/licenses/LICENSE-2.0
 
     Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
+    distributed under the License is distributed on
+     an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.

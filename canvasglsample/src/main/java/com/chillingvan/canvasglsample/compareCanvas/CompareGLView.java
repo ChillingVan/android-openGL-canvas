@@ -32,6 +32,7 @@ import com.chillingvan.canvasgl.CanvasGL;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glview.GLView;
+import com.chillingvan.canvasgl.textureFilter.CropFilter;
 import com.chillingvan.canvasglsample.R;
 
 /**
@@ -41,6 +42,7 @@ import com.chillingvan.canvasglsample.R;
 public class CompareGLView extends GLView {
 
     private Bitmap baboon;
+    private CropFilter cropFilter;
 
     public CompareGLView(Context context) {
         super(context);
@@ -55,6 +57,8 @@ public class CompareGLView extends GLView {
         super.init();
 
         baboon = BitmapFactory.decodeResource(getResources(), R.drawable.baboon);
+
+        cropFilter = new CropFilter(0.5f, 0.5f, 1, 1);
     }
 
     @Override
@@ -72,7 +76,7 @@ public class CompareGLView extends GLView {
         matrix.reset();
         matrix.translate(28, 19);
         matrix.rotateZ(30);
-        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lenna), matrix);
+        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lenna), matrix, cropFilter);
 
 
         GLPaint paint = new GLPaint();
