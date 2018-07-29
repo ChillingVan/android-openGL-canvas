@@ -881,8 +881,20 @@ public class GLThread extends Thread {
      * or without a depth buffer.
      */
     public static class SimpleEGLConfigChooser extends ComponentSizeChooser {
+        public static SimpleEGLConfigChooser createConfigChooser(boolean withDepthBuffer, int contextClientVersion) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                return new SimpleEGLConfigChooser(withDepthBuffer, contextClientVersion);
+            } else {
+                return new SimpleEGLConfigChooser(5, 6, 5, 8, 0, 0, contextClientVersion);
+            }
+        }
+
         public SimpleEGLConfigChooser(boolean withDepthBuffer, int contextClientVersion) {
             super(8, 8, 8, 0, withDepthBuffer ? 16 : 0, 0, contextClientVersion);
+        }
+
+        public SimpleEGLConfigChooser(int redSize, int greenSize, int blueSize, int alphaSize, int depthSize, int stencilSize, int contextClientVersion) {
+            super(redSize, greenSize, blueSize, alphaSize, depthSize, stencilSize, contextClientVersion);
         }
     }
 
@@ -1037,7 +1049,7 @@ public class GLThread extends Thread {
 
 
         public Builder setEGLConfigChooser(boolean needDepth) {
-            setEGLConfigChooser(new SimpleEGLConfigChooser(needDepth, eglContextClientVersion));
+            setEGLConfigChooser(SimpleEGLConfigChooser.createConfigChooser(needDepth, eglContextClientVersion));
             return this;
         }
 
@@ -1096,7 +1108,7 @@ public class GLThread extends Thread {
                 throw new NullPointerException("surface has not been set");
             }
             if (configChooser == null) {
-                configChooser = new SimpleEGLConfigChooser(true, eglContextClientVersion);
+                configChooser = SimpleEGLConfigChooser.createConfigChooser(true, eglContextClientVersion);
             }
             if (eglContextFactory == null) {
                 eglContextFactory = new DefaultContextFactory(eglContextClientVersion);

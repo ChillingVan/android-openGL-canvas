@@ -28,8 +28,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 104010
-        versionName "1.4.1.0"
+        versionCode 104011
+        versionName "1.4.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
