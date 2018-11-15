@@ -52,7 +52,7 @@ public final class FileLogger {
     private static ExecutorService sLogExecutor = Executors.newSingleThreadExecutor();
 
     private static boolean sLogEnable = false;
-    private static LogLevel sLogLevel = LogLevel.DEBUG;
+    private static LogLevel sLogLevel = LogLevel.VERBOSE;
     private static LogFileManager sLogFileManager;
 
     private static Map<String, Integer> limitLogMap = new HashMap<>();
@@ -377,7 +377,7 @@ public final class FileLogger {
         sLogExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                appendLog(tag, strBuilder.toString() + msg);
+                appendLog(strBuilder.toString() + tag, msg);
             }
         });
     }
