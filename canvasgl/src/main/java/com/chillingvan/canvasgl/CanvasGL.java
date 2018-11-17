@@ -39,6 +39,7 @@ import com.chillingvan.canvasgl.glcanvas.GLES20Canvas;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glcanvas.UploadedTexture;
+import com.chillingvan.canvasgl.matrix.IBitmapMatrix;
 import com.chillingvan.canvasgl.shapeFilter.BasicDrawShapeFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawCircleFilter;
 import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
@@ -130,12 +131,12 @@ public class CanvasGL implements ICanvasGL {
 
 
     @Override
-    public void drawBitmap(Bitmap bitmap, @NonNull BitmapMatrix matrix) {
+    public void drawBitmap(Bitmap bitmap, @NonNull IBitmapMatrix matrix) {
         drawBitmap(bitmap, matrix, basicTextureFilter);
     }
 
     @Override
-    public void drawBitmap(Bitmap bitmap, final BitmapMatrix matrix, TextureFilter textureFilter) {
+    public void drawBitmap(Bitmap bitmap, final IBitmapMatrix matrix, TextureFilter textureFilter) {
         BasicTexture basicTexture = getTexture(bitmap, textureFilter);
         save();
         glCanvas.drawTexture(basicTexture, 0, 0, bitmap.getWidth(), bitmap.getHeight(), textureFilter, new GLCanvas.ICustomMVPMatrix() {

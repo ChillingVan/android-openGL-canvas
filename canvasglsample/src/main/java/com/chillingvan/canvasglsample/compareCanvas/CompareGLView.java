@@ -64,21 +64,59 @@ public class CompareGLView extends GLView {
     @Override
     protected void onGLDraw(ICanvasGL canvas) {
 
-
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lenna);
         CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
-        matrix.scale(1.3f, 1.6f);
-        matrix.rotateX(34);
-        matrix.rotateY(64);
-        matrix.rotateZ(30);
-        matrix.translate(390, 0);
+        matrix.translate(getWidth()/4, getHeight()/2);
+        float scale = 6f;
+        matrix.scale(scale, scale);
+        matrix.translate(-bitmap.getWidth()*scale/2,-bitmap.getHeight()*scale/2);
+        canvas.drawBitmap(bitmap, matrix);
+
+//        drawBitmapWithMatrix(canvas);
+        drawRectAndLine(canvas);
+        drawText(canvas);
+        drawCircle(canvas);
+
+//        drawBitmapWithOrthoMatrix(canvas);
+    }
+
+    private void drawBitmapWithOrthoMatrix(ICanvasGL canvas) {
+        CanvasGL.OrthoBitmapMatrix matrix = new CanvasGL.OrthoBitmapMatrix();
         canvas.drawBitmap(baboon, matrix);
 
+
         matrix.reset();
-        matrix.translate(28, 19);
-        matrix.rotateZ(30);
-        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lenna), matrix, cropFilter);
+        matrix.translate(280, 30);
+        canvas.drawBitmap(baboon, matrix);
 
 
+        matrix.reset();
+        matrix.translate(0, 280);
+        matrix.rotateZ(45);
+        canvas.drawBitmap(baboon, matrix);
+
+
+        matrix.reset();
+        matrix.translate(300, 300);
+        matrix.scale(8f, 5f);
+        canvas.drawBitmap(baboon, matrix);
+    }
+
+    private void drawCircle(ICanvasGL canvas) {
+        //circle
+        GLPaint circlePaint = new GLPaint();
+        circlePaint.setColor(Color.parseColor("#88FF0000"));
+        circlePaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(430, 30, 30, circlePaint);
+
+        GLPaint strokeCirclePaint = new GLPaint();
+        strokeCirclePaint.setColor(Color.parseColor("#88FF0000"));
+        strokeCirclePaint.setLineWidth(4);
+        strokeCirclePaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(490, 30, 30, strokeCirclePaint);
+    }
+
+    private void drawRectAndLine(ICanvasGL canvas) {
         GLPaint paint = new GLPaint();
         paint.setColor(Color.parseColor("#88FF0000"));
         paint.setLineWidth(4);
@@ -92,7 +130,9 @@ public class CompareGLView extends GLView {
         canvas.drawRect(560, 40, 760, 180, paint2);
 
         canvas.drawLine(360, 80, 360, 120, paint);
+    }
 
+    private static void drawText(ICanvasGL canvas) {
         // text
         Bitmap textBitmap = Bitmap.createBitmap(180, 100, Bitmap.Config.ARGB_8888);
         Canvas normalCanvas = new Canvas(textBitmap);
@@ -104,18 +144,20 @@ public class CompareGLView extends GLView {
         normalCanvas.drawColor(Color.WHITE);
         normalCanvas.drawText(text, 20, 30, textPaint);
         canvas.drawBitmap(textBitmap, 500, 80);
+    }
 
+    private void drawBitmapWithMatrix(ICanvasGL canvas) {
+        CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
+        matrix.scale(1.3f, 1.6f);
+        matrix.rotateX(34);
+        matrix.rotateY(64);
+        matrix.rotateZ(30);
+        matrix.translate(390, 0);
+        canvas.drawBitmap(baboon, matrix);
 
-        //circle
-        GLPaint circlePaint = new GLPaint();
-        circlePaint.setColor(Color.parseColor("#88FF0000"));
-        circlePaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(430, 30, 30, circlePaint);
-
-        GLPaint strokeCirclePaint = new GLPaint();
-        strokeCirclePaint.setColor(Color.parseColor("#88FF0000"));
-        strokeCirclePaint.setLineWidth(4);
-        strokeCirclePaint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(490, 30, 30, strokeCirclePaint);
+        matrix.reset();
+        matrix.translate(28, 19);
+        matrix.rotateZ(30);
+        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lenna), matrix);
     }
 }
