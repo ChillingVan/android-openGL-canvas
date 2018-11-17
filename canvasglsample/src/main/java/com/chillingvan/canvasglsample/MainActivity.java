@@ -31,8 +31,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.chillingvan.canvasgl.util.Loggers;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +53,6 @@ public class MainActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CrashHandler.init(getApplicationContext());
-        Loggers.DEBUG = true;
         getPermission();
 
         Intent intent = getIntent();
