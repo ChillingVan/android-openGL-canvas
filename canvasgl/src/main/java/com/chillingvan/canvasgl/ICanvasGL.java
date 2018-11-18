@@ -39,7 +39,6 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.matrix.BaseBitmapMatrix;
 import com.chillingvan.canvasgl.matrix.IBitmapMatrix;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
-import com.chillingvan.canvasgl.util.FileLogger;
 
 /**
  * Created by Matthew on 2016/9/26.
@@ -142,7 +141,7 @@ public interface ICanvasGL {
         }
 
         /**
-         * Ma
+         * Should not be larger than 2 * GLES20.GL_MAX_VIEWPORT_DIMS
          * @param sx
          * @param sy
          */
@@ -165,18 +164,21 @@ public interface ICanvasGL {
 
         @Override
         public float[] obtainResultMatrix(int viewportW, int viewportH, float x, float y, float drawW, float drawH) {
-            FileLogger.d("viewportW, viewportH, x, y, drawW, drawH", String.format("%d, %d, %.2f, %.2f, %.2f, %.2f,", viewportW, viewportH, x, y, drawW, drawH));
 
             float ratio = (float) viewportW / viewportH;
 
             transform[TRANSLATE_X] += x;
             transform[TRANSLATE_Y] += y;
 
-            // Move view port to make sure the picture in the center of the view port.
-            int viewportX = (int) (drawW / 2 - viewportW + transform[TRANSLATE_X]);
-            int viewportY = (int) (-drawH / 2 - transform[TRANSLATE_Y]);
             int viewPortRatio = 2; // The ratio is for even this view port contains the real view port, so that the picture won't be interrupted.
-            GLES20.glViewport(viewportX, viewportY, viewPortRatio * viewportW, viewPortRatio * viewportH);
+            // Move view port to make sure the picture in the center of the view port.
+            final float absTransX = Math.abs(transform[TRANSLATE_X]); // Make sure viewportX + realViewportW >= viewportW
+            final float absTransY = Math.abs(transform[TRANSLATE_Y]); // Make sure realViewportH - viewportY >= viewportH
+            int viewportX = (int) (drawW / 2 - (((float)viewPortRatio/2)) * viewportW + transform[TRANSLATE_X] - absTransX);
+            int viewportY = (int) -((drawH / 2 + transform[TRANSLATE_Y] + absTransY) + ((float)viewPortRatio-2)/2 * viewportH);//The origin is (0,h)
+            final int realViewportW = (int) (viewPortRatio * viewportW + 2*absTransX);
+            final int realViewportH = (int) (viewPortRatio * viewportH + 2*absTransY);
+            GLES20.glViewport(viewportX, viewportY, realViewportW, realViewportH);
 
             Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, NEAR, FAR);
             Matrix.setLookAtM(mViewMatrix, 0,
@@ -203,7 +205,6 @@ public interface ICanvasGL {
             // Need to middle X, Y of the plane, too. The middle of the plane is (0, 0, -Z_RATIO + EYEZ)
             Matrix.translateM(tempMultiplyMatrix4, 0, mModelMatrix, 0, -realW/2, -realH/2, -Z_RATIO + EYEZ);
             GLES20Canvas.printMatrix("model translated:", tempMultiplyMatrix4, 0);
-            FileLogger.d("realW, realH:", "" + realW + ", " + realH);
 
 
             Matrix.scaleM(tempMultiplyMatrix4, 0, transform[SCALE_X] * realW, transform[SCALE_Y] * realH, 1);
@@ -217,8 +218,10 @@ public interface ICanvasGL {
 
     }
 
+
+
     /**
-     * Orthographic bitmap matrix. It uses orthographic projection type. So it only support rotateZ.
+     * Orthographic bitmap matrix. It uses orthographic projection type. So it only support rotateX and rotateY.
      */
     class OrthoBitmapMatrix extends BaseBitmapMatrix {
 
@@ -248,11 +251,10 @@ public interface ICanvasGL {
             transform[TRANSLATE_X] += x;
             transform[TRANSLATE_Y] += y;
 
-            int viewportX = (int) (drawW / 2 - viewportW + transform[TRANSLATE_X]);
-            int viewportY = (int) (-drawH / 2 - transform[TRANSLATE_Y]);
-            GLES20.glViewport(viewportX, viewportY, 2 * viewportW, 2 * viewportH);
+            GLES20.glViewport(0, 0, viewportW, viewportH);
 
-            Matrix.orthoM(mProjectionMatrix, 0, 0, viewportW, 0, viewportH, -1, 1);
+            Matrix.orthoM(mProjectionMatrix, 0, 0, ratio, 0, 1, -1, 1);
+            Matrix.multiplyMM(viewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
             Matrix.scaleM(mModelMatrix, 0, 1, -1, 1);
             GLES20Canvas.printMatrix("model init:", mModelMatrix, 0);
@@ -261,12 +263,12 @@ public interface ICanvasGL {
             GLES20Canvas.printMatrix("model rotated:", mModelMatrix, 0);
 
 
-            float realW = drawW / viewportW * 2 * ratio / 2;
-            float realH = drawH / viewportH * 2 / 2;
-            Matrix.translateM(tempMultiplyMatrix4, 0, mModelMatrix, 0, -realW/2, -realH/2, -Z_RATIO + EYEZ);
+            final float transX = transform[TRANSLATE_X] / viewportW;
+            final float transY = transform[TRANSLATE_Y] / viewportH -1;
+            Matrix.translateM(tempMultiplyMatrix4, 0, mModelMatrix, 0, transX, transY, 0);
             GLES20Canvas.printMatrix("model translated:", tempMultiplyMatrix4, 0);
 
-            Matrix.scaleM(tempMultiplyMatrix4, 0, transform[SCALE_X] * realW, transform[SCALE_Y] * realH, 1);
+            Matrix.scaleM(tempMultiplyMatrix4, 0, transform[SCALE_X] * drawW/viewportW * ratio, transform[SCALE_Y] * drawH/viewportH, 1);
             GLES20Canvas.printMatrix("model scaled:", tempMultiplyMatrix4, 0);
 
 
@@ -277,5 +279,4 @@ public interface ICanvasGL {
         }
 
     }
-
 }

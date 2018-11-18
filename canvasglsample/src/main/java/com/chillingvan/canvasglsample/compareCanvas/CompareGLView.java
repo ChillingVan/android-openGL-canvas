@@ -63,21 +63,12 @@ public class CompareGLView extends GLView {
 
     @Override
     protected void onGLDraw(ICanvasGL canvas) {
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lenna);
-        CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
-        matrix.translate(getWidth()/4, getHeight()/2);
-        float scale = 6f;
-        matrix.scale(scale, scale);
-        matrix.translate(-bitmap.getWidth()*scale/2,-bitmap.getHeight()*scale/2);
-        canvas.drawBitmap(bitmap, matrix);
-
-//        drawBitmapWithMatrix(canvas);
+        drawBitmapWithMatrix(canvas);
         drawRectAndLine(canvas);
         drawText(canvas);
         drawCircle(canvas);
-
 //        drawBitmapWithOrthoMatrix(canvas);
+
     }
 
     private void drawBitmapWithOrthoMatrix(ICanvasGL canvas) {
@@ -86,21 +77,17 @@ public class CompareGLView extends GLView {
 
 
         matrix.reset();
-        matrix.translate(280, 30);
+        matrix.translate(500, 150);
+        matrix.scale(10f, 10f);
         canvas.drawBitmap(baboon, matrix);
 
 
         matrix.reset();
-        matrix.translate(0, 280);
+        matrix.translate(0, 100);
         matrix.rotateZ(45);
         canvas.drawBitmap(baboon, matrix);
-
-
-        matrix.reset();
-        matrix.translate(300, 300);
-        matrix.scale(8f, 5f);
-        canvas.drawBitmap(baboon, matrix);
     }
+
 
     private void drawCircle(ICanvasGL canvas) {
         //circle
