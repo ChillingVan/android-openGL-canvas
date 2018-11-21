@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.1'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.2'
 }
 ```
 
@@ -139,6 +139,8 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
+* 添加OrthoBitmapMatrix以支持正交投影。 默认BitmapMatrix用的是透视投影。
+* 修复BitmapMatrix被过小的viewport剪切的问题。支持更大的放大倍数及离屏距离。
 * 支持裁切图片的CropFilter
 * 增加 MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView，支持提供多张纹理的和消化多张纹理
 * 增加AndroidCanvasHelper及其绘制文本的例子

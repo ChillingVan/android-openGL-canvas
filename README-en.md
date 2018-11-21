@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.1'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.2'
 }
 ```
 
@@ -129,6 +129,8 @@ It has sync and async modes.
   This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update
+* Add OrthoBitmapMatrix as One BitmapMatrix. Default BitmapMatrix uses perspective matrix.
+* Fix BitmapMatrix cut by small viewport issue when Bitmap out of screen.
 * Support cut bitmap with CropFilter
 * Add MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView to support producing multiple textures and consume multiple textures
 * Add AndroidCanvasHelper and its example for drawing text.
