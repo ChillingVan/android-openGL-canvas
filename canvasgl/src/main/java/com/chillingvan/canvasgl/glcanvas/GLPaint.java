@@ -23,7 +23,6 @@ package com.chillingvan.canvasgl.glcanvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import junit.framework.Assert;
 
 public class GLPaint {
     private float mLineWidth = 1f;
@@ -39,7 +38,6 @@ public class GLPaint {
     }
 
     public void setLineWidth(float width) {
-        Assert.assertTrue(width >= 0);
         mLineWidth = width;
     }
 

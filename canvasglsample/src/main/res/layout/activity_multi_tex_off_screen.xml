@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp"
         android:textColor="@android:color/black"
-        android:text="touch empty area and do not cover the camera"
+        android:text="touch the TOP empty area and do not cover the camera"
         android:textSize="15sp"
         />
 

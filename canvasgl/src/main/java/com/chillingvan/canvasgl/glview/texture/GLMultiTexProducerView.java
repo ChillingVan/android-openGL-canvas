@@ -106,15 +106,16 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
     @Override
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
-        Loggers.d(TAG, "onSurfaceChanged: ");
+        Loggers.d(TAG, "onSurfaceChanged: " + width + ", " + height);
         if (producedTextureList.isEmpty()) {
             for (int i = 0; i < getInitialTexCount(); i++) {
+                // This must be in this thread because it relies on the GLContext of this thread
                 producedTextureList.add(GLTexture.createRaw(width, height, false, producedTextureTarget, mCanvas));
             }
             post(new Runnable() {
                 @Override
                 public void run() {
-                    if (surfaceTextureCreatedListener != null) {
+                    if (!producedTextureList.isEmpty() && surfaceTextureCreatedListener != null) {
                         surfaceTextureCreatedListener.onCreated(producedTextureList);
                     }
                 }
@@ -139,6 +140,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
     @Override
     public void onPause() {
         super.onPause();
+        Loggers.d(TAG, "onPause");
         recycleProduceTexture();
         if (mGLThread == null) {
             Log.w(TAG, "!!!!!! You may not call setShareEglContext !!!");

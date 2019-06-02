@@ -22,8 +22,6 @@ package com.chillingvan.canvasgl.glcanvas;
 
 import android.graphics.Bitmap;
 
-import junit.framework.Assert;
-
 // BitmapTexture is a secondBitmap whose content is specified by a fixed Bitmap.
 //
 // The secondBitmap does not own the Bitmap. The user should make sure the Bitmap
@@ -38,7 +36,7 @@ public class BitmapTexture extends UploadedTexture {
 
     public BitmapTexture(Bitmap bitmap, boolean hasBorder) {
         super(hasBorder);
-        Assert.assertTrue(bitmap != null && !bitmap.isRecycled());
+//        Assert.assertTrue(bitmap != null && !bitmap.isRecycled());
         mContentBitmap = bitmap;
     }
 

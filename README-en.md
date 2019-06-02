@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.2'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.3'
 }
 ```
 
@@ -129,6 +129,7 @@ It has sync and async modes.
   This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update
+* Fix subtle crash issue
 * Add OrthoBitmapMatrix as One BitmapMatrix. Default BitmapMatrix uses perspective matrix.
 * Fix BitmapMatrix cut by small viewport issue when Bitmap out of screen.
 * Support cut bitmap with CropFilter
