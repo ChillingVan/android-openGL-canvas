@@ -18,7 +18,7 @@
  *
  */
 
-package com.chillingvan.canvasglsample.filter.adapter;
+package com.chillingvan.canvasglsample.util.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;

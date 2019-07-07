@@ -26,8 +26,9 @@ import android.view.ViewGroup;
 
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 import com.chillingvan.canvasglsample.R;
-import com.chillingvan.canvasglsample.filter.adapter.CommonItemView;
-import com.chillingvan.canvasglsample.filter.adapter.RenderEntity;
+import com.chillingvan.canvasglsample.util.adapter.BaseItemView;
+import com.chillingvan.canvasglsample.util.adapter.CommonItemView;
+import com.chillingvan.canvasglsample.util.adapter.RenderEntity;
 
 import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
 
@@ -67,7 +68,7 @@ public class CaseEntity implements RenderEntity {
     }
 
     @Override
-    public CommonItemView createView(ViewGroup parent) {
+    public BaseItemView createView(ViewGroup parent) {
         return new CaseItemView(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_case_filter, parent, false));
     }
 }

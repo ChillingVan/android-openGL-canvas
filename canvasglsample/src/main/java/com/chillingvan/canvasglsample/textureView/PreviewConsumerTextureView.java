@@ -78,4 +78,7 @@ public class PreviewConsumerTextureView extends GLMultiTexConsumerView {
         robot = BitmapFactory.decodeResource(getResources(), R.drawable.ic_robot);
     }
 
+    public void clearConsumedTextures() {
+        consumedTextures.clear();
+    }
 }
