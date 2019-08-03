@@ -121,6 +121,10 @@ public class CanvasGL implements ICanvasGL {
 
     @Override
     public void drawSurfaceTexture(BasicTexture texture, SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
+        if (basicTextureFilter instanceof FilterGroup) {
+            FilterGroup filterGroup = (FilterGroup) basicTextureFilter;
+            texture = filterGroup.draw(texture, glCanvas);
+        }
         if (surfaceTexture == null) {
             glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter, null);
         } else {

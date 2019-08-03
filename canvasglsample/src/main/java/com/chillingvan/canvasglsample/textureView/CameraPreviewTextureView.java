@@ -30,7 +30,13 @@ import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
+import com.chillingvan.canvasgl.textureFilter.FilterGroup;
+import com.chillingvan.canvasgl.textureFilter.HueFilter;
+import com.chillingvan.canvasgl.textureFilter.PixelationFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Chilling on 2016/11/3.
@@ -39,6 +45,12 @@ import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 public class CameraPreviewTextureView extends GLSurfaceTextureProducerView {
 
     private TextureFilter textureFilter = new BasicTextureFilter();
+    {
+        List<TextureFilter> filters = new ArrayList<>();
+        filters.add(new HueFilter(190));
+        filters.add(new PixelationFilter(15));
+        textureFilter = new FilterGroup(filters);
+    }
 
     public CameraPreviewTextureView(Context context) {
         super(context);

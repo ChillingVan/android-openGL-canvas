@@ -24,6 +24,7 @@ package com.chillingvan.canvasgl.textureFilter;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.GLCanvas;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
+import com.chillingvan.canvasgl.util.Loggers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +34,12 @@ import java.util.List;
  */
 
 public class FilterGroup extends BasicTextureFilter {
+    private static final String TAG = "FilterGroup";
 
 
     protected List<TextureFilter> mFilters;
     protected List<TextureFilter> mMergedFilters;
     private final List<RawTexture> rawTextureList = new ArrayList<>();
-    private BasicTexture outputTexture;
-    private BasicTexture initialTexture;
 
     public FilterGroup(List<TextureFilter> mFilters) {
         this.mFilters = mFilters;
@@ -49,8 +49,6 @@ public class FilterGroup extends BasicTextureFilter {
 
     private void createTextures(BasicTexture initialTexture) {
         recycleTextures();
-
-        rawTextureList.clear();
         for (int i = 0; i < mMergedFilters.size(); i++) {
             rawTextureList.add(new RawTexture(initialTexture.getWidth(), initialTexture.getHeight(), false));
         }
@@ -60,16 +58,15 @@ public class FilterGroup extends BasicTextureFilter {
         for (RawTexture rawTexture : rawTextureList) {
             rawTexture.recycle();
         }
+        rawTextureList.clear();
     }
 
 
     public BasicTexture draw(BasicTexture initialTexture, GLCanvas glCanvas) {
-        if (this.initialTexture == initialTexture && outputTexture != null) {
-            return outputTexture;
-        }
-        this.initialTexture = initialTexture;
 
-        createTextures(initialTexture);
+        if (rawTextureList.size() != mMergedFilters.size()) {
+            createTextures(initialTexture);
+        }
         BasicTexture drawTexture = initialTexture;
         for (int i = 0, size = rawTextureList.size(); i < size; i++) {
             RawTexture rawTexture = rawTextureList.get(i);
@@ -79,7 +76,6 @@ public class FilterGroup extends BasicTextureFilter {
             glCanvas.endRenderTarget();
             drawTexture = rawTexture;
         }
-        outputTexture = drawTexture;
 
         return drawTexture;
     }
@@ -87,6 +83,7 @@ public class FilterGroup extends BasicTextureFilter {
     @Override
     public void destroy() {
         super.destroy();
+        Loggers.d(TAG, "destroy");
         recycleTextures();
     }
 
