@@ -64,7 +64,7 @@ public class FilterGroup extends BasicTextureFilter {
     }
 
 
-    public BasicTexture draw(BasicTexture initialTexture, GLCanvas glCanvas) {
+    public BasicTexture draw(BasicTexture initialTexture, GLCanvas glCanvas, OnDrawListener onDrawListener) {
         if (initialTexture instanceof RawTexture) {
             if (!((RawTexture) initialTexture).isNeedInvalidate()) {
                 return outputTexture;
@@ -83,7 +83,7 @@ public class FilterGroup extends BasicTextureFilter {
             RawTexture rawTexture = rawTextureList.get(i);
             TextureFilter textureFilter = mMergedFilters.get(i);
             glCanvas.beginRenderTarget(rawTexture);
-            glCanvas.drawTexture(drawTexture, 0, 0, drawTexture.getWidth(), drawTexture.getHeight(), textureFilter, null);
+            onDrawListener.onDraw(drawTexture, textureFilter, i == 0);
             glCanvas.endRenderTarget();
             drawTexture = rawTexture;
         }
@@ -127,5 +127,9 @@ public class FilterGroup extends BasicTextureFilter {
             }
             mMergedFilters.add(filter);
         }
+    }
+
+    public interface OnDrawListener {
+        void onDraw(BasicTexture drawTexture, TextureFilter textureFilter, boolean isFirst);
     }
 }

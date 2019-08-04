@@ -121,11 +121,11 @@ public class CanvasGL implements ICanvasGL {
     }
 
     @Override
-    public void drawSurfaceTexture(BasicTexture texture, SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
+    public void drawSurfaceTexture(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
         currentTextureFilter = basicTextureFilter;
         if (basicTextureFilter instanceof FilterGroup) {
-            FilterGroup filterGroup = (FilterGroup) basicTextureFilter;
-            texture = filterGroup.draw(texture, glCanvas);
+            drawSurfaceTextureWithFilterGroup(texture, surfaceTexture, left, top, right, bottom, basicTextureFilter);
+            return;
         }
         if (surfaceTexture == null) {
             glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter, null);
@@ -133,6 +133,22 @@ public class CanvasGL implements ICanvasGL {
             surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
             glCanvas.drawTexture(texture, surfaceTextureMatrix, left, top, right - left, bottom - top, basicTextureFilter, null);
         }
+    }
+
+    private void drawSurfaceTextureWithFilterGroup(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
+        FilterGroup filterGroup = (FilterGroup) basicTextureFilter;
+        texture = filterGroup.draw(texture, glCanvas, new FilterGroup.OnDrawListener() {
+            @Override
+            public void onDraw(BasicTexture drawTexture, TextureFilter textureFilter, boolean isFirst) {
+                if (isFirst) {
+                    surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
+                    glCanvas.drawTexture(drawTexture, surfaceTextureMatrix, 0, 0, drawTexture.getWidth(), drawTexture.getHeight(), textureFilter, null);
+                } else {
+                    glCanvas.drawTexture(drawTexture, 0, 0, drawTexture.getWidth(), drawTexture.getHeight(), textureFilter, null);
+                }
+            }
+        });
+        glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter, null);
     }
 
 
@@ -203,7 +219,12 @@ public class CanvasGL implements ICanvasGL {
 
         if (textureFilter instanceof FilterGroup) {
             FilterGroup filterGroup = (FilterGroup) textureFilter;
-            resultTexture = filterGroup.draw(resultTexture, glCanvas);
+            resultTexture = filterGroup.draw(resultTexture, glCanvas, new FilterGroup.OnDrawListener() {
+                @Override
+                public void onDraw(BasicTexture drawTexture, TextureFilter textureFilter, boolean isFirst) {
+                    glCanvas.drawTexture(drawTexture, 0, 0, drawTexture.getWidth(), drawTexture.getHeight(), textureFilter, null);
+                }
+            });
         }
 
 
