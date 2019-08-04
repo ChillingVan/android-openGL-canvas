@@ -103,6 +103,9 @@ public abstract class GLView extends GLSurfaceView implements GLSurfaceView.Rend
 
     public void stop() {
         onPause();
+        if (mCanvas != null) {
+            mCanvas.pause();
+        }
     }
 
     public void destroy() {

@@ -66,3 +66,4 @@ public class CameraPreviewTextureView extends GLSurfaceTextureProducerView {
         canvas.drawSurfaceTexture(producedRawTexture, producedSurfaceTexture, 0, 0, producedRawTexture.getWidth(), producedRawTexture.getHeight(), textureFilter);
     }
 }
+

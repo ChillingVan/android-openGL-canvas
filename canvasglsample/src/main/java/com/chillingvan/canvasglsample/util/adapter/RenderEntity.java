@@ -18,7 +18,7 @@
  *
  */
 
-package com.chillingvan.canvasglsample.filter.adapter;
+package com.chillingvan.canvasglsample.util.adapter;
 
 import android.view.ViewGroup;
 
@@ -26,5 +26,5 @@ import android.view.ViewGroup;
  * Created by Matthew on 2016/4/6.
  */
 public interface RenderEntity {
-    CommonItemView createView(ViewGroup parent);
+    BaseItemView createView(ViewGroup parent);
 }

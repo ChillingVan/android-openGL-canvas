@@ -80,7 +80,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     // TODO: 2018/3/25 This may be duplicated. onSurfaceTextureSizeChanged is doing same thing.
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Loggers.d("BaseGLTextureView", "onSizeChanged: ");
+        Loggers.d(TAG, "onSizeChanged: ");
         super.onSizeChanged(w, h, oldw, oldh);
         if (mGLThread != null) {
             mGLThread.onWindowResize(w, h);
@@ -153,7 +153,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
 
     @Override
     protected void onDetachedFromWindow() {
-        Loggers.d("BaseGLTextureView", "onDetachedFromWindow: ");
+        Loggers.d(TAG, "onDetachedFromWindow: ");
         if (mGLThread != null) {
             mGLThread.requestExitAndWait();
         }
@@ -208,7 +208,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Loggers.d("BaseGLTextureView", "onSurfaceTextureAvailable: ");
+        Loggers.d(TAG, "onSurfaceTextureAvailable: ");
         surfaceAvailable = true;
         glThreadBuilder = new GLThread.Builder();
         if (mGLThread == null) {
@@ -229,7 +229,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
     }
 
     protected void createGLThread() {
-        Loggers.d("BaseGLTextureView", "createGLThread: ");
+        Loggers.d(TAG, "createGLThread: ");
         hasCreateGLThreadCalledOnce = true;
         if (!surfaceAvailable) {
             return;
@@ -267,7 +267,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        Loggers.d("BaseGLTextureView", "onSurfaceTextureSizeChanged: ");
+        Loggers.d(TAG, "onSurfaceTextureSizeChanged: ");
         surfaceChanged(width, height);
         surfaceRedrawNeeded();
         if (surfaceTextureListener != null) {
@@ -280,7 +280,7 @@ abstract class BaseGLTextureView extends TextureView implements TextureView.Surf
      */
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        Loggers.d("BaseGLTextureView", "onSurfaceTextureDestroyed: ");
+        Loggers.d(TAG, "onSurfaceTextureDestroyed: ");
         surfaceDestroyed();
         if (surfaceTextureListener != null) {
             surfaceTextureListener.onSurfaceTextureDestroyed(surface);

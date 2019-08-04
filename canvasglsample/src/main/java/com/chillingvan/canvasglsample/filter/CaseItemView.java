@@ -24,7 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chillingvan.canvasglsample.R;
-import com.chillingvan.canvasglsample.filter.adapter.CommonItemView;
+import com.chillingvan.canvasglsample.util.adapter.BaseItemView;
 
 import jp.co.cyberagent.android.gpuimage.GPUImageView;
 
@@ -32,7 +32,7 @@ import jp.co.cyberagent.android.gpuimage.GPUImageView;
  * Created by Chilling on 2016/10/24.
  */
 
-public class CaseItemView implements CommonItemView<CaseEntity> {
+public class CaseItemView extends BaseItemView<CaseEntity> {
 
     private View view;
     private final FilterGLView glView;
@@ -40,6 +40,7 @@ public class CaseItemView implements CommonItemView<CaseEntity> {
     private final GPUImageView gpuImageView;
 
     public CaseItemView(View view) {
+        super(view);
         this.view = view;
         glView = (FilterGLView) view.findViewById(R.id.gl_view);
         filterNameTxt = (TextView) view.findViewById(R.id.filter_name_txt);

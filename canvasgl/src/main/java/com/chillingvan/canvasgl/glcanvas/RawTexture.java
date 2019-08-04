@@ -31,6 +31,7 @@ public class RawTexture extends BasicTexture {
     private final boolean mOpaque;
     private boolean mIsFlipped;
     private int target = GL11.GL_TEXTURE_2D;
+    protected boolean needInvalidate;
 
     public RawTexture(int width, int height, boolean opaque) {
         this(width, height, opaque, GL11.GL_TEXTURE_2D);
@@ -87,5 +88,16 @@ public class RawTexture extends BasicTexture {
     @Override
     protected int getTarget() {
         return target;
+    }
+
+    /**
+     * Call this when surfaceTexture calls updateTexImage
+     */
+    public void setNeedInvalidate(boolean needInvalidate) {
+        this.needInvalidate = needInvalidate;
+    }
+
+    public boolean isNeedInvalidate() {
+        return needInvalidate;
     }
 }

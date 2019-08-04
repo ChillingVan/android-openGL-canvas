@@ -132,6 +132,7 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
         if (producedTextureTarget != GLES20.GL_TEXTURE_2D) {
             for (GLTexture glTexture : producedTextureList) {
                 glTexture.getSurfaceTexture().updateTexImage();
+                glTexture.getRawTexture().setNeedInvalidate(true);
             }
         }
         super.onDrawFrame();

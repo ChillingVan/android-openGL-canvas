@@ -9,9 +9,9 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.CanvasGL;
 import com.chillingvan.canvasgl.ICanvasGL;
-import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glview.GLView;
+import com.chillingvan.canvasgl.util.Loggers;
 
 /**
  *
@@ -46,7 +46,7 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLVi
 
     @Override
     public void onSurfaceCreated() {
-        Loggers.d("BaseGLCanvasTextureView", "onSurfaceCreated: ");
+        Loggers.d(TAG, "onSurfaceCreated: ");
         mCanvas = new CanvasGL();
     }
 
@@ -61,6 +61,14 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLVi
     public void onDrawFrame() {
         mCanvas.clearBuffer(backgroundColor);
         onGLDraw(mCanvas);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mCanvas != null) {
+            mCanvas.pause();
+        }
     }
 
     protected abstract void onGLDraw(ICanvasGL canvas);

@@ -18,7 +18,7 @@
  *
  */
 
-package com.chillingvan.canvasglsample.filter.adapter;
+package com.chillingvan.canvasglsample.util.adapter;
 
 import java.util.HashMap;
 import java.util.Map;

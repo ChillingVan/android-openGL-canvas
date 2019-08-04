@@ -117,6 +117,10 @@ public interface ICanvasGL {
 
     int getHeight();
 
+    void resume();
+
+    void pause();
+
     /**
      * If used in a texture view, make sure the setOpaque(false) is called.
      *

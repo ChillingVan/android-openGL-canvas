@@ -47,7 +47,7 @@ import com.chillingvan.canvasgl.textureFilter.RGBFilter;
 import com.chillingvan.canvasgl.textureFilter.SaturationFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 import com.chillingvan.canvasglsample.R;
-import com.chillingvan.canvasglsample.filter.adapter.CommonBaseAdapter;
+import com.chillingvan.canvasglsample.util.adapter.CommonBaseAdapter;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
