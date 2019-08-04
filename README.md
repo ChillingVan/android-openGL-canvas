@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.1.3'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.2.0'
 }
 ```
 
@@ -139,6 +139,7 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
+* 修复FilterGroup无法应用在SurfaceTexture上的问题
 * 修复潜在的IndexOutOfBound exception
 * 添加OrthoBitmapMatrix以支持正交投影。 默认BitmapMatrix用的是透视投影。
 * 修复BitmapMatrix被过小的viewport剪切的问题。支持更大的放大倍数及离屏距离。
