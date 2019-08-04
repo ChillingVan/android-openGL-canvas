@@ -40,6 +40,8 @@ public class FilterGroup extends BasicTextureFilter {
     protected List<TextureFilter> mFilters;
     protected List<TextureFilter> mMergedFilters;
     private final List<RawTexture> rawTextureList = new ArrayList<>();
+    private BasicTexture outputTexture;
+    private BasicTexture initialTexture;
 
     public FilterGroup(List<TextureFilter> mFilters) {
         this.mFilters = mFilters;
@@ -63,10 +65,19 @@ public class FilterGroup extends BasicTextureFilter {
 
 
     public BasicTexture draw(BasicTexture initialTexture, GLCanvas glCanvas) {
+        if (initialTexture instanceof RawTexture) {
+            if (!((RawTexture) initialTexture).isNeedInvalidate()) {
+                return outputTexture;
+            }
+        } else if (this.initialTexture == initialTexture && outputTexture != null) {
+            return outputTexture;
+        }
 
-        if (rawTextureList.size() != mMergedFilters.size()) {
+        if (rawTextureList.size() != mMergedFilters.size() || this.initialTexture != initialTexture) {
             createTextures(initialTexture);
         }
+        this.initialTexture = initialTexture;
+
         BasicTexture drawTexture = initialTexture;
         for (int i = 0, size = rawTextureList.size(); i < size; i++) {
             RawTexture rawTexture = rawTextureList.get(i);
@@ -76,6 +87,7 @@ public class FilterGroup extends BasicTextureFilter {
             glCanvas.endRenderTarget();
             drawTexture = rawTexture;
         }
+        outputTexture = drawTexture;
 
         return drawTexture;
     }
