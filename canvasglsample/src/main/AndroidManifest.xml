@@ -137,8 +137,17 @@
                 <category android:name="com.chillingvan.canvasglsample"/>
             </intent-filter>
         </activity>
-        <activity android:name=".listSample.TextureListActivity"
-                  android:label="TextureListActivity"
+        <activity
+            android:name=".listSample.TextureListActivity"
+            android:label="TextureListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="com.chillingvan.canvasglsample"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".testcase.testMatrix.TestMatrixActivity"
+                  android:label="TestMatrixActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

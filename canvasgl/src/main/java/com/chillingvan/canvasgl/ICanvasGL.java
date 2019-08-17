@@ -130,7 +130,7 @@ public interface ICanvasGL {
 
 
     /**
-     * Default bitmap matrix. It uses perspective projection type. So it can have 3D feel. As a result, rotateX and rotateY are supported.
+     * Default bitmap matrix. It uses perspective projection type. So it can have 3D feel. As a result, rotateX, rotateY, rotateZ are supported.
      */
     class BitmapMatrix extends BaseBitmapMatrix {
 
@@ -173,8 +173,9 @@ public interface ICanvasGL {
 
             transform[TRANSLATE_X] += x;
             transform[TRANSLATE_Y] += y;
-
-            int viewPortRatio = 2; // The ratio is for even this view port contains the real view port, so that the picture won't be interrupted.
+            // The ratio is used to make the openGL view port contain the origin view port, so that the picture won't be cropped.
+            // double viewport size is enough to include the origin view port
+            int viewPortRatio = 2;
             // Move view port to make sure the picture in the center of the view port.
             final float absTransX = Math.abs(transform[TRANSLATE_X]); // Make sure viewportX + realViewportW >= viewportW
             final float absTransY = Math.abs(transform[TRANSLATE_Y]); // Make sure realViewportH - viewportY >= viewportH
@@ -183,6 +184,7 @@ public interface ICanvasGL {
             final int realViewportW = (int) (viewPortRatio * viewportW + 2*absTransX);
             final int realViewportH = (int) (viewPortRatio * viewportH + 2*absTransY);
             GLES20.glViewport(viewportX, viewportY, realViewportW, realViewportH);
+            float realViewPortRatio = (float) realViewportW / realViewportH;
 
             Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, NEAR, FAR);
             Matrix.setLookAtM(mViewMatrix, 0,
@@ -202,11 +204,12 @@ public interface ICanvasGL {
             GLES20Canvas.printMatrix("model rotated:", mModelMatrix, 0);
 
 
-            // Translate to the middle of the projection
+            // Translate to the middleZ of the projection
             // realW,realH are the w,h in the middleZ of the projection
-            float realW = ratio * drawW / viewportW * Z_RATIO * 2 / 2;
+            // the viewport may be not square, so (realViewPortRatio/ratio) is needed
+            float realW = (ratio * drawW / viewportW * Z_RATIO * 2 / 2) / (realViewPortRatio/ratio);
             float realH = drawH / viewportH * Z_RATIO * 2 / 2;
-            // Need to middle X, Y of the plane, too. The middle of the plane is (0, 0, -Z_RATIO + EYEZ)
+            // Need to make X, Y to the middleZ of the plane, too. The middleZ of the plane is (0, 0, -Z_RATIO + EYEZ)
             Matrix.translateM(tempMultiplyMatrix4, 0, mModelMatrix, 0, -realW/2, -realH/2, -Z_RATIO + EYEZ);
             GLES20Canvas.printMatrix("model translated:", tempMultiplyMatrix4, 0);
 
