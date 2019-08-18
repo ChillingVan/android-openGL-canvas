@@ -30,6 +30,7 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.CanvasGL;
 import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.textureFilter.CropFilter;
@@ -119,23 +120,27 @@ public class CompareGLView extends GLView {
         canvas.drawLine(360, 80, 360, 120, paint);
     }
 
-    private static void drawText(ICanvasGL canvas) {
+    private static void drawText(final ICanvasGL canvas) {
         // text
-        Bitmap textBitmap = Bitmap.createBitmap(180, 100, Bitmap.Config.ARGB_8888);
-        Canvas normalCanvas = new Canvas(textBitmap);
-        String text = "text";
-        Paint textPaint = new Paint();
-        textPaint.setColor(Color.BLUE);
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(40);
-        normalCanvas.drawColor(Color.WHITE);
-        normalCanvas.drawText(text, 20, 30, textPaint);
-        canvas.drawBitmap(textBitmap, 500, 80);
+        IAndroidCanvasHelper androidCanvasHelper = IAndroidCanvasHelper.Factory.createAndroidCanvasHelper(IAndroidCanvasHelper.MODE.MODE_SYNC);
+        androidCanvasHelper.init(canvas.getWidth(), canvas.getHeight());
+        androidCanvasHelper.draw(new IAndroidCanvasHelper.CanvasPainter() {
+            @Override
+            public void draw(Canvas androidCanvas) {
+                String text = "text";
+                Paint textPaint = new Paint();
+                textPaint.setColor(Color.BLUE);
+                textPaint.setStyle(Paint.Style.FILL);
+                textPaint.setTextSize(40);
+                androidCanvas.drawText(text, 20, 30, textPaint);
+            }
+        });
+        canvas.drawBitmap(androidCanvasHelper.getOutputBitmap(), 500, 80);
     }
 
     private void drawBitmapWithMatrix(ICanvasGL canvas) {
         CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
-        matrix.scale(1.3f, 1.6f);
+        matrix.scale(1.3f, 1f);
         matrix.rotateX(34);
         matrix.rotateY(64);
         matrix.rotateZ(30);
