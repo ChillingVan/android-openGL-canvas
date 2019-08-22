@@ -204,11 +204,13 @@ public interface ICanvasGL {
             GLES20Canvas.printMatrix("model rotated:", mModelMatrix, 0);
 
 
+            // Compare to viewport, the real viewport is different
+            float viewportRatioW = (viewPortRatio*(float)viewportW / realViewportW);
+            float viewportRatioH = (viewPortRatio*(float)viewportH / realViewportH);
             // Translate to the middleZ of the projection
             // realW,realH are the w,h in the middleZ of the projection
-            // the viewport may be not square, so (realViewPortRatio/ratio) is needed
-            float realW = (ratio * drawW / viewportW * Z_RATIO * 2 / 2) / (realViewPortRatio/ratio);
-            float realH = drawH / viewportH * Z_RATIO * 2 / 2;
+            float realW = (ratio * drawW / viewportW * Z_RATIO * 2 / 2)  * viewportRatioW;
+            float realH = (drawH / viewportH * Z_RATIO * 2 / 2) * viewportRatioH;
             // Need to make X, Y to the middleZ of the plane, too. The middleZ of the plane is (0, 0, -Z_RATIO + EYEZ)
             Matrix.translateM(tempMultiplyMatrix4, 0, mModelMatrix, 0, -realW/2, -realH/2, -Z_RATIO + EYEZ);
             GLES20Canvas.printMatrix("model translated:", tempMultiplyMatrix4, 0);

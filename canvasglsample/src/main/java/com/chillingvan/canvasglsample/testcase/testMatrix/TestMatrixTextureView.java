@@ -38,6 +38,7 @@ public class TestMatrixTextureView extends GLTextureView {
     protected void onGLDraw(ICanvasGL canvas) {
         canvas.drawBitmap(baboon, 0, 0);
         drawBitmapTranslate(canvas);
+        drawBitmapTranslateY(canvas);
         drawBitmapTranslateRotate(canvas);
         drawBitmapTranslateRotateY(canvas);
         drawBitmapTranslateRotateZ(canvas);
@@ -57,6 +58,12 @@ public class TestMatrixTextureView extends GLTextureView {
     private void drawBitmapTranslate(ICanvasGL canvas) {
         ICanvasGL.BitmapMatrix matrix = new ICanvasGL.BitmapMatrix();
         matrix.translate(690, 0);
+        canvas.drawBitmap(baboon, matrix);
+    }
+
+    private void drawBitmapTranslateY(ICanvasGL canvas) {
+        ICanvasGL.BitmapMatrix matrix = new ICanvasGL.BitmapMatrix();
+        matrix.translate(0, 1000);
         canvas.drawBitmap(baboon, matrix);
     }
 
