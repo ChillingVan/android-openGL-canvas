@@ -75,7 +75,7 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLVi
 
 
     /**
-     * If setOpaque(false) used, this method will not work.
+     * If setOpaque(true) used, this method will not work.
      */
     public void setRenderBackgroundColor(@ColorInt int color) {
         this.backgroundColor = color;
