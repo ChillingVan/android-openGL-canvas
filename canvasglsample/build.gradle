@@ -28,8 +28,8 @@ android {
         applicationId "com.chillingvan.canvasglsample"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.4"
+        versionCode 9
+        versionName "1.4.2.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
