@@ -18,7 +18,7 @@ public abstract class BaseBitmapMatrix implements IBitmapMatrix {
     public static final int ROTATE_Z = 6;
     public static final int MATRIX_SIZE = 16;
     public final static float NEAR = 1;
-    public final static float FAR = 10; // -10
+    public final static float FAR = 10; // The plane is at -10
     public final static float EYEZ = 5;
     public final static float Z_RATIO = (FAR + NEAR) / 2 / NEAR; // The scale ratio when the picture moved to the middle of the perspective projection.
     protected float[] transform = new float[7];
