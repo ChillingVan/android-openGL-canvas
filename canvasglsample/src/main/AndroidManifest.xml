@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.chillingvan.canvasglsample"
-          xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name=".MainApplication"
@@ -14,18 +11,18 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".filter.FilterActivity"
             android:label="FilterActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
@@ -33,128 +30,141 @@
             android:hardwareAccelerated="true"
             android:label="AnimActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".compareCanvas.CompareCanvasActivity"
             android:label="CompareCanvas">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".textureView.TextureCameraActivity"
             android:label="TextureCamera">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".offscreen.OffScreenActivity"
             android:label="OffScreenActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".comparePerformance.ComparePerformanceActivity"
             android:label="ComparePerformanceActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".offscreen.SimpleOffScreenActivity"
             android:label="SimpleOffScreenActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".offscreen.camera.OffscreenCameraActivity"
             android:label="OffscreenCameraActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".video.MediaPlayerActivity"
             android:label="MediaPlayerActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".text.DrawTextActivity"
             android:label="DrawTextActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".video.MergeVideoActivity"
             android:label="MergeVideoActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".multi.MultiTextureActivity"
             android:label="MultiTextureActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".offscreen.MultiTexOffScreenActivity"
             android:label="MultiTexOffScreenActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
         <activity
             android:name=".listSample.TextureListActivity"
             android:label="TextureListActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
-        <activity android:name=".testcase.testMatrix.TestMatrixActivity"
-                  android:label="TestMatrixActivity"
+        <activity
+            android:name=".testcase.testMatrix.TestMatrixActivity"
+            android:label="TestMatrixActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="com.chillingvan.canvasglsample" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".testcase.testMatrix.TestMatrixSurfaceActivity"
+            android:label="TestMatrixSurfaceActivity"
             >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="com.chillingvan.canvasglsample"/>
+                <category android:name="com.chillingvan.canvasglsample" />
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
