@@ -49,6 +49,10 @@ public class DarkenBlendFilter extends TwoTextureFilter {
         super(bitmap);
     }
 
+    public DarkenBlendFilter() {
+        super();
+    }
+
     @Override
     public String getFragmentShader() {
         return DARKEN_BLEND_FRAGMENT_SHADER;

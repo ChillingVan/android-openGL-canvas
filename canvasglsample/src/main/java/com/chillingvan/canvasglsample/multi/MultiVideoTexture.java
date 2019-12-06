@@ -10,6 +10,8 @@ import com.chillingvan.canvasgl.glview.texture.GLMultiTexProducerView;
 import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
+import com.chillingvan.canvasgl.textureFilter.LightenBlendFilter;
+import com.chillingvan.canvasgl.textureFilter.TwoTextureFilter;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ import java.util.List;
  * Created by Chilling on 2018/5/19.
  */
 public class MultiVideoTexture extends GLMultiTexProducerView {
+
+    private TwoTextureFilter textureFilter = new LightenBlendFilter();
 
     public MultiVideoTexture(Context context) {
         super(context);
@@ -56,7 +60,13 @@ public class MultiVideoTexture extends GLMultiTexProducerView {
             int left = getWidth() * i / size;
             RawTexture rawTexture = texture.getRawTexture();
             rawTexture.setIsFlippedVertically(true);
-            canvas.drawSurfaceTexture(rawTexture, texture.getSurfaceTexture(), left, 0, left + getWidth()/size, getHeight());
+            // An example for two texture filter with RawTexture
+            if (i == 2) {
+                textureFilter.setSecondRawTexture(producedTextures.get(0));
+                canvas.drawSurfaceTexture(rawTexture, texture.getSurfaceTexture(), left, 0, left + getWidth()/size, getHeight(), textureFilter);
+            } else {
+                canvas.drawSurfaceTexture(rawTexture, texture.getSurfaceTexture(), left, 0, left + getWidth()/size, getHeight());
+            }
         }
     }
 }

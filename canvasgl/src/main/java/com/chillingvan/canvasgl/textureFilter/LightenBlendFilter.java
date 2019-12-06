@@ -49,6 +49,9 @@ public class LightenBlendFilter extends TwoTextureFilter {
         super(bitmap);
     }
 
+    public LightenBlendFilter() {
+    }
+
     @Override
     public String getFragmentShader() {
         return LIGHTEN_BLEND_FRAGMENT_SHADER;

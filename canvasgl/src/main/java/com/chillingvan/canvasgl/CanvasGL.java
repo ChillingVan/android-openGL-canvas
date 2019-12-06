@@ -101,6 +101,17 @@ public class CanvasGL implements ICanvasGL {
     }
 
     @Override
+    public void bindRawTexture(int whichTexture, RawTexture texture) {
+        GLES20.glActiveTexture(whichTexture);
+        GLES20Canvas.checkError();
+        if (!texture.isLoaded()) {
+            texture.prepare(glCanvas);
+        }
+        GLES20.glBindTexture(texture.getTarget(), texture.getId());
+        GLES20Canvas.checkError();
+    }
+
+    @Override
     public void beginRenderTarget(RawTexture texture) {
         glCanvas.beginRenderTarget(texture);
     }

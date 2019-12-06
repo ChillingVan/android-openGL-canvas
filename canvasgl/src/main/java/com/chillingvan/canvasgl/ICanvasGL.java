@@ -48,6 +48,8 @@ public interface ICanvasGL {
 
     BitmapTexture bindBitmapToTexture(int whichTexture, Bitmap bitmap);
 
+    void bindRawTexture(int whichTexture, RawTexture texture);
+
     void beginRenderTarget(RawTexture texture);
 
     void endRenderTarget();
