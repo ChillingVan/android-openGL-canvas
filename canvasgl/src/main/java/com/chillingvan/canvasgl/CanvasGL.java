@@ -133,17 +133,7 @@ public class CanvasGL implements ICanvasGL {
 
     @Override
     public void drawSurfaceTexture(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
-        currentTextureFilter = basicTextureFilter;
-        if (basicTextureFilter instanceof FilterGroup) {
-            drawSurfaceTextureWithFilterGroup(texture, surfaceTexture, left, top, right, bottom, basicTextureFilter);
-            return;
-        }
-        if (surfaceTexture == null) {
-            glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter, null);
-        } else {
-            surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
-            glCanvas.drawTexture(texture, surfaceTextureMatrix, left, top, right - left, bottom - top, basicTextureFilter, null);
-        }
+        drawSurfaceTexture(texture, surfaceTexture, null, defaultTextureFilter);
     }
 
     @Override
@@ -152,18 +142,18 @@ public class CanvasGL implements ICanvasGL {
     }
 
     @Override
-    public void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, @NonNull final IBitmapMatrix matrix, @NonNull TextureFilter textureFilter) {
+    public void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, @Nullable final IBitmapMatrix matrix, @NonNull TextureFilter textureFilter) {
         drawSurfaceTexture(texture, surfaceTexture, 0, 0, texture.getWidth(), texture.getHeight(), matrix, textureFilter);
     }
 
     @Override
-    public void drawSurfaceTexture(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, @NonNull final IBitmapMatrix matrix, TextureFilter textureFilter) {
+    public void drawSurfaceTexture(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, @Nullable final IBitmapMatrix matrix, TextureFilter textureFilter) {
         currentTextureFilter = textureFilter;
         BasicTexture filteredTexture = texture;
         if (textureFilter instanceof FilterGroup) {
             filteredTexture = getFilterGroupTexture(texture, surfaceTexture, (FilterGroup) textureFilter);
         }
-        GLCanvas.ICustomMVPMatrix customMVPMatrix = new GLCanvas.ICustomMVPMatrix() {
+        GLCanvas.ICustomMVPMatrix customMVPMatrix = matrix == null ? null : new GLCanvas.ICustomMVPMatrix() {
             @Override
             public float[] getMVPMatrix(int viewportW, int viewportH, float x, float y, float drawW, float drawH) {
                 return matrix.obtainResultMatrix(viewportW, viewportH, x, y, drawW, drawH);
