@@ -104,7 +104,7 @@ public abstract class TwoTextureFilter extends BasicTextureFilter {
     @Override
     public void onPreDraw(int program, BasicTexture texture, ICanvasGL canvas) {
         super.onPreDraw(program, texture, canvas);
-        if (secondBitmap != null) {
+        if (useSecondBitmap()) {
             handleSecondBitmapTexture(program, canvas);
             return;
         }
@@ -150,7 +150,13 @@ public abstract class TwoTextureFilter extends BasicTextureFilter {
 
     @Override
     public String getOesFragmentProgram() {
-//        return "#extension GL_OES_EGL_image_external : require\n" + getFragmentShader().replaceFirst(SAMPLER_2D, SAMPLER_EXTERNAL_OES);
+        if (useSecondBitmap()) {
+            return "#extension GL_OES_EGL_image_external : require\n" + getFragmentShader().replaceFirst(SAMPLER_2D, SAMPLER_EXTERNAL_OES);
+        }
         return "#extension GL_OES_EGL_image_external : require\n" + getFragmentShader().replaceAll(SAMPLER_2D, SAMPLER_EXTERNAL_OES);
+    }
+
+    private boolean useSecondBitmap() {
+        return secondBitmap != null;
     }
 }

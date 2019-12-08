@@ -133,7 +133,7 @@ public class CanvasGL implements ICanvasGL {
 
     @Override
     public void drawSurfaceTexture(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
-        drawSurfaceTexture(texture, surfaceTexture, null, defaultTextureFilter);
+        drawSurfaceTexture(texture, surfaceTexture, left, top, right, bottom, null, basicTextureFilter);
     }
 
     @Override
@@ -165,11 +165,6 @@ public class CanvasGL implements ICanvasGL {
             surfaceTexture.getTransformMatrix(surfaceTextureMatrix);
             glCanvas.drawTexture(filteredTexture, surfaceTextureMatrix, left, top, right - left, bottom - top, textureFilter, customMVPMatrix);
         }
-    }
-
-    private void drawSurfaceTextureWithFilterGroup(BasicTexture texture, final SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter basicTextureFilter) {
-        texture = getFilterGroupTexture(texture, surfaceTexture, (FilterGroup) basicTextureFilter);
-        glCanvas.drawTexture(texture, left, top, right - left, bottom - top, basicTextureFilter, null);
     }
 
     private BasicTexture getFilterGroupTexture(BasicTexture texture, final SurfaceTexture surfaceTexture, FilterGroup basicTextureFilter) {
