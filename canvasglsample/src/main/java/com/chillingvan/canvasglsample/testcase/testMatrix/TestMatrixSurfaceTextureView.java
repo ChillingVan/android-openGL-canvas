@@ -12,9 +12,9 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper;
-import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasglsample.util.ScreenUtil;
 
@@ -65,7 +65,10 @@ public class TestMatrixSurfaceTextureView extends GLSurfaceTextureProducerView {
     }
 
     @Override
-    protected void onGLDraw(final ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture outsideSurfaceTexture, @Nullable BasicTexture outsideTexture) {
+    protected void onGLDraw(ICanvasGL canvas, GLTexture producedGLTexture, @Nullable GLTexture outsideGLTexture) {
+        super.onGLDraw(canvas, producedGLTexture, outsideGLTexture);
+        RawTexture producedRawTexture = producedGLTexture.getRawTexture();
+        SurfaceTexture producedSurfaceTexture = producedGLTexture.getSurfaceTexture();
         switch (mMode) {
             case 0:
                 drawOrigin(canvas, producedRawTexture, producedSurfaceTexture);
