@@ -87,11 +87,17 @@ public abstract class GLSurfaceTextureProducerView extends GLMultiTexProducerVie
         if (!consumedTextures.isEmpty()) {
             GLTexture consumeTexture = consumedTextures.get(0);
             onGLDraw(canvas, glTexture.getSurfaceTexture(), glTexture.getRawTexture(), consumeTexture.getSurfaceTexture(), consumeTexture.getRawTexture());
+            onGLDraw(canvas, glTexture, consumeTexture);
         } else {
             onGLDraw(canvas, glTexture.getSurfaceTexture(), glTexture.getRawTexture(), null, null);
+            onGLDraw(canvas, glTexture, null);
         }
     }
 
-    protected abstract void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture outsideSurfaceTexture, @Nullable BasicTexture outsideTexture);
+    @Deprecated
+    protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture outsideSurfaceTexture, @Nullable BasicTexture outsideTexture) {
+    }
 
+    protected void onGLDraw(ICanvasGL canvas, GLTexture producedGLTexture, @Nullable GLTexture outsideGLTexture) {
+    }
 }

@@ -56,6 +56,9 @@ public class LookupFilter extends TwoTextureFilter implements OneValueFilter {
         super(secondBitmap);
     }
 
+    public LookupFilter() {
+    }
+
     @Override
     public String getFragmentShader() {
         return LOOKUP_FRAGMENT_SHADER;

@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.2.3'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.0.0'
 }
 ```
 
@@ -129,6 +129,8 @@ It has sync and async modes.
   This is kind of heavy so I do not update call this for every drawn.
 
 ## Latest Update
+* The TwoTextureFilter supports RawTexture.
+* The drawSurfaceTexture supports BitmapMatrix.
 * Fix the out of shape when using rotate matrix;
 * Add OrthoBitmapMatrix as One BitmapMatrix. Default BitmapMatrix uses perspective matrix.
 * Fix BitmapMatrix cut by small viewport issue when Bitmap out of screen.

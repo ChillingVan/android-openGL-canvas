@@ -170,6 +170,10 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
         producedTextureList.clear();
     }
 
+    /**
+     * Set the listener to listen the texture creation.
+     * @param surfaceTextureCreatedListener The texture listener
+     */
     public void setSurfaceTextureCreatedListener(SurfaceTextureCreatedListener surfaceTextureCreatedListener) {
         this.surfaceTextureCreatedListener = surfaceTextureCreatedListener;
     }
@@ -178,14 +182,20 @@ public abstract class GLMultiTexProducerView extends GLMultiTexConsumerView {
      * Listen when the produced textures created.
      */
     public interface SurfaceTextureCreatedListener {
+        /**
+         * You can get the created Textures from this method.
+         * The number of textures is decided by {@link GLMultiTexProducerView#getInitialTexCount}
+         * @param producedTextureList The created Textures
+         */
         void onCreated(List<GLTexture> producedTextureList);
     }
 
     /**
      * If {@link #setSharedEglContext(EglContextWrapper)} is not called, this will not be triggered.
-     * @param canvas
-     * @param producedTextures
-     * @param consumedTextures
+     * The consumedTextures are obtained from {@link GLMultiTexConsumerView#addConsumeGLTexture}
+     * @param canvas the canvas to draw things
+     * @param producedTextures The textures created by itself.
+     * @param consumedTextures May be null. This only available when it gets from other GLMultiTexProducerView
      */
     protected abstract void onGLDraw(ICanvasGL canvas, List<GLTexture> producedTextures, List<GLTexture> consumedTextures);
 }

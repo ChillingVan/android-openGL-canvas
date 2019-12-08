@@ -86,7 +86,7 @@ public class RawTexture extends BasicTexture {
      }
 
     @Override
-    protected int getTarget() {
+    public int getTarget() {
         return target;
     }
 

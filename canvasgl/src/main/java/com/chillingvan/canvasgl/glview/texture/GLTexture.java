@@ -27,7 +27,7 @@ public class GLTexture {
     }
 
     public static GLTexture createRaw(int width, int height, boolean opaque, int target, ICanvasGL canvasGL) {
-        RawTexture rawTexture = new RawTexture(width, height, false, target);
+        RawTexture rawTexture = new RawTexture(width, height, opaque, target);
         if (!rawTexture.isLoaded()) {
             rawTexture.prepare(canvasGL.getGlCanvas());
         }

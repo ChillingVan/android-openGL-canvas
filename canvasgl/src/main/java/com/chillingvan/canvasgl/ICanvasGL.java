@@ -48,6 +48,8 @@ public interface ICanvasGL {
 
     BitmapTexture bindBitmapToTexture(int whichTexture, Bitmap bitmap);
 
+    void bindRawTexture(int whichTexture, RawTexture texture);
+
     void beginRenderTarget(RawTexture texture);
 
     void endRenderTarget();
@@ -57,6 +59,12 @@ public interface ICanvasGL {
     void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, int left, int top, int right, int bottom);
 
     void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, TextureFilter textureFilter);
+
+    void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, @NonNull IBitmapMatrix matrix);
+
+    void drawSurfaceTexture(BasicTexture texture, @Nullable SurfaceTexture surfaceTexture, @NonNull IBitmapMatrix matrix, @NonNull TextureFilter textureFilter);
+
+    void drawSurfaceTexture(BasicTexture texture, SurfaceTexture surfaceTexture, int left, int top, int right, int bottom, @NonNull IBitmapMatrix matrix, TextureFilter textureFilter);
 
     void drawBitmap(Bitmap bitmap, @NonNull IBitmapMatrix matrix);
 
