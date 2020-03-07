@@ -32,10 +32,13 @@ import java.util.List;
 
 /**
  * This class is used to accept eglContext and textures from outside. Then it can use them to draw.
+ * The {@link #setSharedEglContext} must be called as the precondition to consume outside texture.
  */
 public abstract class GLMultiTexConsumerView extends BaseGLCanvasTextureView {
 
     protected List<GLTexture> consumedTextures = new ArrayList<>();
+
+    protected EglContextWrapper mSharedEglContext;
 
     public GLMultiTexConsumerView(Context context) {
         super(context);
@@ -53,13 +56,20 @@ public abstract class GLMultiTexConsumerView extends BaseGLCanvasTextureView {
      * @param sharedEglContext The openGL context from other or {@link EglContextWrapper#EGL_NO_CONTEXT_WRAPPER}
      */
     public void setSharedEglContext(EglContextWrapper sharedEglContext) {
+        mSharedEglContext = sharedEglContext;
         glThreadBuilder.setSharedEglContext(sharedEglContext);
         createGLThread();
     }
 
+    @Override
+    protected void createGLThread() {
+        if (mSharedEglContext != null) {
+            super.createGLThread();
+        }
+    }
 
     /**
-     *
+     * This must be called for a GLMultiTexConsumerView.
      * @param glTexture texture from outSide.
      */
     public void addConsumeGLTexture(GLTexture glTexture) {
