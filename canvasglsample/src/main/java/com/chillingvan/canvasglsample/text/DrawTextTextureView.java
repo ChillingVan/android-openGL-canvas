@@ -5,16 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.SurfaceTexture;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper;
-import com.chillingvan.canvasgl.glcanvas.BasicTexture;
-import com.chillingvan.canvasgl.glcanvas.RawTexture;
+import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasglsample.util.ScreenUtil;
 import com.chillingvan.canvasglsample.video.MediaPlayerTextureView;
@@ -68,13 +64,13 @@ public class DrawTextTextureView extends MediaPlayerTextureView {
     }
 
     @Override
-    protected void onGLDraw(ICanvasGL canvas, SurfaceTexture producedSurfaceTexture, RawTexture producedRawTexture, @Nullable SurfaceTexture sharedSurfaceTexture, @Nullable BasicTexture sharedTexture) {
-        super.onGLDraw(canvas, producedSurfaceTexture, producedRawTexture, sharedSurfaceTexture, sharedTexture);
+    protected void onGLDraw(ICanvasGL canvas, GLTexture producedGLTexture, GLTexture outsideGLTexture) {
+        super.onGLDraw(canvas, producedGLTexture, outsideGLTexture);
         if (isStart) {
             drawTextHelper.draw(new IAndroidCanvasHelper.CanvasPainter() {
                 @Override
-                public void draw(Canvas canvas) {
-                    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                public void draw(Canvas canvas, Bitmap drawBitmap) {
+                    drawBitmap.eraseColor(Color.TRANSPARENT);
                     List<Dannmaku> availableItems = dannmakuFactory.getAvailableItems();
                     for (Dannmaku dannmaku : availableItems) {
                         if (dannmaku.getLength() == 0) {

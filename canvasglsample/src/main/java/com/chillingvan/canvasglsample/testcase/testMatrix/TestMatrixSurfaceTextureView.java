@@ -28,7 +28,7 @@ public class TestMatrixSurfaceTextureView extends GLSurfaceTextureProducerView {
     private Paint textPaint = new Paint();
     private IAndroidCanvasHelper.CanvasPainter canvasPainter = new IAndroidCanvasHelper.CanvasPainter() {
         @Override
-        public void draw(Canvas androidCanvas) {
+        public void draw(Canvas androidCanvas, Bitmap drawBitmap) {
             androidCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             androidCanvas.drawText("Current Mode = " + mMode, 50, 50, textPaint);
         }
