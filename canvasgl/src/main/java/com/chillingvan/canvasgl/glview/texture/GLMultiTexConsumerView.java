@@ -97,6 +97,7 @@ public abstract class GLMultiTexConsumerView extends BaseGLCanvasTextureView {
     @Override
     protected void surfaceDestroyed() {
         super.surfaceDestroyed();
+        mSharedEglContext = null;
         consumedTextures.clear();
     }
 }

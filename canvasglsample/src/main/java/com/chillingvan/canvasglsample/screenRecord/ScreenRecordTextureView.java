@@ -45,7 +45,7 @@ public class ScreenRecordTextureView extends GLSurfaceTextureProducerView {
         textPaint.setTextSize(ScreenUtil.dpToPx(getContext(), 15));
         mCanvasPainter = new IAndroidCanvasHelper.CanvasPainter() {
             @Override
-            public void draw(Canvas androidCanvas) {
+            public void draw(Canvas androidCanvas, Bitmap drawBitmap) {
                 drawCnt++;
                 androidCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 androidCanvas.drawText("Cnt: " + drawCnt, 45, 45, textPaint);

@@ -41,6 +41,11 @@ public class MultiTextureActivity extends AppCompatActivity {
     private CameraCaptureSession mCaptureSession;
     private MultiVideoTexture multiVideoTexture;
 
+    {
+        mediaPlayers.add(new MediaPlayerHelper(MediaPlayerHelper.TEST_VIDEO_MP4));
+        mediaPlayers.add(new MediaPlayerHelper(MediaPlayerHelper.TEST_VIDEO_MP4_2));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +63,7 @@ public class MultiTextureActivity extends AppCompatActivity {
         multiVideoTexture.setSurfaceTextureCreatedListener(new GLMultiTexProducerView.SurfaceTextureCreatedListener() {
             @Override
             public void onCreated(List<GLTexture> glTextureList) {
-                mediaPlayers.add(new MediaPlayerHelper(MediaPlayerHelper.TEST_VIDEO_MP4));
-                mediaPlayers.add(new MediaPlayerHelper(MediaPlayerHelper.TEST_VIDEO_MP4_2));
+                mediaSurfaces.clear();
                 for (int i = 0; i < mediaPlayers.size(); i++) {
                     GLTexture glTexture = glTextureList.get(i);
                     mediaSurfaces.add(new Surface(glTexture.getSurfaceTexture()));

@@ -17,7 +17,7 @@ public interface IAndroidCanvasHelper {
     Bitmap getOutputBitmap();
 
     interface CanvasPainter {
-        void draw(Canvas androidCanvas);
+        void draw(Canvas androidCanvas, Bitmap drawBitmap);
     }
 
     interface MODE {

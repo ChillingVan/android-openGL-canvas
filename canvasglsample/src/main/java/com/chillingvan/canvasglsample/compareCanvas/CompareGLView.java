@@ -126,7 +126,7 @@ public class CompareGLView extends GLView {
         androidCanvasHelper.init(canvas.getWidth(), canvas.getHeight());
         androidCanvasHelper.draw(new IAndroidCanvasHelper.CanvasPainter() {
             @Override
-            public void draw(Canvas androidCanvas) {
+            public void draw(Canvas androidCanvas, Bitmap drawBitmap) {
                 String text = "text";
                 Paint textPaint = new Paint();
                 textPaint.setColor(Color.BLUE);

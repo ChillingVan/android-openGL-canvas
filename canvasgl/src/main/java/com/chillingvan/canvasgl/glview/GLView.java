@@ -108,7 +108,14 @@ public abstract class GLView extends GLSurfaceView implements GLSurfaceView.Rend
         }
     }
 
-    public void destroy() {
+    /**
+     * Force clear texture and bitmap cache of the canvas. This is not necessary needed.
+     * The canvas uses weak HashMap to reference bitmap and will recycle the texture when finalize
+     */
+    public void clearBitmapCache() {
+        if (mCanvas != null) {
+            mCanvas.clearBitmapCache();
+        }
     }
 
     public void setOnSizeChangeCallback(OnSizeChangeCallback onSizeChangeCallback) {

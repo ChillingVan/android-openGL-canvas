@@ -55,7 +55,7 @@ class AndroidCanvasHelperAsync implements IAndroidCanvasHelper {
             public void run() {
                 lock.lock();
                 isAvailable = false;
-                canvasPainter.draw(canvas);
+                canvasPainter.draw(canvas, bitmapBoard);
                 isAvailable = true;
                 lock.unlock();
             }

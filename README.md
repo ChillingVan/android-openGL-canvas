@@ -18,7 +18,7 @@
 * 提供类似 GPUImage 里的Filter的API，可以在使用canvasGL画东西时实现图像处理。
 * 提供的View是继承 GLSurfaceView 或 TextureView 的，可以使用这两种View的特性，特别是TextureView的特性。
 
-* 另外,因为使用OpenGL在另一线程渲染，所以里面的 GLContinuousView 还提供能够实现高性能的动画的方法。
+* 另外,因为使用OpenGL在另一线程渲染，所以里面的 GLContinuousView 还提供能够实现高性能的动画的方法。（如果只要这个功能不要其它得话，那么我建议你直接继承View，见[浅析Android的canvas性能](https://www.jianshu.com/p/5a0c61c286e6)）
 ![anim](https://github.com/ChillingVan/android-openGL-canvas/raw/master/screenshots/anim-activity-example.png)
 
 
@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.1.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.2.0'
 }
 ```
 
@@ -139,14 +139,14 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
+* 添加录屏demo
+* 添加clearTextureCache，比弱引用更快释放内存 (1.5.2)
+* AndroidCanvasHelper能直接操作Canvas里的bitmap了 (1.5.2)
 * TwoTextureFilter支持RawTexture了
 * drawSurfaceTexture也支持BitmapMatrix了
-* 修复BitmapMatrix rotate导致的变形
 * 添加OrthoBitmapMatrix以支持正交投影。 默认BitmapMatrix用的是透视投影。
-* 修复BitmapMatrix被过小的viewport剪切的问题。支持更大的放大倍数及离屏距离。
 * 支持裁切图片的CropFilter
 * 增加 MultiTexOffScreenCanvas, GLMultiTexProducerView, GLMultiTexConsumerView，支持提供多张纹理的和消化多张纹理
-* 增加AndroidCanvasHelper及其绘制文本的例子
 
 ## License
     Copyright 2016 ChillingVan.

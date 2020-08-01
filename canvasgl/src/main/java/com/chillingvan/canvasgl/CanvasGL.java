@@ -404,7 +404,6 @@ public class CanvasGL implements ICanvasGL {
 
     @Override
     public void resume() {
-
     }
 
     @Override
@@ -415,6 +414,14 @@ public class CanvasGL implements ICanvasGL {
     }
 
     @Override
+    public void clearBitmapCache() {
+        for (BasicTexture bitmapTexture : bitmapTextureMap.values()) {
+            bitmapTexture.recycle();
+        }
+        bitmapTextureMap.clear();
+    }
+
+    @Override
     public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {
         glCanvas.setAlpha(alpha/(float)255);
     }
@@ -422,9 +429,7 @@ public class CanvasGL implements ICanvasGL {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        for (BasicTexture bitmapTexture : bitmapTextureMap.values()) {
-            bitmapTexture.recycle();
-        }
+        clearBitmapCache();
     }
 
     protected void throwIfCannotDraw(Bitmap bitmap) {

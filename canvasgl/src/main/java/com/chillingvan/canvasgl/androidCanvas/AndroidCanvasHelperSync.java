@@ -30,7 +30,7 @@ class AndroidCanvasHelperSync implements IAndroidCanvasHelper {
         if (canvas == null) {
             throw new IllegalStateException("DrawTextHelper has not init.");
         }
-        canvasPainter.draw(canvas);
+        canvasPainter.draw(canvas, bitmapBoard);
     }
 
     @Override
