@@ -64,5 +64,4 @@ public class FilterGLView extends GLTextureView {
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
-
 }

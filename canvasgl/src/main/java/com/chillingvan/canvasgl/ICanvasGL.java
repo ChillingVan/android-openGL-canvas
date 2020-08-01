@@ -130,6 +130,12 @@ public interface ICanvasGL {
     void pause();
 
     /**
+     * Force clear texture and bitmap cache of the canvas. This is not necessary needed.
+     * The canvas uses weak HashMap to reference bitmap and will recycle the texture when finalize
+     */
+    void clearBitmapCache();
+
+    /**
      * If used in a texture view, make sure the setOpaque(false) is called.
      *
      * @param alpha alpha value

@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 import com.chillingvan.canvasglsample.R;
 import com.chillingvan.canvasglsample.util.adapter.BaseItemView;
-import com.chillingvan.canvasglsample.util.adapter.CommonItemView;
 import com.chillingvan.canvasglsample.util.adapter.RenderEntity;
 
 import jp.co.cyberagent.android.gpuimage.GPUImageFilter;

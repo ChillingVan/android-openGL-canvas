@@ -20,6 +20,10 @@
 
 package com.chillingvan.canvasglsample.filter;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -45,6 +49,16 @@ public class CaseItemView extends BaseItemView<CaseEntity> {
         glView = (FilterGLView) view.findViewById(R.id.gl_view);
         filterNameTxt = (TextView) view.findViewById(R.id.filter_name_txt);
         gpuImageView = (GPUImageView) view.findViewById(R.id.gpu_image_view);
+        ((AppCompatActivity) view.getContext())
+                .getLifecycle()
+                .addObserver(new LifecycleObserver() {
+                    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+                    public void onDestroy() {
+                        if (glView != null) {
+                            glView.clearTextureCache();
+                        }
+                    }
+                });
 
     }
 

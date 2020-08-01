@@ -71,6 +71,16 @@ abstract class BaseGLCanvasTextureView extends BaseGLTextureView implements GLVi
         }
     }
 
+    /**
+     * Force clear texture and bitmap cache of the canvas. This is not necessary needed.
+     * The canvas uses weak HashMap to reference bitmap and will recycle the texture when finalize
+     */
+    public void clearTextureCache() {
+        if (mCanvas != null) {
+            mCanvas.clearBitmapCache();
+        }
+    }
+
     protected abstract void onGLDraw(ICanvasGL canvas);
 
 
