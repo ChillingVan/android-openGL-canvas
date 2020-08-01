@@ -38,13 +38,22 @@ public class MediaPlayerHelper {
     }
 
     public boolean isLooping() {
-        if (mediaPlayer != null) {
+        if (isPlaying() && mediaPlayer != null) {
             return mediaPlayer.isLooping();
         }
         return false;
     }
 
     public void playMedia(final Context context, Surface mediaSurface) {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.setSurface(mediaSurface);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         mediaPlayer = new MediaPlayer();
         try {
             AssetFileDescriptor afd = context.getAssets().openFd(videoName);
