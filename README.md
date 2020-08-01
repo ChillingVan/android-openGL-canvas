@@ -89,8 +89,7 @@ public class MyGLView extends GLView {
         canvas.rotate(rotateDegree, x, y);
         canvas.drawBitmap(bitmap, left, top);
         canvas.restore();
-        ，
-        见// or
+        // or
         CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
         matrix.postScale(2.1f, 2.1f);
         matrix.postRotate(90);
