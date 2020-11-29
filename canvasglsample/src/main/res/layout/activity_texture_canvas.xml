@@ -84,6 +84,21 @@
             android:onClick="onClickChangeLayoutSize"
             />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:text="Rotate TextureView"
+            android:onClick="onClickRotateTextureView"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:text="Rotate Surface"
+            android:onClick="onClickRotateSurface"
+            />
 
     </LinearLayout>
 

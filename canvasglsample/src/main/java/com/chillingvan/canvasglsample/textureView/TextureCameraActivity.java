@@ -142,6 +142,7 @@ public class TextureCameraActivity extends AppCompatActivity {
         }
 
         Camera.Parameters parms = mCamera.getParameters();
+        mCamera.setDisplayOrientation(270);
 
         CameraUtils.choosePreviewSize(parms, 1280, 720);
     }
@@ -188,5 +189,13 @@ public class TextureCameraActivity extends AppCompatActivity {
             consumerLayoutParams.height -= 50;
             previewConsumerTextureView.setLayoutParams(consumerLayoutParams);
         }
+    }
+
+    public void onClickRotateTextureView(View view) {
+        cameraTextureView.setRotation(cameraTextureView.getRotation() + 90);
+    }
+
+    public void onClickRotateSurface(View view) {
+        cameraTextureView.rotateSurface(90);
     }
 }
