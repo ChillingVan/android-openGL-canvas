@@ -39,6 +39,7 @@ import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 public class CameraPreviewTextureView extends GLSurfaceTextureProducerView {
 
     private TextureFilter textureFilter = new BasicTextureFilter();
+    private int mRotation = 0;
 
     public CameraPreviewTextureView(Context context) {
         super(context);
@@ -64,9 +65,19 @@ public class CameraPreviewTextureView extends GLSurfaceTextureProducerView {
     @Override
     protected void onGLDraw(ICanvasGL canvas, GLTexture producedGLTexture, @Nullable GLTexture outsideGLTexture) {
         super.onGLDraw(canvas, producedGLTexture, outsideGLTexture);
+        canvas.save();
         RawTexture producedRawTexture = producedGLTexture.getRawTexture();
         SurfaceTexture producedSurfaceTexture = producedGLTexture.getSurfaceTexture();
+        // note the rotate center point.
+        canvas.rotate(mRotation, getWidth() / 2f, getHeight() / 2f);
         canvas.drawSurfaceTexture(producedRawTexture, producedSurfaceTexture, 0, 0, producedRawTexture.getWidth(), producedRawTexture.getHeight(), textureFilter);
+        canvas.restore();
+    }
+
+    public void rotateSurface(int rotation) {
+        mRotation += rotation;
+        if (mRotation >= 360) {
+            mRotation = 0;
+        }
     }
 }
-
