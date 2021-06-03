@@ -559,7 +559,7 @@ public class GLES20Canvas implements GLCanvas {
             checkError();
             return;
         }
-        GLES20.glViewport(0, 0, mScreenWidth, mScreenHeight);
+        GLES20.glViewport(0, 0, (int)width, (int)height);
         Matrix.translateM(mTempMatrix, 0, mMatrices, mCurrentMatrixIndex, x, y, 0f);
         Matrix.scaleM(mTempMatrix, 0, width, height, 1f);
         Matrix.multiplyMM(mTempMatrix, MATRIX_SIZE, mProjectionMatrix, 0, mTempMatrix, 0);
