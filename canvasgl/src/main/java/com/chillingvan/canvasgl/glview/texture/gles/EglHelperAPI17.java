@@ -1,6 +1,5 @@
 package com.chillingvan.canvasgl.glview.texture.gles;
 
-import android.nfc.Tag;
 import android.opengl.EGL14;
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
@@ -8,9 +7,10 @@ import android.opengl.EGLDisplay;
 import android.opengl.EGLExt;
 import android.opengl.EGLSurface;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import com.chillingvan.canvasgl.util.FileLogger;
+
+import androidx.annotation.RequiresApi;
 
 import static com.chillingvan.canvasgl.glview.texture.gles.EglHelper.formatEglError;
 

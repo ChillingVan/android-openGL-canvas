@@ -5,8 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.chillingvan.canvasgl.ICanvasGL;
@@ -15,6 +13,9 @@ import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasglsample.R;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SimpleOffScreenActivity extends AppCompatActivity {
 

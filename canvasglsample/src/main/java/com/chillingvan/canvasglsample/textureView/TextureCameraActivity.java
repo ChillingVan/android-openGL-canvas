@@ -25,22 +25,23 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.chillingvan.canvasgl.glview.texture.GLTexture;
-import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
+import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 import com.chillingvan.canvasgl.glview.texture.gles.GLThread;
 import com.chillingvan.canvasgl.textureFilter.PixelationFilter;
+import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasglsample.R;
 
 import java.io.IOException;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class TextureCameraActivity extends AppCompatActivity {
 

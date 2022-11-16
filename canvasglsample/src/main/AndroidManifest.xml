@@ -13,7 +13,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +23,8 @@
         </activity>
         <activity
             android:name=".filter.FilterActivity"
-            android:label="FilterActivity">
+            android:label="FilterActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +34,8 @@
         <activity
             android:name=".animation.AnimActivity"
             android:hardwareAccelerated="true"
-            android:label="AnimActivity">
+            android:label="AnimActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,7 +44,8 @@
         </activity>
         <activity
             android:name=".compareCanvas.CompareCanvasActivity"
-            android:label="CompareCanvas">
+            android:label="CompareCanvas"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +54,8 @@
         </activity>
         <activity
             android:name=".textureView.TextureCameraActivity"
-            android:label="TextureCamera">
+            android:label="TextureCamera"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,7 +64,8 @@
         </activity>
         <activity
             android:name=".offscreen.OffScreenActivity"
-            android:label="OffScreenActivity">
+            android:label="OffScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,7 +74,8 @@
         </activity>
         <activity
             android:name=".comparePerformance.ComparePerformanceActivity"
-            android:label="ComparePerformanceActivity">
+            android:label="ComparePerformanceActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -77,7 +84,8 @@
         </activity>
         <activity
             android:name=".offscreen.SimpleOffScreenActivity"
-            android:label="SimpleOffScreenActivity">
+            android:label="SimpleOffScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -86,7 +94,8 @@
         </activity>
         <activity
             android:name=".offscreen.camera.OffscreenCameraActivity"
-            android:label="OffscreenCameraActivity">
+            android:label="OffscreenCameraActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,7 +104,8 @@
         </activity>
         <activity
             android:name=".video.MediaPlayerActivity"
-            android:label="MediaPlayerActivity">
+            android:label="MediaPlayerActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -104,7 +114,8 @@
         </activity>
         <activity
             android:name=".text.DrawTextActivity"
-            android:label="DrawTextActivity">
+            android:label="DrawTextActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -113,7 +124,8 @@
         </activity>
         <activity
             android:name=".video.MergeVideoActivity"
-            android:label="MergeVideoActivity">
+            android:label="MergeVideoActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -122,7 +134,8 @@
         </activity>
         <activity
             android:name=".multi.MultiTextureActivity"
-            android:label="MultiTextureActivity">
+            android:label="MultiTextureActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -131,7 +144,8 @@
         </activity>
         <activity
             android:name=".offscreen.MultiTexOffScreenActivity"
-            android:label="MultiTexOffScreenActivity">
+            android:label="MultiTexOffScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -140,7 +154,8 @@
         </activity>
         <activity
             android:name=".listSample.TextureListActivity"
-            android:label="TextureListActivity">
+            android:label="TextureListActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -149,7 +164,8 @@
         </activity>
         <activity
             android:name=".testcase.testMatrix.TestMatrixActivity"
-            android:label="TestMatrixActivity">
+            android:label="TestMatrixActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -159,7 +175,7 @@
         <activity
             android:name=".testcase.testMatrix.TestMatrixSurfaceActivity"
             android:label="TestMatrixSurfaceActivity"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -168,7 +184,7 @@
         </activity>
         <activity android:name=".screenRecord.ScreenRecordActivity"
             android:label="ScreenRecordActivity"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -3,7 +3,6 @@ package com.chillingvan.canvasglsample.text;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 import android.view.View;
 import android.widget.TextView;
@@ -12,6 +11,8 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasglsample.R;
 import com.chillingvan.canvasglsample.video.MediaPlayerHelper;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DrawTextActivity extends AppCompatActivity {
 

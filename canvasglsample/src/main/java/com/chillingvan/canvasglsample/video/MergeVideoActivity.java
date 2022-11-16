@@ -3,7 +3,7 @@ package com.chillingvan.canvasglsample.video;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Surface;
 import android.view.View;
 

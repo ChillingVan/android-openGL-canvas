@@ -1,9 +1,10 @@
 package com.chillingvan.canvasglsample.testcase.testMatrix;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.chillingvan.canvasglsample.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class TestMatrixActivity extends AppCompatActivity {
 

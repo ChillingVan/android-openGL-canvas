@@ -21,7 +21,7 @@
 package com.chillingvan.canvasgl.textureFilter;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by Chilling on 2016/10/23.

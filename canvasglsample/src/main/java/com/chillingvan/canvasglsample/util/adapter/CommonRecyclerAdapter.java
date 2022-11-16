@@ -1,10 +1,11 @@
 package com.chillingvan.canvasglsample.util.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Matthew on 2016/4/7.

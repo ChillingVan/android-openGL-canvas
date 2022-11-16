@@ -29,7 +29,8 @@ import com.chillingvan.canvasglsample.R;
 import com.chillingvan.canvasglsample.util.adapter.BaseItemView;
 import com.chillingvan.canvasglsample.util.adapter.RenderEntity;
 
-import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
+
 
 /**
  * Created by Chilling on 2016/10/24.

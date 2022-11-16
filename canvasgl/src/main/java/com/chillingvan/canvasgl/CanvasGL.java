@@ -28,9 +28,6 @@ import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.os.Build;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.BitmapTexture;
@@ -49,6 +46,10 @@ import com.chillingvan.canvasgl.textureFilter.TextureFilter;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * All the depth of textures are the same. So the texture drawn after will cover the texture drawn before.

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
@@ -17,6 +16,8 @@ import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasglsample.util.ScreenUtil;
+
+import androidx.annotation.Nullable;
 
 /**
  * Created by Chilling on 2019/11/23.

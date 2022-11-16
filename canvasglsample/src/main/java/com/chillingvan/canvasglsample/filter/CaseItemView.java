@@ -20,16 +20,16 @@
 
 package com.chillingvan.canvasglsample.filter;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.OnLifecycleEvent;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chillingvan.canvasglsample.R;
 import com.chillingvan.canvasglsample.util.adapter.BaseItemView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
 import jp.co.cyberagent.android.gpuimage.GPUImageView;
 
 /**

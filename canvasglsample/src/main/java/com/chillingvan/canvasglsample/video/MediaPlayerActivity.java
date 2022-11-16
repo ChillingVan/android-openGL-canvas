@@ -2,7 +2,6 @@ package com.chillingvan.canvasglsample.video;
 
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 import android.view.View;
 
@@ -10,6 +9,8 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLSurfaceTextureProducerView;
 import com.chillingvan.canvasgl.util.Loggers;
 import com.chillingvan.canvasglsample.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MediaPlayerActivity extends AppCompatActivity {
 

@@ -21,7 +21,6 @@
 package com.chillingvan.canvasgl;
 
 import android.graphics.SurfaceTexture;
-import android.support.annotation.Nullable;
 
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
@@ -31,6 +30,8 @@ import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * @deprecated use {@link MultiTexOffScreenCanvas} instead

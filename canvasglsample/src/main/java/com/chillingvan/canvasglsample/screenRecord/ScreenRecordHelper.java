@@ -8,12 +8,13 @@ import android.hardware.display.VirtualDisplay;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.Surface;
 
 import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.GLTexture;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Created by Chilling on 2020/3/7.

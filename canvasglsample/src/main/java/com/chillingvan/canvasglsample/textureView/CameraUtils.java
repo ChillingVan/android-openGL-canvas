@@ -22,7 +22,6 @@ package com.chillingvan.canvasglsample.textureView;
 
 import android.hardware.Camera;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.util.Size;
 
@@ -30,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Camera-related utility functions.
