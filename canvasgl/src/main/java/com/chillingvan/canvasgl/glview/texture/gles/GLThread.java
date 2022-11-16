@@ -24,8 +24,6 @@ import android.annotation.TargetApi;
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Choreographer;
 
@@ -41,6 +39,9 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 /**
  * This is the thread where the gl draw runs in.

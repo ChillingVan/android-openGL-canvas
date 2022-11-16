@@ -23,7 +23,7 @@ package com.chillingvan.canvasgl.glcanvas;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.chillingvan.canvasgl.shapeFilter.DrawShapeFilter;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;

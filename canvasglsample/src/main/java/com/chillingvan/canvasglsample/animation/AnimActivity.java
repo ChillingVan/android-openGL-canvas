@@ -24,7 +24,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.chillingvan.canvasgl.textureFilter.BasicTextureFilter;
 import com.chillingvan.canvasgl.textureFilter.ContrastFilter;
@@ -38,6 +37,8 @@ import com.chillingvan.canvasglsample.animation.bubble.Bubble;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class AnimActivity extends AppCompatActivity {
 

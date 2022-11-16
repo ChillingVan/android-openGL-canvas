@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.2.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.3.0'
 }
 ```
 
@@ -127,6 +127,7 @@ It has sync and async modes.
 
   You can use canvasGL.invalidateTextureContent(bitmap) to rebind the bitmap to texture. 
   This is kind of heavy so I do not update call this for every drawn.
+* The CanvasGL doesn't support drawPath or drawText. You can try IAndroidCanvasHelper but this just uses Android canvas to generate a Bitmap. So heed the performance.
 
 ## Latest Update
 * Add record screen demo

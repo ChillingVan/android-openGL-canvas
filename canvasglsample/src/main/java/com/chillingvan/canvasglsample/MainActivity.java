@@ -73,23 +73,23 @@ public class MainActivity extends ListActivity {
     }
 
     private void getPermission() {
-        Nammu.init(getApplicationContext());
+        Nammu.INSTANCE.init(getApplicationContext());
         askPermission(Manifest.permission.CAMERA);
         askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     private void askPermission(String permissionName) {
-        if (!Nammu.checkPermission(permissionName)) {
-            if (Nammu.shouldShowRequestPermissionRationale(this, permissionName)) {
+        if (!Nammu.INSTANCE.checkPermission(permissionName)) {
+            if (Nammu.INSTANCE.shouldShowRequestPermissionRationale(this, permissionName)) {
                 Toast.makeText(this, R.string.permission_tips, Toast.LENGTH_SHORT).show();
-                Nammu.askForPermission(MainActivity.this, permissionName, new PermissionCallback() {
+                Nammu.INSTANCE.askForPermission(MainActivity.this, permissionName, new PermissionCallback() {
                     @Override
                     public void permissionGranted() { }
                     @Override
                     public void permissionRefused() { }
                 });
             } else {
-                Nammu.askForPermission(MainActivity.this, permissionName, new PermissionCallback() {
+                Nammu.INSTANCE.askForPermission(MainActivity.this, permissionName, new PermissionCallback() {
                     @Override
                     public void permissionGranted() { }
                     @Override

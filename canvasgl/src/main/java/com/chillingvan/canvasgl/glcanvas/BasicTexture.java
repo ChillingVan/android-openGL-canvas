@@ -55,9 +55,11 @@ public abstract class BasicTexture implements Texture {
     private boolean isRecycled;
 
     protected GLCanvas mCanvasRef = null;
-    private static WeakHashMap<BasicTexture, Object> sAllTextures
+    private static final WeakHashMap<BasicTexture, Object> sAllTextures
             = new WeakHashMap<BasicTexture, Object>();
-    private static ThreadLocal sInFinalizer = new ThreadLocal();
+    private static final ThreadLocal sInFinalizer = new ThreadLocal();
+    private boolean mIsFlippedVertically;
+    private boolean mIsFlippedHorizontally;
 
     protected BasicTexture(GLCanvas canvas, int id, int state) {
         setAssociatedCanvas(canvas);
@@ -89,10 +91,6 @@ public abstract class BasicTexture implements Texture {
             Log.w(TAG, String.format("secondBitmap is too large: %d x %d",
                     mTextureWidth, mTextureHeight), new Exception());
         }
-    }
-
-    public boolean isFlippedVertically() {
-      return false;
     }
 
     public int getId() {
@@ -146,6 +144,29 @@ public abstract class BasicTexture implements Texture {
     @Override
     public void draw(GLCanvas canvas, int x, int y, int w, int h) {
         canvas.drawTexture(this, x, y, w, h, new BasicTextureFilter(), null);
+    }
+
+    public boolean isFlippedVertically() {
+        return mIsFlippedVertically;
+    }
+    public boolean isFlippedHorizontally() {
+        return mIsFlippedHorizontally;
+    }
+
+    /**
+     *
+     * @param isFlipped whether vertically flip this texture
+     */
+    public void setIsFlippedVertically(boolean isFlipped) {
+        mIsFlippedVertically = isFlipped;
+    }
+
+    /**
+     *
+     * @param isFlipped whether horizontally flip this texture
+     */
+    public void setIsFlippedHorizontally(boolean isFlipped) {
+        mIsFlippedHorizontally = isFlipped;
     }
 
     // onBind is called before GLCanvas binds this secondBitmap.

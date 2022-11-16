@@ -1,10 +1,11 @@
 package com.chillingvan.canvasgl.shapeFilter;
 
 import android.opengl.GLES20;
-import android.support.annotation.FloatRange;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.OpenGLUtil;
+
+import androidx.annotation.FloatRange;
 
 /**
  * Created by Chilling on 2016/11/11.

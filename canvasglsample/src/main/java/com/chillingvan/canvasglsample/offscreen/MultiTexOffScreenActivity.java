@@ -6,7 +6,6 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +25,8 @@ import com.chillingvan.canvasglsample.video.MediaPlayerHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MultiTexOffScreenActivity extends AppCompatActivity {
 

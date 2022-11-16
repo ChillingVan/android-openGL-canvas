@@ -17,21 +17,15 @@
  *  *
  *
  */
+package com.chillingvan.canvasglsample.compareCanvas
 
-package com.chillingvan.canvasgl;
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import com.chillingvan.canvasglsample.R
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+class CompareCanvasActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_compare_canvas)
     }
 }

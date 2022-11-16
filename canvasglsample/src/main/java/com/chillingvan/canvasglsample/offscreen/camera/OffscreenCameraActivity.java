@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -18,6 +17,8 @@ import com.chillingvan.canvasglsample.R;
 import com.chillingvan.canvasglsample.textureView.CameraUtils;
 
 import java.io.IOException;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class OffscreenCameraActivity extends AppCompatActivity {
 

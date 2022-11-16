@@ -22,7 +22,6 @@ package com.chillingvan.canvasgl.glview.texture;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
@@ -31,6 +30,8 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.glview.texture.gles.EglContextWrapper;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * <p>

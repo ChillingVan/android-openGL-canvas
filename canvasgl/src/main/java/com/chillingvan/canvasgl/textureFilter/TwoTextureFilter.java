@@ -24,7 +24,6 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.support.annotation.NonNull;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
@@ -34,6 +33,8 @@ import com.chillingvan.canvasgl.glcanvas.TextureMatrixTransformer;
 import com.chillingvan.canvasgl.glview.texture.GLTexture;
 
 import java.util.Arrays;
+
+import androidx.annotation.NonNull;
 
 import static com.chillingvan.canvasgl.ICanvasGL.BitmapMatrix.MATRIX_SIZE;
 

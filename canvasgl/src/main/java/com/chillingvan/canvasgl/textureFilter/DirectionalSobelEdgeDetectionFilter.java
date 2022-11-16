@@ -20,7 +20,7 @@
 
 package com.chillingvan.canvasgl.textureFilter;
 
-import android.support.annotation.FloatRange;
+import androidx.annotation.FloatRange;
 
 /**
  * Created by Chilling on 2016/11/6.

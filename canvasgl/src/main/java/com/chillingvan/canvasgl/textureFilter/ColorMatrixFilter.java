@@ -1,11 +1,12 @@
 package com.chillingvan.canvasgl.textureFilter;
 
 import android.opengl.GLES20;
-import android.support.annotation.FloatRange;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
+
+import androidx.annotation.FloatRange;
 
 /**
  * Created by Chilling on 2017/4/15.
