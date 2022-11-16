@@ -29,8 +29,7 @@ public class RawTexture extends BasicTexture {
     private static final String TAG = "RawTexture";
 
     private final boolean mOpaque;
-    private boolean mIsFlipped;
-    private int target = GL11.GL_TEXTURE_2D;
+    private int target;
     protected boolean needInvalidate;
 
     public RawTexture(int width, int height, boolean opaque) {
@@ -46,19 +45,6 @@ public class RawTexture extends BasicTexture {
     @Override
     public boolean isOpaque() {
         return mOpaque;
-    }
-
-    @Override
-    public boolean isFlippedVertically() {
-        return mIsFlipped;
-    }
-
-    /**
-     *
-     * @param isFlipped whether vertically flip this texture
-     */
-    public void setIsFlippedVertically(boolean isFlipped) {
-        mIsFlipped = isFlipped;
     }
 
     public void prepare(GLCanvas canvas) {
