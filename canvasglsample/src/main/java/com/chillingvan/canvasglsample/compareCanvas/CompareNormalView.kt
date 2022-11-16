@@ -17,100 +17,68 @@
  *  *
  *
  */
+package com.chillingvan.canvasglsample.compareCanvas
 
-package com.chillingvan.canvasglsample.compareCanvas;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.util.AttributeSet;
-import android.view.View;
-
-import com.chillingvan.canvasglsample.R;
+import android.content.Context
+import android.graphics.*
+import android.util.AttributeSet
+import android.view.View
+import com.chillingvan.canvasglsample.R
 
 /**
  * Created by Matthew on 2016/10/8.
  */
+class CompareNormalView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
+    private var baboon: Bitmap? = null
+    private val mMatrix: Matrix = Matrix()
 
-public class CompareNormalView extends View {
-
-    private Bitmap baboon;
-    private Matrix matrix;
-
-    public CompareNormalView(Context context) {
-        super(context);
-        init();
+    init {
+        init()
     }
 
-    public CompareNormalView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    private fun init() {
+        baboon = BitmapFactory.decodeResource(resources, R.drawable.baboon)
     }
 
-    public CompareNormalView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-
-        baboon = BitmapFactory.decodeResource(getResources(), R.drawable.baboon);
-        matrix = new Matrix();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-
-        matrix.reset();
-        matrix.postScale(2.1f, 2.1f);
-        matrix.postRotate(90);
-        matrix.postTranslate(90, 120);
-        matrix.postScale(0.4f, 0.4f, 139, 149);
-        matrix.postRotate(10, 128 , 128);
-        matrix.postTranslate(90, -120);
-        canvas.drawBitmap(baboon, matrix, new Paint());
-
-
-        Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#88FF0000"));
-        paint.setStrokeWidth(4);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(360, 0, 380, 40, paint);
-
-        Paint paint2 = new Paint();
-        paint2.setColor(Color.parseColor("#8800FF00"));
-        paint2.setStrokeWidth(4);
-        paint2.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(360, 40, 380, 80, paint2);
-
-        canvas.drawLine(360, 80, 360, 120, paint);
-
-
-        String text = "text";
-        Paint textPaint = new Paint();
-        textPaint.setColor(Color.BLUE);
-        textPaint.setTextSize(30);
-        canvas.drawText(text,0, text.length(), 500, 80, textPaint);
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        mMatrix.reset()
+        mMatrix.postScale(2.1f, 2.1f)
+        mMatrix.postRotate(90f)
+        mMatrix.postTranslate(90f, 120f)
+        mMatrix.postScale(0.4f, 0.4f, 139f, 149f)
+        mMatrix.postRotate(10f, 128f, 128f)
+        mMatrix.postTranslate(90f, -120f)
+        canvas.drawBitmap(baboon!!, mMatrix!!, Paint())
+        val paint = Paint()
+        paint.color = Color.parseColor("#88FF0000")
+        paint.strokeWidth = 4f
+        paint.style = Paint.Style.FILL
+        canvas.drawRect(360f, 0f, 380f, 40f, paint)
+        val paint2 = Paint()
+        paint2.color = Color.parseColor("#8800FF00")
+        paint2.strokeWidth = 4f
+        paint2.style = Paint.Style.STROKE
+        canvas.drawRect(360f, 40f, 380f, 80f, paint2)
+        canvas.drawLine(360f, 80f, 360f, 120f, paint)
+        val text = "text"
+        val textPaint = Paint()
+        textPaint.color = Color.BLUE
+        textPaint.textSize = 30f
+        canvas.drawText(text, 0, text.length, 500f, 80f, textPaint)
 
 
         //circle
-        Paint circlePaint = new Paint();
-        circlePaint.setColor(Color.parseColor("#88FF0000"));
-        circlePaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(430, 30, 30, circlePaint);
-
-        Paint strokeCirclePaint = new Paint();
-        strokeCirclePaint.setColor(Color.parseColor("#88FF0000"));
-        strokeCirclePaint.setStrokeWidth(4);
-        strokeCirclePaint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(490, 30, 30, strokeCirclePaint);
+        val circlePaint = Paint()
+        circlePaint.color = Color.parseColor("#88FF0000")
+        circlePaint.style = Paint.Style.FILL
+        canvas.drawCircle(430f, 30f, 30f, circlePaint)
+        val strokeCirclePaint = Paint()
+        strokeCirclePaint.color = Color.parseColor("#88FF0000")
+        strokeCirclePaint.strokeWidth = 4f
+        strokeCirclePaint.style = Paint.Style.STROKE
+        canvas.drawCircle(490f, 30f, 30f, strokeCirclePaint)
     }
-
-
 }

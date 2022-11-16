@@ -17,139 +17,116 @@
  *  *
  *
  */
+package com.chillingvan.canvasglsample.compareCanvas
 
-package com.chillingvan.canvasglsample.compareCanvas;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.AttributeSet;
-
-import com.chillingvan.canvasgl.CanvasGL;
-import com.chillingvan.canvasgl.ICanvasGL;
-import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper;
-import com.chillingvan.canvasgl.glcanvas.GLPaint;
-import com.chillingvan.canvasgl.glview.GLView;
-import com.chillingvan.canvasgl.textureFilter.CropFilter;
-import com.chillingvan.canvasglsample.R;
+import android.content.Context
+import com.chillingvan.canvasgl.glview.GLView
+import android.graphics.Bitmap
+import com.chillingvan.canvasgl.textureFilter.CropFilter
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Paint
+import android.util.AttributeSet
+import com.chillingvan.canvasglsample.R
+import com.chillingvan.canvasgl.ICanvasGL
+import com.chillingvan.canvasgl.ICanvasGL.OrthoBitmapMatrix
+import com.chillingvan.canvasgl.glcanvas.GLPaint
+import com.chillingvan.canvasgl.ICanvasGL.BitmapMatrix
+import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper
 
 /**
  * Created by Matthew on 2016/10/5.
  */
+class CompareGLView : GLView {
+    private var baboon: Bitmap? = null
+    private var cropFilter: CropFilter? = null
 
-public class CompareGLView extends GLView {
+    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
 
-    private Bitmap baboon;
-    private CropFilter cropFilter;
-
-    public CompareGLView(Context context) {
-        super(context);
+    override fun init() {
+        super.init()
+        baboon = BitmapFactory.decodeResource(resources, R.drawable.baboon)
+        cropFilter = CropFilter(0.5f, 0.5f, 1f, 1f)
     }
 
-    public CompareGLView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    override fun onGLDraw(canvas: ICanvasGL) {
+        drawBitmapWithMatrix(canvas)
+        drawRectAndLine(canvas)
+        drawText(canvas)
+        drawCircle(canvas)
+        //        drawBitmapWithOrthoMatrix(canvas);
     }
 
-    @Override
-    protected void init() {
-        super.init();
-
-        baboon = BitmapFactory.decodeResource(getResources(), R.drawable.baboon);
-
-        cropFilter = new CropFilter(0.5f, 0.5f, 1, 1);
+    private fun drawBitmapWithOrthoMatrix(canvas: ICanvasGL) {
+        val matrix = OrthoBitmapMatrix()
+        canvas.drawBitmap(baboon, matrix)
+        matrix.reset()
+        matrix.translate(500f, 150f)
+        matrix.scale(10f, 10f)
+        canvas.drawBitmap(baboon, matrix)
+        matrix.reset()
+        matrix.translate(0f, 100f)
+        matrix.rotateZ(45f)
+        canvas.drawBitmap(baboon, matrix)
     }
 
-    @Override
-    protected void onGLDraw(ICanvasGL canvas) {
-        drawBitmapWithMatrix(canvas);
-        drawRectAndLine(canvas);
-        drawText(canvas);
-        drawCircle(canvas);
-//        drawBitmapWithOrthoMatrix(canvas);
-
-    }
-
-    private void drawBitmapWithOrthoMatrix(ICanvasGL canvas) {
-        CanvasGL.OrthoBitmapMatrix matrix = new CanvasGL.OrthoBitmapMatrix();
-        canvas.drawBitmap(baboon, matrix);
-
-
-        matrix.reset();
-        matrix.translate(500, 150);
-        matrix.scale(10f, 10f);
-        canvas.drawBitmap(baboon, matrix);
-
-
-        matrix.reset();
-        matrix.translate(0, 100);
-        matrix.rotateZ(45);
-        canvas.drawBitmap(baboon, matrix);
-    }
-
-
-    private void drawCircle(ICanvasGL canvas) {
+    private fun drawCircle(canvas: ICanvasGL) {
         //circle
-        GLPaint circlePaint = new GLPaint();
-        circlePaint.setColor(Color.parseColor("#88FF0000"));
-        circlePaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(430, 30, 30, circlePaint);
-
-        GLPaint strokeCirclePaint = new GLPaint();
-        strokeCirclePaint.setColor(Color.parseColor("#88FF0000"));
-        strokeCirclePaint.setLineWidth(4);
-        strokeCirclePaint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(490, 30, 30, strokeCirclePaint);
+        val circlePaint = GLPaint()
+        circlePaint.color = Color.parseColor("#88FF0000")
+        circlePaint.style = Paint.Style.FILL
+        canvas.drawCircle(430f, 30f, 30f, circlePaint)
+        val strokeCirclePaint = GLPaint()
+        strokeCirclePaint.color = Color.parseColor("#88FF0000")
+        strokeCirclePaint.lineWidth = 4f
+        strokeCirclePaint.style = Paint.Style.STROKE
+        canvas.drawCircle(490f, 30f, 30f, strokeCirclePaint)
     }
 
-    private void drawRectAndLine(ICanvasGL canvas) {
-        GLPaint paint = new GLPaint();
-        paint.setColor(Color.parseColor("#88FF0000"));
-        paint.setLineWidth(4);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(360, 0, 380, 40, paint);
-
-        GLPaint paint2 = new GLPaint();
-        paint2.setColor(Color.parseColor("#8800FF00"));
-        paint2.setLineWidth(4);
-        paint2.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(560, 40, 760, 180, paint2);
-
-        canvas.drawLine(360, 80, 360, 120, paint);
+    private fun drawRectAndLine(canvas: ICanvasGL) {
+        val paint = GLPaint()
+        paint.color = Color.parseColor("#88FF0000")
+        paint.lineWidth = 4f
+        paint.style = Paint.Style.FILL
+        canvas.drawRect(360f, 0f, 380f, 40f, paint)
+        val paint2 = GLPaint()
+        paint2.color = Color.parseColor("#8800FF00")
+        paint2.lineWidth = 4f
+        paint2.style = Paint.Style.STROKE
+        canvas.drawRect(560f, 40f, 760f, 180f, paint2)
+        canvas.drawLine(360f, 80f, 360f, 120f, paint)
     }
 
-    private static void drawText(final ICanvasGL canvas) {
-        // text
-        IAndroidCanvasHelper androidCanvasHelper = IAndroidCanvasHelper.Factory.createAndroidCanvasHelper(IAndroidCanvasHelper.MODE.MODE_SYNC);
-        androidCanvasHelper.init(canvas.getWidth(), canvas.getHeight());
-        androidCanvasHelper.draw(new IAndroidCanvasHelper.CanvasPainter() {
-            @Override
-            public void draw(Canvas androidCanvas, Bitmap drawBitmap) {
-                String text = "text";
-                Paint textPaint = new Paint();
-                textPaint.setColor(Color.BLUE);
-                textPaint.setStyle(Paint.Style.FILL);
-                textPaint.setTextSize(40);
-                androidCanvas.drawText(text, 20, 30, textPaint);
+    private fun drawBitmapWithMatrix(canvas: ICanvasGL) {
+        val matrix = BitmapMatrix()
+        matrix.scale(1.3f, 1f)
+        matrix.rotateX(34f)
+        matrix.rotateY(64f)
+        matrix.rotateZ(30f)
+        matrix.translate(390f, 0f)
+        canvas.drawBitmap(baboon, matrix)
+        matrix.reset()
+        matrix.translate(28f, 19f)
+        matrix.rotateZ(30f)
+        canvas.drawBitmap(BitmapFactory.decodeResource(resources, R.drawable.lenna), matrix)
+    }
+
+    companion object {
+        private fun drawText(canvas: ICanvasGL) {
+            // text
+            val androidCanvasHelper =
+                IAndroidCanvasHelper.Factory.createAndroidCanvasHelper(IAndroidCanvasHelper.MODE.MODE_SYNC)
+            androidCanvasHelper.init(canvas.width, canvas.height)
+            androidCanvasHelper.draw { androidCanvas, drawBitmap ->
+                val text = "text"
+                val textPaint = Paint()
+                textPaint.color = Color.BLUE
+                textPaint.style = Paint.Style.FILL
+                textPaint.textSize = 40f
+                androidCanvas.drawText(text, 20f, 30f, textPaint)
             }
-        });
-        canvas.drawBitmap(androidCanvasHelper.getOutputBitmap(), 500, 80);
-    }
-
-    private void drawBitmapWithMatrix(ICanvasGL canvas) {
-        CanvasGL.BitmapMatrix matrix = new CanvasGL.BitmapMatrix();
-        matrix.scale(1.3f, 1f);
-        matrix.rotateX(34);
-        matrix.rotateY(64);
-        matrix.rotateZ(30);
-        matrix.translate(390, 0);
-        canvas.drawBitmap(baboon, matrix);
-
-        matrix.reset();
-        matrix.translate(28, 19);
-        matrix.rotateZ(30);
-        canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lenna), matrix);
+            canvas.drawBitmap(androidCanvasHelper.outputBitmap, 500, 80)
+        }
     }
 }

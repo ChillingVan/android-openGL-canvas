@@ -17,20 +17,15 @@
  *  *
  *
  */
+package com.chillingvan.canvasglsample.compareCanvas
 
-package com.chillingvan.canvasglsample.compareCanvas;
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import com.chillingvan.canvasglsample.R
 
-import android.os.Bundle;
-
-import com.chillingvan.canvasglsample.R;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-public class CompareCanvasActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compare_canvas);
+class CompareCanvasActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_compare_canvas)
     }
 }

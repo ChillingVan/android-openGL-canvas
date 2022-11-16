@@ -1,18 +1,16 @@
-package com.chillingvan.canvasglsample;
+package com.chillingvan.canvasglsample
 
-import android.app.Application;
-
-import com.chillingvan.canvasgl.util.FileLogger;
+import android.app.Application
+import com.chillingvan.canvasgl.util.FileLogger
 
 /**
  * Created by Chilling on 2018/11/17.
  */
-public class MainApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-//        Loggers.DEBUG = true;
-        FileLogger.init(getExternalFilesDir(null).getAbsolutePath());
-        FileLogger.d("MainActivity", "init -----------------");
+class MainApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        //        Loggers.DEBUG = true;
+        FileLogger.init(getExternalFilesDir(null)!!.absolutePath)
+        FileLogger.d("MainActivity", "init -----------------")
     }
 }
