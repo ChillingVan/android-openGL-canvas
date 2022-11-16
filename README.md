@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.2.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.3.0'
 }
 ```
 
@@ -130,7 +130,7 @@ public class MyGLView extends GLView {
 * 为什么Bitmap修改后，再次绘制时并没更新？
 
   因为没有调用canvasGL的invalidateTextureContent(bitmap)。改变了的Bitmap需要重新绑定texture。因为绑定需要耗时，所以库里面才不做成每次都重新绑定。
-* CanvasGL里面没有drawPath或者drawText，要实现的话本库提供了IAndroidCanvasHelper，
+* CanvasGL里面没有drawPath或者drawText，要实现的话本库提供了IAndroidCanvasHelper，但这个只是用安卓自己的canvas生成一个Bitmap，所以要注意性能
 
 ## 相关博客文章
 * [OpenGL绘制一张图片的流程](http://www.jianshu.com/p/40521c92ef85)
