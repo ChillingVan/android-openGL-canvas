@@ -48,6 +48,7 @@ public class MediaPlayerTextureView extends GLSurfaceTextureProducerView {
         RawTexture producedRawTexture = producedGLTexture.getRawTexture();
         SurfaceTexture producedSurfaceTexture = producedGLTexture.getSurfaceTexture();
         producedRawTexture.setIsFlippedVertically(true);
+        producedRawTexture.setIsFlippedHorizontally(true);
         canvas.drawSurfaceTexture(producedRawTexture, producedSurfaceTexture, 0, 0, producedRawTexture.getWidth(), producedRawTexture.getHeight(), textureFilter);
     }
 }
