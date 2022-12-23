@@ -3,13 +3,14 @@ package com.chillingvan.canvasglsample.comparePerformance;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chillingvan.canvasglsample.R;
 
 import java.util.Locale;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ComparePerformanceActivity extends AppCompatActivity {
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.CanvasGL;
@@ -12,6 +11,8 @@ import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.OpenGLUtil;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.chillingvan.canvasgl.util.Loggers;
+
+import androidx.annotation.ColorInt;
 
 /**
  *

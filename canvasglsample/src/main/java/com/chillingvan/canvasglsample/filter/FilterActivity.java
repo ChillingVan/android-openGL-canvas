@@ -24,8 +24,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -56,20 +54,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.co.cyberagent.android.gpuimage.GPUImageColorMatrixFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageContrastFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageDarkenBlendFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageDirectionalSobelEdgeDetectionFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageFilterGroup;
-import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageGaussianBlurFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageLightenBlendFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageLookupFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImagePixelationFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageRGBFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageSaturationFilter;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageColorMatrixFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageDarkenBlendFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageDirectionalSobelEdgeDetectionFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilterGroup;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageGammaFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageHueFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageLightenBlendFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageLookupFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImagePixelationFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageRGBFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSaturationFilter;
 
 public class FilterActivity extends AppCompatActivity {
 

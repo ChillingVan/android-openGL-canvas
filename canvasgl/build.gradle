@@ -19,19 +19,20 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.ChillingVan'
-def VERSION_NAME="1.5.2.0"
+apply plugin: 'maven-publish'
+def NAMESPACE="com.github.ChillingVan"
+group = NAMESPACE
+def VERSION_NAME="1.5.3.0"
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    namespace = NAMESPACE
+    compileSdkVersion 32
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 105020
+        targetSdkVersion 32
+        versionCode 105030
         versionName VERSION_NAME
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -46,13 +47,17 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.annotation:annotation:1.3.0'
 }
 
 
@@ -81,14 +86,18 @@ artifacts {
     archives javadocJar
 }
 
-/**
- * Used to support other project uses mavenLocal() to refer this project which is convenient to debug
- */
-install {
-    repositories.mavenInstaller {
-        pom.version = 'v' + VERSION_NAME
-        pom.artifactId = 'android-openGL-canvas'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId = NAMESPACE
+                artifactId = 'android-openGL-canvas'
+                version = VERSION_NAME
+            }
+        }
     }
 }
-
 

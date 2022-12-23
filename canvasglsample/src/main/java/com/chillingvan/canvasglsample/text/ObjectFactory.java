@@ -1,13 +1,13 @@
 package com.chillingvan.canvasglsample.text;
 
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pools;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import androidx.annotation.Nullable;
+import androidx.core.util.Pools;
 
 /**
  * Created by Chilling on 2018/4/14.

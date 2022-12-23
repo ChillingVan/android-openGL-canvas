@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +15,10 @@ import com.chillingvan.canvasgl.glview.texture.GLTexture;
 import com.chillingvan.canvasglsample.R;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import static com.chillingvan.canvasglsample.screenRecord.ScreenRecordHelper.REQUEST_MEDIA_PROJECTION;
 

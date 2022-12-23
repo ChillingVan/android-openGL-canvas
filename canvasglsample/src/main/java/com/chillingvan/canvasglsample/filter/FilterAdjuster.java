@@ -22,39 +22,40 @@ package com.chillingvan.canvasglsample.filter;
 
 import android.opengl.Matrix;
 
-import jp.co.cyberagent.android.gpuimage.GPUImage3x3TextureSamplingFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageBilateralFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageBrightnessFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageBulgeDistortionFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageColorBalanceFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageContrastFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageCrosshatchFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageDissolveBlendFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageEmbossFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageExposureFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageGaussianBlurFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageGlassSphereFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageHazeFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageHighlightShadowFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageLevelsFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageLookupFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageMonochromeFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageOpacityFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImagePixelationFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImagePosterizeFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageRGBFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageSaturationFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageSepiaFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageSharpenFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageSobelEdgeDetection;
-import jp.co.cyberagent.android.gpuimage.GPUImageSphereRefractionFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageSwirlFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageTransformFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageVignetteFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageWhiteBalanceFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImage3x3TextureSamplingFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageBilateralBlurFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageBulgeDistortionFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageColorBalanceFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageCrosshatchFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageDissolveBlendFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageEmbossFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageExposureFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageGammaFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageGaussianBlurFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageGlassSphereFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageHazeFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageHighlightShadowFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageHueFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageLevelsFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageLookupFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageMonochromeFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageOpacityFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImagePixelationFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImagePosterizeFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageRGBFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSaturationFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSepiaToneFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSharpenFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSobelEdgeDetectionFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSphereRefractionFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSwirlFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageTransformFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageVignetteFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageWhiteBalanceFilter;
+
 
 public class FilterAdjuster {
         private final Adjuster<? extends GPUImageFilter> adjuster;
@@ -62,7 +63,7 @@ public class FilterAdjuster {
         public FilterAdjuster(final GPUImageFilter filter) {
             if (filter instanceof GPUImageSharpenFilter) {
                 adjuster = new SharpnessAdjuster().filter(filter);
-            } else if (filter instanceof GPUImageSepiaFilter) {
+            } else if (filter instanceof GPUImageSepiaToneFilter) {
                 adjuster = new SepiaAdjuster().filter(filter);
             } else if (filter instanceof GPUImageContrastFilter) {
                 adjuster = new ContrastAdjuster().filter(filter);
@@ -70,7 +71,7 @@ public class FilterAdjuster {
                 adjuster = new GammaAdjuster().filter(filter);
             } else if (filter instanceof GPUImageBrightnessFilter) {
                 adjuster = new BrightnessAdjuster().filter(filter);
-            } else if (filter instanceof GPUImageSobelEdgeDetection) {
+            } else if (filter instanceof GPUImageSobelEdgeDetectionFilter) {
                 adjuster = new SobelAdjuster().filter(filter);
             } else if (filter instanceof GPUImageEmbossFilter) {
                 adjuster = new EmbossAdjuster().filter(filter);
@@ -118,7 +119,7 @@ public class FilterAdjuster {
                 adjuster = new ColorBalanceAdjuster().filter(filter);
             } else if (filter instanceof GPUImageLevelsFilter) {
                 adjuster = new LevelsMinMidAdjuster().filter(filter);
-            } else if (filter instanceof GPUImageBilateralFilter) {
+            } else if (filter instanceof GPUImageBilateralBlurFilter) {
                 adjuster = new BilateralAdjuster().filter(filter);
             } else if (filter instanceof GPUImageTransformFilter) {
                 adjuster = new RotateAdjuster().filter(filter);
@@ -205,14 +206,14 @@ public class FilterAdjuster {
             }
         }
 
-        private class SepiaAdjuster extends Adjuster<GPUImageSepiaFilter> {
+        private class SepiaAdjuster extends Adjuster<GPUImageSepiaToneFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setIntensity(range(percentage, 0.0f, 2.0f));
             }
         }
 
-        private class SobelAdjuster extends Adjuster<GPUImageSobelEdgeDetection> {
+        private class SobelAdjuster extends Adjuster<GPUImageSobelEdgeDetectionFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setLineSize(range(percentage, 0.0f, 5.0f));
@@ -379,7 +380,7 @@ public class FilterAdjuster {
             }
         }
 
-        private class BilateralAdjuster extends Adjuster<GPUImageBilateralFilter> {
+        private class BilateralAdjuster extends Adjuster<GPUImageBilateralBlurFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setDistanceNormalizationFactor(range(percentage, 0.0f, 15.0f));
