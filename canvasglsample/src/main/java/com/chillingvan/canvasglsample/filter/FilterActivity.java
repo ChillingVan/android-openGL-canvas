@@ -36,6 +36,7 @@ import com.chillingvan.canvasgl.textureFilter.DarkenBlendFilter;
 import com.chillingvan.canvasgl.textureFilter.DirectionalSobelEdgeDetectionFilter;
 import com.chillingvan.canvasgl.textureFilter.FilterGroup;
 import com.chillingvan.canvasgl.textureFilter.GammaFilter;
+import com.chillingvan.canvasgl.textureFilter.GaussianBlurFilter;
 import com.chillingvan.canvasgl.textureFilter.HueFilter;
 import com.chillingvan.canvasgl.textureFilter.LightenBlendFilter;
 import com.chillingvan.canvasgl.textureFilter.LookupFilter;
@@ -103,7 +104,6 @@ public class FilterActivity extends AppCompatActivity {
         initSeekBar();
 
 
-
         adapter = new CommonBaseAdapter<>(renderEntityList);
         listView.setAdapter(adapter);
         refreshDataList();
@@ -145,10 +145,12 @@ public class FilterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
     }
 
@@ -162,7 +164,7 @@ public class FilterActivity extends AppCompatActivity {
 
         int width = firstBitmap.getWidth();
         int height = firstBitmap.getHeight();
-        CropFilter cropFilter = new CropFilter(CropFilter.calc(width/2, width), 0, 1, CropFilter.calc(height/2, height));
+        CropFilter cropFilter = new CropFilter(CropFilter.calc(width / 2, width), 0, 1, CropFilter.calc(height / 2, height));
         renderEntityList.add(new CaseEntity(cropFilter, new GPUImageFilter(), firstBitmap));
 
         Bitmap lookupAmatorka = BitmapFactory.decodeResource(getResources(), R.drawable.lookup_amatorka);
@@ -233,6 +235,10 @@ public class FilterActivity extends AppCompatActivity {
         GPUImageColorMatrixFilter gpuImageColorMatrixFilter = new GPUImageColorMatrixFilter(0.3f, matrix4);
         renderEntityList.add(new CaseEntity(colorMatrixFilter, gpuImageColorMatrixFilter, firstBitmap));
 
+        GaussianBlurFilter gaussianBlurFilter = new GaussianBlurFilter(5f);
+        GPUImageGaussianBlurFilter gpuImageGaussianBlurFilter = new GPUImageGaussianBlurFilter(5f);
+        renderEntityList.add(new CaseEntity(gaussianBlurFilter, gpuImageGaussianBlurFilter, firstBitmap));
+
         return renderEntityList;
     }
 
@@ -287,7 +293,7 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     public static class Range {
-        float min ;
+        float min;
         float max;
 
         public Range(float min, float max) {
@@ -296,7 +302,7 @@ public class FilterActivity extends AppCompatActivity {
         }
 
         public float value(float percentage) {
-            return min + (max - min) * (percentage /100);
+            return min + (max - min) * (percentage / 100);
         }
     }
 }
