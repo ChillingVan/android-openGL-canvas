@@ -555,11 +555,11 @@ public class GLES20Canvas implements GLCanvas {
 
     private void setMatrix(ShaderParameter[] params, float x, float y, float width, float height, ICustomMVPMatrix customMVPMatrix) {
         if (customMVPMatrix != null) {
-            GLES20.glUniformMatrix4fv(params[INDEX_MATRIX].handle, 1, false, customMVPMatrix.getMVPMatrix(mScreenWidth, mScreenHeight, x, y, width, height), 0);
+            GLES20.glUniformMatrix4fv(params[INDEX_MATRIX].handle, 1, false, customMVPMatrix.getMVPMatrix(mWidth, mHeight, x, y, width, height), 0);
             checkError();
             return;
         }
-        GLES20.glViewport(0, 0, mScreenWidth, mScreenHeight);
+        GLES20.glViewport(0, 0, mWidth, mHeight);
         Matrix.translateM(mTempMatrix, 0, mMatrices, mCurrentMatrixIndex, x, y, 0f);
         Matrix.scaleM(mTempMatrix, 0, width, height, 1f);
         Matrix.multiplyMM(mTempMatrix, MATRIX_SIZE, mProjectionMatrix, 0, mTempMatrix, 0);

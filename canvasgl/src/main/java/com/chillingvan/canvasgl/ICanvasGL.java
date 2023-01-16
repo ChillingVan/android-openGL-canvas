@@ -26,9 +26,6 @@ import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.chillingvan.canvasgl.glcanvas.BasicTexture;
 import com.chillingvan.canvasgl.glcanvas.BitmapTexture;
@@ -39,6 +36,10 @@ import com.chillingvan.canvasgl.glcanvas.RawTexture;
 import com.chillingvan.canvasgl.matrix.BaseBitmapMatrix;
 import com.chillingvan.canvasgl.matrix.IBitmapMatrix;
 import com.chillingvan.canvasgl.textureFilter.TextureFilter;
+
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by Matthew on 2016/9/26.
@@ -197,7 +198,7 @@ public interface ICanvasGL {
             final float absTransY = Math.abs(transform[TRANSLATE_Y]); // Make sure realViewportH - viewportY includes viewportH
             int realViewportW = (int) (viewPortRatio * viewportW + 2*absTransX);
             int realViewportH = (int) (viewPortRatio * viewportH + 2*absTransY);
-            realViewportW = Math.max(realViewportW, maxViewPortInt);
+            realViewportW = Math.min(realViewportW, maxViewPortInt);
             realViewportH = Math.min(realViewportH, maxViewPortInt);
             int viewportX = (int) (drawW / 2 - realViewportW / 2 + transform[TRANSLATE_X]);
             int viewportY = (int) (-drawH / 2 - transform[TRANSLATE_Y] - realViewportH / 2 + viewportH);
