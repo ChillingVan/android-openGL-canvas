@@ -48,7 +48,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.3.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.4.0'
 }
 ```
 
@@ -140,6 +140,7 @@ public class MyGLView extends GLView {
 
 
 ## 最近更新
+* 添加高斯模糊 & 修复FilterGroup ViewPort 宽高问题（1.5.4 感谢[@iffly](https://github.com/feiyin0719)))
 * 添加录屏demo
 * 添加clearTextureCache，比弱引用更快释放内存 (1.5.2)
 * AndroidCanvasHelper能直接操作Canvas里的bitmap了 (1.5.2)

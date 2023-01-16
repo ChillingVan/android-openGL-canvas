@@ -43,7 +43,7 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.3.0'
+    implementation 'com.github.ChillingVan:android-openGL-canvas:v1.5.4.0'
 }
 ```
 
@@ -130,6 +130,7 @@ It has sync and async modes.
 * The CanvasGL doesn't support drawPath or drawText. You can try IAndroidCanvasHelper but this just uses Android canvas to generate a Bitmap. So heed the performance.
 
 ## Latest Update
+* Add GaussianBlurFilter & Fix FilterGroup ViewPort Issue (1.5.4, Thanks to [@iffly](https://github.com/feiyin0719))
 * Add record screen demo
 * Add clearTextureCache to help clear cache faster than WeakHashMap. (1.5.2)
 * Can operate bitmap when using AndroidCanvasHelper (1.5.2)

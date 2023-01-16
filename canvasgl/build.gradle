@@ -22,7 +22,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 def NAMESPACE="com.github.ChillingVan"
 group = NAMESPACE
-def VERSION_NAME="1.5.3.0"
+def VERSION_NAME="1.5.4.0"
 
 android {
     namespace = NAMESPACE
@@ -30,7 +30,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 32
-        versionCode 105030
+        versionCode 105040
         versionName VERSION_NAME
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
